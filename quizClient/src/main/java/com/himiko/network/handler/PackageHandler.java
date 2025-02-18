@@ -1,32 +1,28 @@
-package com.himiko.server.handler;
-
+package com.himiko.network.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.himiko.Main;
 import com.himiko.logger.Logger;
-import com.himiko.server.protocol.Package;
-import com.himiko.server.protocol.enums.PackageCategory;
-import com.himiko.server.utils.NetworkClient;
+import com.himiko.network.utils.Connection;
+import com.himiko.network.protocol.Package;
+import com.himiko.network.protocol.enums.PackageCategory;
 
-import java.net.Socket;
 
-/**
- * @author Valk on 14.02.2025
- * @project quizServer
- */
-public class PackageHandler {
+public class PackageHandler extends Thread{
     private Logger logger;
+    private Connection connection;
     private Gson gson;
 
-    public PackageHandler()
+    public PackageHandler(Connection connection)
     {
         this.logger = Main.logger;
+        this.connection = connection;
         this.gson = new Gson();
     }
 
-    public void handelPackage(String data, NetworkClient client)
+    public void handelPackage(String data)
     {
         this.logger.debug("Message Received:{}", data);
         //Don't u dare to remove the exp catch!
@@ -34,9 +30,8 @@ public class PackageHandler {
         try {
             Package<JsonElement> rawPackage = gson.fromJson(data, new TypeToken<Package<JsonElement>>() {
             }.getType());
-            switch (rawPackage.getAction()) {
+            switch (rawPackage.getCategory()) {
                 case USER_DATA -> {
-                    this.logger.debug("Received USER_DATA!");
                     break;
                 }
                 case USER_LOGIN -> {
@@ -46,15 +41,33 @@ public class PackageHandler {
                     break;
                 }
                 default -> {
-                    client.sendData("Hello!");
                     break;
                 }
             }
         }catch (Exception e)
         {
-            client.sendData("FUCK UR PACKAGE!");
             this.logger.error("Something went wrong while handling the package... Error:{}", e.getMessage());
         }
     }
 
+    public <T> void sendData(T data, PackageCategory category)
+    {
+        if(data == null || category == null) return;
+
+        Package<T> dataPackage = new Package<>(data, category);
+        String rawJSON = gson.toJson(dataPackage);
+        connection.send(rawJSON);
+        this.logger.debug("Send data to server... Data:{}", rawJSON);
+    }
+
+    @Override
+    public void run() {
+        while (this.connection.isConnected()) {
+            String content = this.connection.receive();
+            if(content != null)
+            {
+                this.handelPackage(content);
+            }
+        }
+    }
 }

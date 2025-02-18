@@ -8,13 +8,13 @@ import com.himiko.server.protocol.enums.PackageCategory;
  * @project quizServer
  */
 public class Package<T>{
-    private PackageCategory category;
     private T data;
+    private PackageCategory category;
 
-    public Package(PackageCategory action, T data)
+    public Package(T data, PackageCategory action)
     {
-        this.category = action;
         this.data = data;
+        this.category = action;
     }
 
     public PackageCategory getAction() {

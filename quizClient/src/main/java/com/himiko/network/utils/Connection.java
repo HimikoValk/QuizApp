@@ -1,4 +1,4 @@
-package com.himiko.network;
+package com.himiko.network.utils;
 
 
 import java.io.BufferedReader;
