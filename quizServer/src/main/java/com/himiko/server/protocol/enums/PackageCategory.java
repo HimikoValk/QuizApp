@@ -1,0 +1,10 @@
+package com.himiko.server.protocol.enums;
+
+
+/**
+ * @author Valk on 16.02.2025
+ * @project quizServer
+ */
+public enum PackageCategory {
+    USER_LOGIN,USER_DATA,USER_REQUEST
+}

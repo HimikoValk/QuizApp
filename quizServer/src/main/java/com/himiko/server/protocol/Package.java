@@ -1,0 +1,35 @@
+package com.himiko.server.protocol;
+
+
+import com.himiko.server.protocol.enums.PackageCategory;
+
+/**
+ * @author Valk on 16.02.2025
+ * @project quizServer
+ */
+public class Package<T>{
+    private PackageCategory category;
+    private T data;
+
+    public Package(PackageCategory action, T data)
+    {
+        this.category = action;
+        this.data = data;
+    }
+
+    public PackageCategory getAction() {
+        return this.category;
+    }
+
+    public void setCategory(PackageCategory category) {
+        this.category = category;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+}
