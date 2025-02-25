@@ -28,15 +28,6 @@ public class NetworkClient {
         this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
     }
 
-    public <T> void sendPackage(Package<T> data)
-    {
-        if(data == null) return;
-
-        String json = new Gson().toJson(data);
-
-        this.sendData(json);
-    }
-
     public void sendData(String data)
     {
         if(this.writer == null) return;

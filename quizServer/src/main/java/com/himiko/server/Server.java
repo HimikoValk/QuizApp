@@ -30,7 +30,7 @@ public class Server extends Thread{
 
         this.logger = Main.logger;
 
-        this.logger.debug("Initializing Server...");
+        this.logger.info("Initializing server...");
 
         this.port = port;
         this.serverSocket = new ServerSocket(port);
@@ -42,7 +42,7 @@ public class Server extends Thread{
     @Override
     public void run() {
         this.logger.debug("Thread:{} Server-Port:{} Server-IP:{}", super.getId(),this.port, this.serverSocket.getLocalSocketAddress().toString());
-        this.logger.info("Successfully Started Server!");
+        this.logger.info("Successfully started server!");
 
         while(running) {
             try {
