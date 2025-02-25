@@ -1,29 +1,31 @@
 package com.himiko;
 
 
-
-import com.himiko.game.utils.UserData;
+import com.himiko.gui.GUI;
 import com.himiko.logger.Logger;
 import com.himiko.logger.LoggerBuilder;
 import com.himiko.network.NetworkWrapper;
-import com.himiko.network.protocol.enums.PackageCategory;
 
 /**
  * @author Valk on 14.02.2025
  * @project quizClient
  */
-public class Main {
+public class Main{
     public static Logger logger = LoggerBuilder.build("logs.txt").getLogger();
-    public static NetworkWrapper networkWrapper;
+    public static NetworkWrapper NETWORK;
+    public static GUI GUI;
 
     public static void main(String[] args) {
         try {
-            networkWrapper = new NetworkWrapper();
-            networkWrapper.start();
-            networkWrapper.getPackageHandler().<UserData>sendData(new UserData("test"), PackageCategory.USER_DATA);
+            GUI = new GUI("Quizapp", "0.0", 500, 800);
+            NETWORK = new NetworkWrapper();
+            NETWORK.start();
         }catch (Exception e)
         {
+            logger.error("Something went wrong... Error:{}", e.getMessage());
             e.printStackTrace();
         }
     }
+
 }
+

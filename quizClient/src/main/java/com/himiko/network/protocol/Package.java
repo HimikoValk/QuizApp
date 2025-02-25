@@ -1,7 +1,5 @@
 package com.himiko.network.protocol;
 
-import com.himiko.network.protocol.enums.PackageCategory;
-
 public class Package<T>{
     private T data;
     private PackageCategory category;

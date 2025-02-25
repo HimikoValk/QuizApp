@@ -7,7 +7,7 @@ import com.himiko.Main;
 import com.himiko.logger.Logger;
 import com.himiko.network.utils.Connection;
 import com.himiko.network.protocol.Package;
-import com.himiko.network.protocol.enums.PackageCategory;
+import com.himiko.network.protocol.PackageCategory;
 
 
 public class PackageHandler extends Thread{
@@ -55,13 +55,14 @@ public class PackageHandler extends Thread{
         if(data == null || category == null) return;
 
         Package<T> dataPackage = new Package<>(data, category);
-        String rawJSON = gson.toJson(dataPackage);
-        connection.send(rawJSON);
+        String rawJSON = this.gson.toJson(dataPackage);
+        this.connection.send(rawJSON);
         this.logger.debug("Send data to server... Data:{}", rawJSON);
     }
 
     @Override
     public void run() {
+        this.logger.info("Start listening to server...");
         while (this.connection.isConnected()) {
             String content = this.connection.receive();
             if(content != null)
