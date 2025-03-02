@@ -9,17 +9,18 @@ public class User {
     private String name;
     private int totalGames;
     private int wins;
-
+    private long id;
     //Default Constructor
     public User()
     {
     }
 
-    public User(String name, int totalGames, int wins)
+    public User(String name, int totalGames, int wins, long id)
     {
         this.name = name;
         this.totalGames = totalGames;
         this.wins = wins;
+        this.id = id;
     }
 
     public String getName() {
@@ -44,5 +45,9 @@ public class User {
 
     public void setWins(int wins) {
         this.wins = wins;
+    }
+
+    public long getId() {
+        return this.id;
     }
 }

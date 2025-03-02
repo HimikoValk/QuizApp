@@ -28,10 +28,6 @@ public class ScreenHandler {
 
         this.currentScreen = screen;
         this.currentScreen.onEnter();
-        /*
-        Main.GUI.getRenderPanel().revalidate();
-        Main.GUI.getRenderPanel().repaint();
-    */
     }
 
 
