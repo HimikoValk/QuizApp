@@ -1,15 +1,17 @@
 package com.himiko.gui.screen;
 
+import com.himiko.Main;
+import com.himiko.gui.screen.screens.ConnectionScreen;
+
 public class ScreenHandler {
     public final static ScreenHandler INSTANCE = new ScreenHandler();
     private Screen currentScreen;
 
-
     //Screens
-
+    public static ConnectionScreen CONNECTION_SCREEN;
     static
     {
-
+        CONNECTION_SCREEN = new ConnectionScreen();
     }
 
     public ScreenHandler()
@@ -26,7 +28,12 @@ public class ScreenHandler {
 
         this.currentScreen = screen;
         this.currentScreen.onEnter();
+        /*
+        Main.GUI.getRenderPanel().revalidate();
+        Main.GUI.getRenderPanel().repaint();
+    */
     }
+
 
     public Screen getCurrentScreen()
     {

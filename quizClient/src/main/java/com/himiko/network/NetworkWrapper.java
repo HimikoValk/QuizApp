@@ -5,25 +5,32 @@ import com.himiko.logger.Logger;
 import com.himiko.network.handler.PackageHandler;
 import com.himiko.network.utils.Connection;
 
+import java.util.concurrent.ExecutionException;
+
 public class NetworkWrapper {
     private Logger logger;
-    private final Connection connection;
-    private final PackageHandler packageHandler;
+    private Connection connection;
+    private PackageHandler packageHandler;
 
-    public NetworkWrapper() throws Exception
+    public NetworkWrapper()
     {
         this.logger = Main.logger;
-
-        this.logger.info("Initializing Connection...");
-        this.connection = new Connection("127.0.0.1", 188);
-        if(!this.connection.isConnected()) throw new Exception("No server connection");
-        this.packageHandler = new PackageHandler(connection);
-        this.logger.info("Successfully init connection!");
-        //this.packageHandler.run();
     }
 
-    public void start()
+    public void connect(String serverIP, int port) throws Exception
     {
+        this.logger.info("Initializing Connection...");
+
+        this.connection = new Connection(serverIP, port);
+        if(!this.connection.isConnected()) throw new Exception("No server connection");
+        this.packageHandler = new PackageHandler(connection);
+
+        this.logger.info("Successfully init connection!");
+    }
+
+    public void start() throws Exception
+    {
+        if(this.connection == null || !this.connection.isConnected()) throw new Exception("No connection initialized or no server connection");
         this.packageHandler.start();
     }
 

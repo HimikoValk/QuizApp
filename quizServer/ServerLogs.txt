@@ -1,12 +1,6 @@
-[18-02-2025 14:25:01][DEBUG] Initializing Server...
-[18-02-2025 14:25:01][DEBUG] Thread:24 Server-Port:188 Server-IP:0.0.0.0/0.0.0.0:188
-[18-02-2025 14:25:01][INFO] Successfully Started Server!
-[18-02-2025 14:25:03][DEBUG] Client(127.0.0.1) connected..
-[18-02-2025 14:25:03][DEBUG] Message Received:{"data":{"name":"test"},"category":"USER_DATA"}
-[18-02-2025 14:25:03][DEBUG] Received USER_DATA!
-[18-02-2025 14:25:15][DEBUG] Client(127.0.0.1) connected..
-[18-02-2025 14:25:16][DEBUG] Message Received:{"data":{"name":"test"},"category":"USER_DATA"}
-[18-02-2025 14:25:16][DEBUG] Received USER_DATA!
-[18-02-2025 14:25:19][DEBUG] Client(127.0.0.1) connected..
-[18-02-2025 14:25:19][DEBUG] Message Received:{"data":{"name":"test"},"category":"USER_DATA"}
-[18-02-2025 14:25:19][DEBUG] Received USER_DATA!
+[20-02-2025 15:30:28][DEBUG] Initializing Server...
+[20-02-2025 15:30:28][DEBUG] Thread:32 Server-Port:188 Server-IP:0.0.0.0/0.0.0.0:188
+[20-02-2025 15:30:28][INFO] Successfully Started Server!
+[20-02-2025 15:30:56][DEBUG] Client(127.0.0.1) connected..
+[20-02-2025 15:30:56][DEBUG] Message Received:{"data":{"name":"test"},"category":"USER_DATA"}
+[20-02-2025 15:30:56][DEBUG] Received USER_DATA!
