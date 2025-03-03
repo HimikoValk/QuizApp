@@ -11,6 +11,7 @@ public class NetworkWrapper {
     private Logger logger;
     private Connection connection;
     private PackageHandler packageHandler;
+    private boolean access = false; //Access for quiz
 
     public NetworkWrapper()
     {
@@ -37,7 +38,11 @@ public class NetworkWrapper {
     public Logger getLogger() {
         return logger;
     }
-
+    public void setAccess(boolean access) {this.access = access;}
+    public boolean hasAccess()
+    {
+        return this.access;
+    }
     public void setLogger(Logger logger) {
         this.logger = logger;
     }

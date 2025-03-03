@@ -10,6 +10,7 @@ public class User {
     private int totalGames;
     private int wins;
     private long id;
+    
     //Default Constructor
     public User()
     {
@@ -45,6 +46,10 @@ public class User {
 
     public void setWins(int wins) {
         this.wins = wins;
+    }
+
+    public void setId(long id){
+        this.id = id;
     }
 
     public long getId() {

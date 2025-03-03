@@ -6,6 +6,7 @@ import com.himiko.server.protocol.Package;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -13,7 +14,6 @@ import java.util.concurrent.ExecutionException;
  * @project quizServer
  */
 public class NetworkClient {
-
     private final Socket client;
 
     private OutputStream clientStream;
@@ -35,9 +35,19 @@ public class NetworkClient {
         this.writer.println(data);
     }
 
-    public String receive() throws Exception
-    {
-        if(this.reader != null) return this.reader.readLine();
+    public String receive() {
+        if (this.reader != null)
+            try {
+                return this.reader.readLine();
+            } catch (SocketException se) {
+                if (se.getMessage().equals("Connection reset")) {
+                    return null;
+                } else {
+                    throw new RuntimeException(se);
+                }
+            } catch (IOException e) {
+                return null;
+            }
         return null;
     }
 

@@ -6,5 +6,11 @@ package com.himiko.server.protocol.enums;
  * @project quizServer
  */
 public enum PackageCategory {
-    USER_LOGIN,USER_DATA,USER_REQUEST
+    USER_LOGIN,
+    USER_DATA,
+    USER_REQUEST,
+    GAME_CREATE,
+    GAME_JOIN,
+    GAME_LEAVE,
+    GAME_EDIT,
 }

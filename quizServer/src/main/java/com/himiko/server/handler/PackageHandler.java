@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.himiko.Main;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
+import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.Package;
 import com.himiko.server.protocol.enums.PackageCategory;
 import com.himiko.server.utils.NetworkClient;
@@ -42,6 +43,18 @@ public class PackageHandler {
                     break;
                 }
                 case USER_LOGIN -> {
+                    this.logger.debug("Received Login!");
+                    User userData = parseDataToClass(rawPackage.getData(), User.class);
+
+                    if(SessionManager.getUser(client) != null && SessionManager.doesUsernameExist(userData.getName()))
+                    {
+                        this.sendPackage(new Package<Boolean>(false, PackageCategory.USER_LOGIN), client);
+                        return;
+                    }
+
+                    SessionManager.addSession(client, userData);
+                    this.sendPackage(new Package<Boolean>(true, PackageCategory.USER_LOGIN), client);
+                    this.logger.debug("User data: Name:{} ID:{}", SessionManager.getUser(client).getName(), SessionManager.getUser(client).getId());
                     break;
                 }
                 case USER_REQUEST -> {

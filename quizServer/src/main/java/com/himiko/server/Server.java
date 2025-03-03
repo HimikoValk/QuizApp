@@ -4,6 +4,7 @@ package com.himiko.server;
 import com.himiko.Main;
 import com.himiko.logger.Logger;
 import com.himiko.server.handler.PackageHandler;
+import com.himiko.server.manager.SessionManager;
 import com.himiko.server.utils.NetworkClient;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class Server extends Thread{
                 //Connect client
                 NetworkClient client = new NetworkClient(this.serverSocket.accept());
                 this.clients.add(client);
-                this.logger.debug("Client({}) connected..", client.getClient().getInetAddress().getHostAddress());
+                this.logger.debug("Client({}) connected..", client.getClient().getRemoteSocketAddress());
                 String message = client.receive();
 
                 if(message != null)
@@ -57,11 +58,8 @@ public class Server extends Thread{
                     packageHandler.handelPackage(message, client);
                 }else
                 {
-                    if(isClientConnected(client)) {
-                        closeConnection(client);
-                    }
+                    this.closeConnection(client);
                 }
-
             }catch (Exception e)
             {
                 this.logger.error("Something went wrong... Error:{}", e.getMessage());
@@ -69,19 +67,23 @@ public class Server extends Thread{
         }
     }
 
-    private void closeConnection(NetworkClient client) throws Exception
+    public void closeConnection(NetworkClient client) throws Exception
     {
         client.getClient().close();
+        //Remove client from session
+        SessionManager.removeSession(client);
+        //Remove client from client list
+        this.clients.remove(client);
         //what else should happen? -> User disconnect from room?
-        this.logger.warning("Client({}) disconnected from Server", client.getClient().getInetAddress().getHostAddress());
+        this.logger.warning("Client({}) disconnected from Server", client.getClient().getRemoteSocketAddress().toString());
     }
 
-    private boolean isClientConnected(NetworkClient client)
+    public boolean isClientConnected(NetworkClient client)
     {
-        return this.clients.stream().filter(client1 -> {return client1.getClient() == client.getClient();}).findFirst().get() != null;
+        return this.clients.stream().anyMatch(client1 -> client1.getClient() == client.getClient());
     }
 
-    private NetworkClient findClient(String clientIP, int clientPort)
+    public NetworkClient findClient(String clientIP, int clientPort)
     {
         NetworkClient[] tmp = {null};
 

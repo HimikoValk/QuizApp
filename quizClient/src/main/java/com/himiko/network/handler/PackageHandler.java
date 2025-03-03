@@ -35,6 +35,7 @@ public class PackageHandler extends Thread{
                     break;
                 }
                 case USER_LOGIN -> {
+                    Main.NETWORK.setAccess(rawPackage.getData().getAsBoolean());
                     break;
                 }
                 case USER_REQUEST -> {

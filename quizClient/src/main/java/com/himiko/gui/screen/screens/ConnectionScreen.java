@@ -5,6 +5,7 @@ import com.himiko.Main;
 import com.himiko.game.utils.UserData;
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
+import com.himiko.logger.Logger;
 import com.himiko.network.protocol.PackageCategory;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.awt.*;
  * @project quizClient
  */
 public class ConnectionScreen extends Screen {
+    private Logger logger;
     private int WIDTH;
     private int HEIGHT;
 
@@ -29,6 +31,8 @@ public class ConnectionScreen extends Screen {
 
     public ConnectionScreen() {
         super("Connection Screen");
+
+        this.logger = Main.logger;
 
         UIManager.put("Button.font", new Font("Arial", Font.BOLD, 14));
         UIManager.put("TextField.font", new Font("Arial", Font.PLAIN, 14));
@@ -65,6 +69,9 @@ public class ConnectionScreen extends Screen {
                 if (Main.NETWORK.getConnection().isConnected()) {
                     this.usernameField.setEnabled(true);
                     this.enterButton.setEnabled(true);
+
+                    Main.NETWORK.start();
+                    JOptionPane.showMessageDialog(null, "Connected to server!", "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Invalid port number!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -76,6 +83,15 @@ public class ConnectionScreen extends Screen {
         this.enterButton.addActionListener(e -> {
             if (Main.NETWORK.getConnection().isConnected()) {
                 Main.NETWORK.getPackageHandler().sendData(new UserData(this.usernameField.getText(), 0L), PackageCategory.USER_LOGIN);
+                try {
+                    Thread.sleep(200);
+                    if(Main.NETWORK.hasAccess()) {
+                        //TODO:IMPLEMENT GAME SCREEN USW.
+                        this.logger.debug("Has access..");
+                    }
+                }catch (Exception ex) {
+                    this.logger.error("Something went wrong...");
+                }
             }
         });
 
