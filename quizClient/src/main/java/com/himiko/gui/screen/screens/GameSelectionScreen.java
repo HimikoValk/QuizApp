@@ -1,0 +1,94 @@
+package com.himiko.gui.screen.screens;
+
+import com.himiko.Main;
+import com.himiko.gui.GUI;
+import com.himiko.gui.screen.Screen;
+import com.himiko.logger.Logger;
+import com.himiko.network.protocol.PackageCategory;
+import com.himiko.network.protocol.request.UserRequest;
+import com.himiko.network.protocol.request.UserRequestType;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class GameSelectionScreen extends Screen {
+    private Logger logger;
+
+    private JButton joinPublicGameButton;
+    private JButton searchGameButton;
+    private JButton createGameButton;
+    private JButton profileButton;
+    private JLabel titleLabel;
+    private JLabel onlinePlayersLabel;
+
+    public GameSelectionScreen() {
+        super("Game Selection Screen");
+
+        this.logger = Main.logger;
+
+        UIManager.put("Button.font", new Font("Arial", Font.BOLD, 14));
+        UIManager.put("Label.font", new Font("Arial", Font.PLAIN, 14));
+
+        this.titleLabel = GUI.uiManager.createStyledLabel("Game Selection");
+        this.titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        this.titleLabel.setSize(200, 100);
+
+        this.onlinePlayersLabel = GUI.uiManager.createStyledLabel("Online Players: 0");
+
+        this.joinPublicGameButton = GUI.uiManager.createStyledButton("Join Public Game");
+        this.searchGameButton = GUI.uiManager.createStyledButton("Find Game");
+        this.createGameButton = GUI.uiManager.createStyledButton("Create Game");
+        this.profileButton = GUI.uiManager.createStyledButton("Profile");
+
+        this.joinPublicGameButton.addActionListener(e -> {
+            this.logger.debug("Joining public game...");
+            //TODO: Implement join game logic
+        });
+
+        this.searchGameButton.addActionListener(e -> {
+            this.logger.debug("Searching for a game...");
+            // TODO: Implement game search logic
+        });
+
+        this.createGameButton.addActionListener(e -> {
+            this.logger.debug("Creating a new game...");
+            // TODO: Implement game creation logic
+        });
+
+        this.profileButton.addActionListener(e -> {
+            this.logger.debug("Opening profile...");
+            // TODO: Implement profile screen logic
+        });
+
+        super.setComponents(this.titleLabel, this.onlinePlayersLabel, this.joinPublicGameButton,this.searchGameButton, this.createGameButton, this.profileButton);
+    }
+
+    @Override
+    public void render(Graphics g) {
+        this.searchGameButton.repaint();
+        this.createGameButton.repaint();
+        this.profileButton.repaint();
+    }
+
+    @Override
+    public void onEnter() {
+        WIDTH = Main.GUI.getWidth();
+        HEIGHT = Main.GUI.getHeight();
+
+        this.titleLabel.setBounds(WIDTH / 2 - 100, 20, 200, 40);
+        this.onlinePlayersLabel.setBounds(WIDTH / 2 - 75, 70, 150, 30);
+
+        this.joinPublicGameButton.setBounds(WIDTH / 2 - 100, 100, 200, 40);
+        this.searchGameButton.setBounds(WIDTH / 2 - 100, 150, 200, 40);
+        this.createGameButton.setBounds(WIDTH / 2 - 100, 200, 200, 40);
+        this.profileButton.setBounds(WIDTH / 2 - 100, 250, 200, 40);
+
+        Main.NETWORK.getPackageHandler().sendData(new UserRequest(UserRequestType.GET_PLAYER_COUNT), PackageCategory.USER_REQUEST);
+        super.onEnter();
+    }
+
+    private void updatePlayerCount()
+    {
+        this.onlinePlayersLabel.setText("Online Players:");
+    }
+}

@@ -1,4 +1,4 @@
-package com.himiko.server.protocol.enums;
+package com.himiko.server.protocol;
 
 
 /**

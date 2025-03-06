@@ -32,6 +32,12 @@ public class PackageHandler extends Thread{
             }.getType());
             switch (rawPackage.getCategory()) {
                 case USER_DATA -> {
+                    Object rawData = rawPackage.getData();
+                    if(rawData instanceof Integer)
+                    {
+                        int playerCount = (Integer) rawData;
+                        this.logger.debug("Received player count:" + playerCount);
+                    }
                     break;
                 }
                 case USER_LOGIN -> {

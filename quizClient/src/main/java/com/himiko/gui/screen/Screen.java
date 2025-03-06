@@ -8,6 +8,8 @@ import java.awt.*;
 public abstract class Screen implements IScreenListener{
     private JComponent[] components;
     private final String name;
+    protected int WIDTH;
+    protected int HEIGHT;
 
     public Screen(String name)
     {

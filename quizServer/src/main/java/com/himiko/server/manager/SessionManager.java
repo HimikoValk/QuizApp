@@ -34,6 +34,11 @@ public class SessionManager {
         return sessions.values().stream().anyMatch(u -> u.getName().equals(username));
     }
 
+    public static int getActiveSessionSize()
+    {
+        return sessions.size();
+    }
+
     private static long createID(long maxID)
     {
         long id = (long) (Math.random() * maxID);

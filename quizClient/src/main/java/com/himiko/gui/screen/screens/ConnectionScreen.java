@@ -5,8 +5,11 @@ import com.himiko.Main;
 import com.himiko.game.utils.UserData;
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
+import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.PackageCategory;
+import com.himiko.network.protocol.request.UserRequest;
+import com.himiko.network.protocol.request.UserRequestType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +20,6 @@ import java.awt.*;
  */
 public class ConnectionScreen extends Screen {
     private Logger logger;
-    private int WIDTH;
-    private int HEIGHT;
 
     private JTextField addressField;
     private JTextField portField;
@@ -82,12 +83,14 @@ public class ConnectionScreen extends Screen {
 
         this.enterButton.addActionListener(e -> {
             if (Main.NETWORK.getConnection().isConnected()) {
+                //ID will be generated on server side
                 Main.NETWORK.getPackageHandler().sendData(new UserData(this.usernameField.getText(), 0L), PackageCategory.USER_LOGIN);
                 try {
                     Thread.sleep(200);
                     if(Main.NETWORK.hasAccess()) {
                         //TODO:IMPLEMENT GAME SCREEN USW.
                         this.logger.debug("Has access..");
+                        ScreenHandler.INSTANCE.changeScreen(ScreenHandler.GAME_SELECTION_SCREEN);
                     }
                 }catch (Exception ex) {
                     this.logger.error("Something went wrong...");

@@ -10,6 +10,7 @@ import com.himiko.server.utils.NetworkClient;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class Server extends Thread{
     private List<NetworkClient> clients = new ArrayList<>(); //Connected Clients
+    private HashMap<NetworkClient, Thread> clientThreads = new HashMap<>(); //Handel each client separated
     private PackageHandler packageHandler;
     private ServerSocket serverSocket;
     private boolean running = true;
@@ -50,23 +52,66 @@ public class Server extends Thread{
                 //Connect client
                 NetworkClient client = new NetworkClient(this.serverSocket.accept());
                 this.clients.add(client);
-                this.logger.debug("Client({}) connected..", client.getClient().getRemoteSocketAddress());
-                String message = client.receive();
-
-                if(message != null)
-                {
-                    packageHandler.handelPackage(message, client);
-                }else
-                {
-                    this.closeConnection(client);
-                }
+                Thread clientThread = createHandleClientThread(client);
+                this.clientThreads.put(client, clientThread);
+                clientThread.start();
             }catch (Exception e)
             {
                 this.logger.error("Something went wrong... Error:{}", e.getMessage());
             }
         }
+        this.shutdown();
     }
 
+    public void shutdown() {
+        this.running = false;
+        try {
+            this.serverSocket.close();
+            for (NetworkClient client : clients) {
+                this.closeConnection(client);
+            }
+        } catch (IOException e) {
+            logger.error("Error while shutting down the server", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Create thread for client to handel message (packages)
+     * @param client
+     * @return
+     */
+    public Thread createHandleClientThread(NetworkClient client)
+    {
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    logger.info("Client({}) connected to server and Thread successfully created...", client.getClient().getRemoteSocketAddress().toString());
+                    while (running && isClientConnected(client)) {
+                        String message = client.receive();
+
+                        if (message != null) {
+                            packageHandler.handelPackage(message, client);
+                        } else {
+                            closeConnection(client);
+                        }
+                    }
+                    logger.warning("Client disconnected, closing client connection and thread");
+                }catch(Exception e)
+                {
+                    logger.error("Something went wrong... Error:{}", e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * Close client connection
+     * @param client
+     * @throws Exception
+     */
     public void closeConnection(NetworkClient client) throws Exception
     {
         client.getClient().close();
@@ -74,15 +119,22 @@ public class Server extends Thread{
         SessionManager.removeSession(client);
         //Remove client from client list
         this.clients.remove(client);
-        //what else should happen? -> User disconnect from room?
+        //Remove client Thread
+        Thread clientThread = this.clientThreads.remove(client);
+        if (clientThread != null) {
+            logger.debug("Waiting for client thread to terminate...");
+            clientThread.join(); // Waiting for thread until terminated
+        }
         this.logger.warning("Client({}) disconnected from Server", client.getClient().getRemoteSocketAddress().toString());
     }
 
     public boolean isClientConnected(NetworkClient client)
     {
-        return this.clients.stream().anyMatch(client1 -> client1.getClient() == client.getClient());
+        return this.clients.contains(client);
     }
 
+    // FOR WHAT???????????????????
+    /*
     public NetworkClient findClient(String clientIP, int clientPort)
     {
         NetworkClient[] tmp = {null};
@@ -96,4 +148,5 @@ public class Server extends Thread{
         });
         return tmp[0];
     }
+     */
 }

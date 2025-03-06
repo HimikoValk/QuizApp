@@ -1,8 +1,6 @@
 package com.himiko.server.protocol;
 
 
-import com.himiko.server.protocol.enums.PackageCategory;
-
 /**
  * @author Valk on 16.02.2025
  * @project quizServer

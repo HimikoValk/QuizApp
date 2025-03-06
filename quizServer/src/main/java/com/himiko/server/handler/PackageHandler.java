@@ -9,16 +9,18 @@ import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.Package;
-import com.himiko.server.protocol.enums.PackageCategory;
+import com.himiko.server.protocol.PackageCategory;
 import com.himiko.server.utils.NetworkClient;
+import com.himiko.server.protocol.request.UserRequest;
+import com.himiko.server.protocol.request.UserRequestType;
 
-import java.net.Socket;
+import java.util.List;
 
 /**
  * @author Valk on 14.02.2025
  * @project quizServer
  */
-public class PackageHandler {
+public class PackageHandler{
     private Logger logger;
     private Gson gson;
 
@@ -58,9 +60,29 @@ public class PackageHandler {
                     break;
                 }
                 case USER_REQUEST -> {
+                    this.logger.debug("Received request");
+                    UserRequest request = parseDataToClass(rawPackage.getData(), UserRequest.class);
+
+                    switch (request.getRequestType()) {
+                        case GET_PLAYER_COUNT:
+                            int playerCount = SessionManager.getActiveSessionSize();
+                            this.sendPackage(new Package<>(playerCount, PackageCategory.USER_DATA), client);
+                            break;
+
+                        case GET_ACTIVE_GAMES:
+                            //List<String> activeGames = getActiveGames();
+                            //Package<List<String>> gameResponse = new Package<>(activeGames, PackageCategory.USER_DATA);
+                            //sendResponse(gameResponse);
+                            break;
+
+                        default:
+                            this.logger.warning("Unknown UserRequestType received!");
+                            break;
+                    }
                     break;
                 }
                 default -> {
+                    this.logger.warning("Unknown PackageType received!");
                     break;
                 }
             }
