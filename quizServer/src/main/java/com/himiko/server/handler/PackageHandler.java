@@ -98,10 +98,7 @@ public class PackageHandler{
             }
 
             case SERVER_INFORMATION -> {
-                int playerCount = SessionManager.getActiveSessionSize();
-                int openGames = Main.gameManager.getPublicGames().size();
-                String serverVersion = Main.version;
-                ServerInformation serverInformation = new ServerInformation(playerCount, openGames, serverVersion);
+                ServerInformation serverInformation = new ServerInformation(SessionManager.getActiveSessionSize(), Main.gameManager.getPublicGames().size(), Main.version);
                 this.sendResponse(new Response<>(ResponseType.SERVER_INFORMATION, serverInformation), client);
             }
         }

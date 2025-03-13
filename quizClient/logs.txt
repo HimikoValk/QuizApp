@@ -1,0 +1,22 @@
+[13-03-2025 13:05:29][INFO] Initializing Connection...
+[13-03-2025 13:05:33][INFO] Initializing Connection...
+[13-03-2025 13:05:33][INFO] Successfully init connection!
+[13-03-2025 13:05:33][INFO] Start listening to server...
+[13-03-2025 13:05:35][DEBUG] Send data to server... Data:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 13:05:35][DEBUG] Message Received:{"data":{"responseType":"LOGIN_SUCCESS","data":true},"category":"RESPONSE"}
+[13-03-2025 13:05:35][DEBUG] Handling response: LOGIN_SUCCESS
+[13-03-2025 13:05:35][INFO] Login successful!
+[13-03-2025 13:05:35][DEBUG] Has access..
+[13-03-2025 13:05:37][DEBUG] Send data to server... Data:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[13-03-2025 13:05:37][DEBUG] Message Received:{"data":{"responseType":"SERVER_INFORMATION","data":{"playerCount":1,"openGames":0,"serverVersion":"0.0"}},"category":"RESPONSE"}
+[13-03-2025 13:05:37][DEBUG] Handling response: SERVER_INFORMATION
+[13-03-2025 13:05:37][DEBUG] PlayerCount:1
+[13-03-2025 13:06:01][DEBUG] Send data to server... Data:{"data":{"requestType":"USER_LOGOUT"},"category":"REQUEST"}
+[13-03-2025 13:07:14][INFO] Initializing Connection...
+[13-03-2025 13:07:14][INFO] Successfully init connection!
+[13-03-2025 13:07:14][INFO] Start listening to server...
+[13-03-2025 13:07:16][DEBUG] Send data to server... Data:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 13:07:16][DEBUG] Message Received:{"data":{"responseType":"LOGIN_SUCCESS","data":true},"category":"RESPONSE"}
+[13-03-2025 13:07:16][DEBUG] Handling response: LOGIN_SUCCESS
+[13-03-2025 13:07:16][INFO] Login successful!
+[13-03-2025 13:07:16][DEBUG] Has access..

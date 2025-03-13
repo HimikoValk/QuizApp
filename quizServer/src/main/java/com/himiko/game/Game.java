@@ -11,6 +11,7 @@ import java.util.List;
 public class Game {
     private int maxUserSize;
     private long gameID;
+    private final int code;
     private boolean privateGame = false;
 
     private List<NetworkClient> currentUserList = new ArrayList<>();
@@ -25,15 +26,17 @@ public class Game {
         this.maxUserSize = 4; //Default user size
         this.gameID = gameID;
         this.privateGame = false;
+        this.code = 0;
     }
 
     //Custom game constructor (Private game)
-    public Game(int maxPlayerSize, final long gameID, final User gameCreator, boolean privateGame)
+    public Game(int maxPlayerSize, final long gameID, final User gameCreator, boolean privateGame, final int code)
     {
         this.maxUserSize = maxPlayerSize;
         this.gameID = gameID;
         this.gameCreator = gameCreator;
         this.privateGame = privateGame;
+        this.code = code;
     }
 
     public void addUser(NetworkClient client) {
@@ -45,6 +48,17 @@ public class Game {
     {
         if(!this.isUserInGame(client)) return;
         this.currentUserList.remove(client);
+    }
+
+    public void addQuestion(Question question)
+    {
+        this.quetsionPool.add(question);
+    }
+
+    //TODO:??
+    public void removeQuestion(Question question)
+    {
+        this.quetsionPool.remove(question);
     }
 
     public boolean isUserInGame(NetworkClient client)

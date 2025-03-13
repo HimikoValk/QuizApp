@@ -34,7 +34,7 @@ public class GameManager {
     }
 
     //Default
-    public void createGame(NetworkClient client, int maxPlayerSize, boolean privateGame)
+    public void createGame(NetworkClient client, int maxPlayerSize, boolean privateGame, int code)
     {
         User creator = SessionManager.getUser(client);
         if(creator == null) {
@@ -42,7 +42,7 @@ public class GameManager {
             return;
         }
         long gameID = createID(99999999999L);
-        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame));
+        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame, code));
         this.logger.debug("Created game with id:{}", gameID);
     }
 
@@ -54,6 +54,11 @@ public class GameManager {
     }
 
     public List<Game> getPublicGames()
+    {
+        return games.values().stream().filter(game -> !game.isPrivateGame()).toList();
+    }
+
+    public List<Game> getPrivateGames()
     {
         return games.values().stream().filter(Game::isPrivateGame).toList();
     }

@@ -9,5 +9,6 @@ public enum ResponseType {
     GAME_JOINED,     // Erfolgreich beigetreten
     GAME_LEFT,       // Erfolgreich verlassen
     GAME_EDITED,     // Spiel erfolgreich bearbeitet
-    ERROR            // Allgemeine Fehlermeldung
+    ERROR,           // Allgemeine Fehlermeldung
+    SERVER_INFORMATION;
 }

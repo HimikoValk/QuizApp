@@ -7,5 +7,6 @@ public enum RequestType {
     GAME_CREATE,  // Create game
     GAME_JOIN,    // Join game
     GAME_LEAVE,   // Leave game
-    GAME_EDIT     // Edit game
+    GAME_EDIT,     // Edit game
+    SERVER_INFORMATION
 }

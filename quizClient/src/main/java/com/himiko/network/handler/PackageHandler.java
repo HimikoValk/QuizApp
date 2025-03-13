@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.himiko.Main;
 import com.himiko.game.manager.GameManager;
 import com.himiko.logger.Logger;
+import com.himiko.network.protocol.data.ServerInformation;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.response.Response;
 import com.himiko.network.utils.Connection;
@@ -54,10 +55,11 @@ public class PackageHandler extends Thread{
         this.logger.debug("Handling response: {}", response.getResponseType());
 
         switch (response.getResponseType()) {
-            case PLAYER_COUNT -> {
-                int playerCount = gson.fromJson(response.getData().toString(), Integer.class);
-                GameManager.currentPlayerCount = playerCount;
-                this.logger.info("Current player count: {}", playerCount);
+            case SERVER_INFORMATION ->  {
+                ServerInformation serverInformation = gson.fromJson(response.getData().toString(), ServerInformation.class);
+                GameManager.currentPlayerCount = serverInformation.getPlayerCount();
+                this.logger.debug("PlayerCount:{}", serverInformation.getPlayerCount());
+                break;
             }
             case LOGIN_SUCCESS -> {
                 Main.NETWORK.setAccess(true);

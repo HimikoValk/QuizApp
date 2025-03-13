@@ -1,6 +1,43 @@
-[20-02-2025 15:30:28][DEBUG] Initializing Server...
-[20-02-2025 15:30:28][DEBUG] Thread:32 Server-Port:188 Server-IP:0.0.0.0/0.0.0.0:188
-[20-02-2025 15:30:28][INFO] Successfully Started Server!
-[20-02-2025 15:30:56][DEBUG] Client(127.0.0.1) connected..
-[20-02-2025 15:30:56][DEBUG] Message Received:{"data":{"name":"test"},"category":"USER_DATA"}
-[20-02-2025 15:30:56][DEBUG] Received USER_DATA!
+[13-03-2025 12:51:11][INFO] Initializing server...
+[13-03-2025 12:51:11][DEBUG] Thread:32 Server-Port:188 Server-IP:0.0.0.0/0.0.0.0:188
+[13-03-2025 12:51:11][INFO] Successfully started server!
+[13-03-2025 12:51:38][INFO] Client(/127.0.0.1:39328) connected to server and Thread successfully created...
+[13-03-2025 12:51:40][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 12:51:40][DEBUG] Received Login!
+[13-03-2025 12:51:40][DEBUG] User data: Name:Username ID:922480
+[13-03-2025 12:51:44][DEBUG] Message Received:{"data":{"requestType":"USER_DATA"},"category":"REQUEST"}
+[13-03-2025 12:51:45][DEBUG] Message Received:{"data":{"requestType":"USER_DATA"},"category":"REQUEST"}
+[13-03-2025 12:53:53][DEBUG] Waiting for client thread to terminate...
+[13-03-2025 12:53:53][DEBUG] Thread terminated
+[13-03-2025 12:53:53][WARNING] Client(/127.0.0.1:39328) disconnected from Server
+[13-03-2025 12:53:53][WARNING] Client disconnected, closing client connection and thread
+[13-03-2025 12:55:37][INFO] Client(/127.0.0.1:39340) connected to server and Thread successfully created...
+[13-03-2025 12:55:39][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 12:55:39][DEBUG] Received Login!
+[13-03-2025 12:55:39][DEBUG] User data: Name:Username ID:80300
+[13-03-2025 12:55:41][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[13-03-2025 13:03:52][DEBUG] Waiting for client thread to terminate...
+[13-03-2025 13:03:52][DEBUG] Thread terminated
+[13-03-2025 13:03:52][WARNING] Client(/127.0.0.1:39340) disconnected from Server
+[13-03-2025 13:03:52][WARNING] Client disconnected, closing client connection and thread
+[13-03-2025 13:04:22][INFO] Client(/127.0.0.1:39366) connected to server and Thread successfully created...
+[13-03-2025 13:04:24][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 13:04:24][DEBUG] Received Login!
+[13-03-2025 13:04:24][DEBUG] User data: Name:Username ID:624978
+[13-03-2025 13:04:36][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[13-03-2025 13:04:40][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[13-03-2025 13:05:23][DEBUG] Waiting for client thread to terminate...
+[13-03-2025 13:05:23][DEBUG] Thread terminated
+[13-03-2025 13:05:23][WARNING] Client(/127.0.0.1:39366) disconnected from Server
+[13-03-2025 13:05:23][WARNING] Client disconnected, closing client connection and thread
+[13-03-2025 13:05:33][INFO] Client(/127.0.0.1:39376) connected to server and Thread successfully created...
+[13-03-2025 13:05:35][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 13:05:35][DEBUG] Received Login!
+[13-03-2025 13:05:35][DEBUG] User data: Name:Username ID:276823
+[13-03-2025 13:05:37][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[13-03-2025 13:06:01][DEBUG] Message Received:{"data":{"requestType":"USER_LOGOUT"},"category":"REQUEST"}
+[13-03-2025 13:06:01][DEBUG] Received Logout!
+[13-03-2025 13:07:14][INFO] Client(/127.0.0.1:39378) connected to server and Thread successfully created...
+[13-03-2025 13:07:16][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[13-03-2025 13:07:16][DEBUG] Received Login!
+[13-03-2025 13:07:16][DEBUG] User data: Name:Username ID:949228

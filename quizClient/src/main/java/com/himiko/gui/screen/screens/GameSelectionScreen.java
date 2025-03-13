@@ -104,9 +104,13 @@ public class GameSelectionScreen extends Screen {
         super.onEnter();
     }
 
-    private void updatePlayerCount()
-    {
-        Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.USER_DATA));
-        this.onlinePlayersLabel.setText("Online Players: " + GameManager.currentPlayerCount);
+    private void updatePlayerCount() {
+        try {
+            Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.SERVER_INFORMATION));
+            Thread.sleep(200);
+            this.onlinePlayersLabel.setText("Online Players: " + GameManager.currentPlayerCount);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
