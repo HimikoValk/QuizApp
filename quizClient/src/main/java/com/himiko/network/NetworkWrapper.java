@@ -2,10 +2,8 @@ package com.himiko.network;
 
 import com.himiko.Main;
 import com.himiko.logger.Logger;
-import com.himiko.network.handler.PackageHandler;
+import com.himiko.network.protocol.handler.PackageHandler;
 import com.himiko.network.utils.Connection;
-
-import java.util.concurrent.ExecutionException;
 
 public class NetworkWrapper {
     private Logger logger;

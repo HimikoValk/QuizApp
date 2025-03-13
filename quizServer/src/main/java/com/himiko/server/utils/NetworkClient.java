@@ -31,8 +31,8 @@ public class NetworkClient {
     public void sendData(String data)
     {
         if(this.writer == null) return;
-
         this.writer.println(data);
+        this.writer.flush();
     }
 
     public String receive() {

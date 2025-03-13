@@ -1,4 +1,4 @@
-package com.himiko.network.handler;
+package com.himiko.network.protocol.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -6,12 +6,17 @@ import com.google.gson.reflect.TypeToken;
 import com.himiko.Main;
 import com.himiko.game.manager.GameManager;
 import com.himiko.logger.Logger;
+import com.himiko.network.protocol.data.GameInfo;
 import com.himiko.network.protocol.data.ServerInformation;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.response.Response;
 import com.himiko.network.utils.Connection;
 import com.himiko.network.protocol.Package;
 import com.himiko.network.protocol.PackageCategory;
+
+import javax.swing.*;
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class PackageHandler extends Thread{
     private Logger logger;
@@ -38,6 +43,10 @@ public class PackageHandler extends Thread{
                     this.handelResponse(rawPackage);
                     break;
                 }
+
+                case REQUEST -> {
+                    break;
+                }
                 default -> {
                     this.logger.warning("Unknown PackageCategory received!");
                     break;
@@ -55,26 +64,47 @@ public class PackageHandler extends Thread{
         this.logger.debug("Handling response: {}", response.getResponseType());
 
         switch (response.getResponseType()) {
+            case GAMES -> {
+                Type gameInfoListType = new TypeToken<List<GameInfo>>() {}.getType();
+                List<GameInfo> gameInfo = parseDataToClass(response.getData().toString(), gameInfoListType);
+                //TODO Implement usage of gmaeinfo in GameManager
+                /*
+                this.logger.debug("Received Game Infos:{}", gameInfo.size());
+                gameInfo.forEach(g -> this.logger.debug("Game Info: {}", g.getGameID()));
+                 */
+                break;
+            }
             case SERVER_INFORMATION ->  {
-                ServerInformation serverInformation = gson.fromJson(response.getData().toString(), ServerInformation.class);
+                ServerInformation serverInformation = parseDataToClass(response.getData().toString(), ServerInformation.class);
                 GameManager.currentPlayerCount = serverInformation.getPlayerCount();
                 this.logger.debug("PlayerCount:{}", serverInformation.getPlayerCount());
                 break;
             }
             case LOGIN_SUCCESS -> {
                 Main.NETWORK.setAccess(true);
-                this.logger.info("Login successful!");
+                this.logger.info("Successfully passed auth!");
                 break;
             }
             case LOGIN_FAILED -> {
                 Main.NETWORK.setAccess(false);
                 this.logger.info("Login attempt was a failure...");
             }
+            case ERROR -> {
+                this.logger.error("Received a error from server!");
+                JOptionPane.showMessageDialog(null, "Something went wrong on server side!", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            }
             default ->{
-                this.logger.warning("Unknown response type received!");
+                this.logger.warning("Unknown response type received...");
                 break;
             }
         }
+    }
+
+    public void handelRequest(Package<JsonElement> rawPackage)
+    {
+        Request<?> request = gson.fromJson(rawPackage.getData(), new TypeToken<Request<?>>() {}.getType());
+        //TODO:
     }
 
     @Override
@@ -112,5 +142,9 @@ public class PackageHandler extends Thread{
     private <T> T parseDataToClass(String data, Class<T> type)
     {
         return new Gson().fromJson(data, type);
+    }
+
+    private <T> T parseDataToClass(String data, Type type) {
+        return gson.fromJson(data, type);
     }
 }

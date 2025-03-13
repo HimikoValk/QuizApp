@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class Server extends Thread{
     private List<NetworkClient> clients = new ArrayList<>(); //Connected Clients
     private HashMap<NetworkClient, Thread> clientThreads = new HashMap<>(); //Handel each client separated
-    private PackageHandler packageHandler;
+    public PackageHandler packageHandler;
     private ServerSocket serverSocket;
     private boolean running = true;
     private final int port;

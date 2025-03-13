@@ -4,9 +4,9 @@ public class Response<T> {
     private ResponseType responseType;
     private T data;
 
-    public Response(ResponseType responseType, T data) {
-        this.responseType = responseType;
+    public Response(T data, ResponseType responseType) {
         this.data = data;
+        this.responseType = responseType;
     }
 
     public ResponseType getResponseType() {

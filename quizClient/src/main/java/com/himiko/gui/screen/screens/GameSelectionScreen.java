@@ -7,6 +7,7 @@ import com.himiko.gui.screen.Screen;
 import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.PackageCategory;
+import com.himiko.network.protocol.handler.PackageHandler;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
 
@@ -49,6 +50,7 @@ public class GameSelectionScreen extends Screen {
         this.joinPublicGameButton.addActionListener(e -> {
             this.logger.debug("Joining public game...");
             //TODO: Implement join game logic
+            Main.NETWORK.getPackageHandler().sendRequest(new Request<>(null, RequestType.GET_GAMES));
         });
 
         this.searchGameButton.addActionListener(e -> {
@@ -100,6 +102,8 @@ public class GameSelectionScreen extends Screen {
         this.profileButton.setBounds(WIDTH / 2 - 100, 250, 200, 40);
         this.refreshButton.setBounds(0,400 , 200, 40);
         this.logoutButton.setBounds(WIDTH - 200,400 , 200, 40);
+
+        this.updatePlayerCount();
 
         super.onEnter();
     }

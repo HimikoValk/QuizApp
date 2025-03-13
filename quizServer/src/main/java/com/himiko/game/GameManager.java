@@ -4,11 +4,12 @@ import com.himiko.Main;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
+import com.himiko.server.protocol.data.GameInfo;
+import com.himiko.server.protocol.request.Request;
+import com.himiko.server.protocol.request.RequestType;
 import com.himiko.server.utils.NetworkClient;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +24,10 @@ public class GameManager {
     public GameManager()
     {
         this.logger = Main.logger;
+        for(int i = 0; i < 10; i++) {
+            //Create 10 Games
+            this.createGame();
+        }
     }
 
     //Default
@@ -33,7 +38,7 @@ public class GameManager {
         this.logger.debug("Created game with id:{}", gameID);
     }
 
-    //Default
+    //Custom Game
     public void createGame(NetworkClient client, int maxPlayerSize, boolean privateGame, int code)
     {
         User creator = SessionManager.getUser(client);
@@ -50,8 +55,39 @@ public class GameManager {
     {
         if(!doesGameExist(gameID)) return;
         Game game = games.get(gameID);
-        game.addUser(client);
+
+        if(game.isPrivateGame()){
+            //TODO:
+        }
     }
+    public List<GameInfo> getGameInfos() {
+        return games.values().stream()
+                .map(game -> new GameInfo(
+                        game.getGameID(),
+                        game.getMaxUserSize(),
+                        game.getCurrentUserList().size(),
+                        getPlayerNames(game),
+                        game.isPrivateGame(),
+                        game.isPrivateGame() ? null : game.getCode(), //null , null???
+                        game.getGameCreator() != null ? game.getGameCreator().getName() : "Unknown"
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getPlayerNames(Game game)
+    {
+        return game.getCurrentUserList().stream()
+                .map(SessionManager::getUser)
+                .filter(Objects::nonNull)
+                .map(User::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<Game> getGames()
+    {
+        return games.values().stream().toList();
+    }
+
 
     public List<Game> getPublicGames()
     {
