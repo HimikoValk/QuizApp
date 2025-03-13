@@ -7,7 +7,9 @@ import com.himiko.server.manager.SessionManager;
 import com.himiko.server.utils.NetworkClient;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Valk on 16.02.2025
@@ -32,7 +34,7 @@ public class GameManager {
     }
 
     //Default
-    public void createGame(NetworkClient client, int maxPlayerSize)
+    public void createGame(NetworkClient client, int maxPlayerSize, boolean privateGame)
     {
         User creator = SessionManager.getUser(client);
         if(creator == null) {
@@ -40,7 +42,7 @@ public class GameManager {
             return;
         }
         long gameID = createID(99999999999L);
-        games.put(gameID, new Game(maxPlayerSize, gameID, creator));
+        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame));
         this.logger.debug("Created game with id:{}", gameID);
     }
 
@@ -49,6 +51,11 @@ public class GameManager {
         if(!doesGameExist(gameID)) return;
         Game game = games.get(gameID);
         game.addUser(client);
+    }
+
+    public List<Game> getPublicGames()
+    {
+        return games.values().stream().filter(Game::isPrivateGame).toList();
     }
 
     private long createID(long maxID)

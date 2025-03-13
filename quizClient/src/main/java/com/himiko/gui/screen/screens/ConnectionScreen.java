@@ -8,8 +8,8 @@ import com.himiko.gui.screen.Screen;
 import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.PackageCategory;
-import com.himiko.network.protocol.request.UserRequest;
-import com.himiko.network.protocol.request.UserRequestType;
+import com.himiko.network.protocol.request.Request;
+import com.himiko.network.protocol.request.RequestType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,8 +83,8 @@ public class ConnectionScreen extends Screen {
 
         this.enterButton.addActionListener(e -> {
             if (Main.NETWORK.getConnection().isConnected()) {
-                //ID will be generated on server side
-                Main.NETWORK.getPackageHandler().sendData(new UserData(this.usernameField.getText(), 0L), PackageCategory.USER_LOGIN);
+                //Request login/access (ID will be generated on server side)
+                Main.NETWORK.getPackageHandler().sendRequest(new Request<UserData>(new UserData(this.usernameField.getText(), 0L), RequestType.USER_LOGIN));
                 try {
                     Thread.sleep(200);
                     if(Main.NETWORK.hasAccess()) {

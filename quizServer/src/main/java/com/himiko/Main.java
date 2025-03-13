@@ -12,6 +12,7 @@ import com.himiko.server.Server;
  */
 public class Main
 {
+    public static final String version = "0.0";
     public static Server server = null;
     public static GameManager gameManager = null;
     public static Logger logger = LoggerBuilder.build("ServerLogs.txt").getLogger();

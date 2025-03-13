@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.himiko.Main;
+import com.himiko.game.manager.GameManager;
 import com.himiko.logger.Logger;
+import com.himiko.network.protocol.request.Request;
+import com.himiko.network.protocol.response.Response;
 import com.himiko.network.utils.Connection;
 import com.himiko.network.protocol.Package;
 import com.himiko.network.protocol.PackageCategory;
-
 
 public class PackageHandler extends Thread{
     private Logger logger;
@@ -31,23 +33,12 @@ public class PackageHandler extends Thread{
             Package<JsonElement> rawPackage = gson.fromJson(data, new TypeToken<Package<JsonElement>>() {
             }.getType());
             switch (rawPackage.getCategory()) {
-                case USER_DATA -> {
-                    Object rawData = rawPackage.getData();
-                    if(rawData instanceof Integer)
-                    {
-                        int playerCount = (Integer) rawData;
-                        this.logger.debug("Received player count:" + playerCount);
-                    }
-                    break;
-                }
-                case USER_LOGIN -> {
-                    Main.NETWORK.setAccess(rawPackage.getData().getAsBoolean());
-                    break;
-                }
-                case USER_REQUEST -> {
+                case RESPONSE ->{
+                    this.handelResponse(rawPackage);
                     break;
                 }
                 default -> {
+                    this.logger.warning("Unknown PackageCategory received!");
                     break;
                 }
             }
@@ -57,14 +48,31 @@ public class PackageHandler extends Thread{
         }
     }
 
-    public <T> void sendData(T data, PackageCategory category)
+    public void handelResponse(Package<JsonElement> rawPackage)
     {
-        if(data == null || category == null) return;
+        Response<?> response = gson.fromJson(rawPackage.getData(), new TypeToken<Response<?>>() {}.getType());
+        this.logger.debug("Handling response: {}", response.getResponseType());
 
-        Package<T> dataPackage = new Package<>(data, category);
-        String rawJSON = this.gson.toJson(dataPackage);
-        this.connection.send(rawJSON);
-        this.logger.debug("Send data to server... Data:{}", rawJSON);
+        switch (response.getResponseType()) {
+            case PLAYER_COUNT -> {
+                int playerCount = gson.fromJson(response.getData().toString(), Integer.class);
+                GameManager.currentPlayerCount = playerCount;
+                this.logger.info("Current player count: {}", playerCount);
+            }
+            case LOGIN_SUCCESS -> {
+                Main.NETWORK.setAccess(true);
+                this.logger.info("Login successful!");
+                break;
+            }
+            case LOGIN_FAILED -> {
+                Main.NETWORK.setAccess(false);
+                this.logger.info("Login attempt was a failure...");
+            }
+            default ->{
+                this.logger.warning("Unknown response type received!");
+                break;
+            }
+        }
     }
 
     @Override
@@ -77,5 +85,30 @@ public class PackageHandler extends Thread{
                 this.handelPackage(content);
             }
         }
+    }
+
+    public <T> void sendRequest(Request<T> request)
+    {
+        this.sendData(request, PackageCategory.REQUEST);
+    }
+
+    public <T> void sendData(T data, PackageCategory category)
+    {
+        if(data == null || category == null) return;
+
+        Package<T> dataPackage = new Package<>(data, category);
+        String rawJSON = this.gson.toJson(dataPackage);
+        this.connection.send(rawJSON);
+        this.logger.debug("Send data to server... Data:{}", rawJSON);
+    }
+
+    private <T> T parseDataToClass(JsonElement data, Class<T> type)
+    {
+        return new Gson().fromJson(data, type);
+    }
+
+    private <T> T parseDataToClass(String data, Class<T> type)
+    {
+        return new Gson().fromJson(data, type);
     }
 }

@@ -6,9 +6,6 @@ import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.logger.LoggerBuilder;
 import com.himiko.network.NetworkWrapper;
-import com.himiko.network.protocol.PackageCategory;
-import com.himiko.network.protocol.request.UserRequest;
-import com.himiko.network.protocol.request.UserRequestType;
 
 /**
  * @author Valk on 14.02.2025

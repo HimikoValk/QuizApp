@@ -1,12 +1,14 @@
 package com.himiko.gui.screen.screens;
 
 import com.himiko.Main;
+import com.himiko.game.manager.GameManager;
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
+import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.PackageCategory;
-import com.himiko.network.protocol.request.UserRequest;
-import com.himiko.network.protocol.request.UserRequestType;
+import com.himiko.network.protocol.request.Request;
+import com.himiko.network.protocol.request.RequestType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +20,8 @@ public class GameSelectionScreen extends Screen {
     private JButton searchGameButton;
     private JButton createGameButton;
     private JButton profileButton;
+    private JButton refreshButton;
+    private JButton logoutButton;
     private JLabel titleLabel;
     private JLabel onlinePlayersLabel;
 
@@ -33,12 +37,14 @@ public class GameSelectionScreen extends Screen {
         this.titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         this.titleLabel.setSize(200, 100);
 
-        this.onlinePlayersLabel = GUI.uiManager.createStyledLabel("Online Players: 0");
+        this.onlinePlayersLabel = GUI.uiManager.createStyledLabel("Online Players: " + GameManager.currentPlayerCount);
 
         this.joinPublicGameButton = GUI.uiManager.createStyledButton("Join Public Game");
         this.searchGameButton = GUI.uiManager.createStyledButton("Find Game");
         this.createGameButton = GUI.uiManager.createStyledButton("Create Game");
         this.profileButton = GUI.uiManager.createStyledButton("Profile");
+        this.refreshButton = GUI.uiManager.createStyledButton("Refresh");
+        this.logoutButton = GUI.uiManager.createStyledButton("Logout");
 
         this.joinPublicGameButton.addActionListener(e -> {
             this.logger.debug("Joining public game...");
@@ -60,7 +66,16 @@ public class GameSelectionScreen extends Screen {
             // TODO: Implement profile screen logic
         });
 
-        super.setComponents(this.titleLabel, this.onlinePlayersLabel, this.joinPublicGameButton,this.searchGameButton, this.createGameButton, this.profileButton);
+        this.refreshButton.addActionListener(e ->{
+            this.updatePlayerCount();
+        });
+
+        this.logoutButton.addActionListener(e ->{
+            Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.USER_LOGOUT));
+            ScreenHandler.INSTANCE.changeScreen(ScreenHandler.CONNECTION_SCREEN);
+        });
+
+        super.setComponents(this.titleLabel, this.onlinePlayersLabel, this.joinPublicGameButton,this.searchGameButton, this.createGameButton, this.profileButton, this.refreshButton,this.logoutButton);
     }
 
     @Override
@@ -75,6 +90,7 @@ public class GameSelectionScreen extends Screen {
         WIDTH = Main.GUI.getWidth();
         HEIGHT = Main.GUI.getHeight();
 
+
         this.titleLabel.setBounds(WIDTH / 2 - 100, 20, 200, 40);
         this.onlinePlayersLabel.setBounds(WIDTH / 2 - 75, 70, 150, 30);
 
@@ -82,13 +98,15 @@ public class GameSelectionScreen extends Screen {
         this.searchGameButton.setBounds(WIDTH / 2 - 100, 150, 200, 40);
         this.createGameButton.setBounds(WIDTH / 2 - 100, 200, 200, 40);
         this.profileButton.setBounds(WIDTH / 2 - 100, 250, 200, 40);
+        this.refreshButton.setBounds(0,400 , 200, 40);
+        this.logoutButton.setBounds(WIDTH - 200,400 , 200, 40);
 
-        Main.NETWORK.getPackageHandler().sendData(new UserRequest(UserRequestType.GET_PLAYER_COUNT), PackageCategory.USER_REQUEST);
         super.onEnter();
     }
 
     private void updatePlayerCount()
     {
-        this.onlinePlayersLabel.setText("Online Players:");
+        Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.USER_DATA));
+        this.onlinePlayersLabel.setText("Online Players: " + GameManager.currentPlayerCount);
     }
 }

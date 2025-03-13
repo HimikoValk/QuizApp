@@ -123,7 +123,8 @@ public class Server extends Thread{
         Thread clientThread = this.clientThreads.remove(client);
         if (clientThread != null) {
             logger.debug("Waiting for client thread to terminate...");
-            clientThread.join(); // Waiting for thread until terminated
+            clientThread.interrupt(); // Waiting for thread until terminated
+            logger.debug("Thread terminated");
         }
         this.logger.warning("Client({}) disconnected from Server", client.getClient().getRemoteSocketAddress().toString());
     }
