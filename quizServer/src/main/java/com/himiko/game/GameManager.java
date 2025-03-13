@@ -20,6 +20,7 @@ public class GameManager {
     private Logger logger;
     //Key:ID (Long), Value:Game
     private static Map<Long, Game> games = new HashMap<>();
+    private static final long maxID = 99999999999L;
 
     public GameManager()
     {
@@ -33,7 +34,7 @@ public class GameManager {
     //Default
     public void createGame()
     {
-        long gameID = createID(99999999999L);
+        long gameID = this.createID(maxID);
         games.put(gameID, new Game(gameID));
         this.logger.debug("Created game with id:{}", gameID);
     }
@@ -46,7 +47,7 @@ public class GameManager {
             this.logger.error("No session found for client:{}", client.getClient().getRemoteSocketAddress());
             return;
         }
-        long gameID = createID(99999999999L);
+        long gameID = createID(maxID);
         games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame, code));
         this.logger.debug("Created game with id:{}", gameID);
     }
