@@ -1,120 +1,76 @@
 package com.himiko.gui.screen.screens;
 
+
 import com.himiko.Main;
+import com.himiko.game.Game;
 import com.himiko.game.manager.GameManager;
 import com.himiko.gui.GUI;
+import com.himiko.gui.manager.UIManager;
 import com.himiko.gui.screen.Screen;
-import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
-import com.himiko.network.protocol.PackageCategory;
-import com.himiko.network.protocol.handler.PackageHandler;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @author Valk on 14.03.2025
+ * @project quizClient
+ */
 public class GameSelectionScreen extends Screen {
+    private JPanel gameRoomPanel;
+    private JLabel titelLabel;
     private Logger logger;
-
-    private JButton joinPublicGameButton;
-    private JButton searchGameButton;
-    private JButton createGameButton;
-    private JButton profileButton;
-    private JButton refreshButton;
-    private JButton logoutButton;
-    private JLabel titleLabel;
-    private JLabel onlinePlayersLabel;
 
     public GameSelectionScreen() {
         super("Game Selection Screen");
 
         this.logger = Main.logger;
+        this.titelLabel = GUI.uiManager.createStyledLabel(this.getName());
 
-        UIManager.put("Button.font", new Font("Arial", Font.BOLD, 14));
-        UIManager.put("Label.font", new Font("Arial", Font.PLAIN, 14));
+        this.gameRoomPanel = new JPanel();
+        this.gameRoomPanel.setLayout(new BoxLayout(this.gameRoomPanel, BoxLayout.Y_AXIS));
+        this.gameRoomPanel.setBounds(50, 50, 200, 300);
+        this.gameRoomPanel.setBackground(GUI.uiManager.getCurrentTheme().backgroundColor.brighter());
 
-        this.titleLabel = GUI.uiManager.createStyledLabel("Game Selection");
-        this.titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        this.titleLabel.setSize(200, 100);
+        super.setComponents(gameRoomPanel, titelLabel);
+    }
 
-        this.onlinePlayersLabel = GUI.uiManager.createStyledLabel("Online Players: " + GameManager.currentPlayerCount);
 
-        this.joinPublicGameButton = GUI.uiManager.createStyledButton("Join Public Game");
-        this.searchGameButton = GUI.uiManager.createStyledButton("Find Game");
-        this.createGameButton = GUI.uiManager.createStyledButton("Create Game");
-        this.profileButton = GUI.uiManager.createStyledButton("Profile");
-        this.refreshButton = GUI.uiManager.createStyledButton("Refresh");
-        this.logoutButton = GUI.uiManager.createStyledButton("Logout");
-
-        this.joinPublicGameButton.addActionListener(e -> {
-            this.logger.debug("Joining public game...");
-            //TODO: Implement join game logic
-            Main.NETWORK.getPackageHandler().sendRequest(new Request<>(null, RequestType.GET_GAMES));
-        });
-
-        this.searchGameButton.addActionListener(e -> {
-            this.logger.debug("Searching for a game...");
-            // TODO: Implement game search logic
-        });
-
-        this.createGameButton.addActionListener(e -> {
-            this.logger.debug("Creating a new game...");
-            // TODO: Implement game creation logic
-        });
-
-        this.profileButton.addActionListener(e -> {
-            this.logger.debug("Opening profile...");
-            // TODO: Implement profile screen logic
-        });
-
-        this.refreshButton.addActionListener(e ->{
-            this.updatePlayerCount();
-        });
-
-        this.logoutButton.addActionListener(e ->{
-            Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.USER_LOGOUT));
-            ScreenHandler.INSTANCE.changeScreen(ScreenHandler.CONNECTION_SCREEN);
-        });
-
-        super.setComponents(this.titleLabel, this.onlinePlayersLabel, this.joinPublicGameButton,this.searchGameButton, this.createGameButton, this.profileButton, this.refreshButton,this.logoutButton);
+    @Override
+    public void onEnter() {
+        this.titelLabel.setBounds(WIDTH / 2, HEIGHT, this.titelLabel.getWidth(), this.titelLabel.getHeight());
+        this.updateGameButtons();
+        super.onEnter();
     }
 
     @Override
     public void render(Graphics g) {
-        this.searchGameButton.repaint();
-        this.createGameButton.repaint();
-        this.profileButton.repaint();
+
     }
 
-    @Override
-    public void onEnter() {
-        WIDTH = Main.GUI.getWidth();
-        HEIGHT = Main.GUI.getHeight();
+    private void updateGameButtons()
+    {
+        this.gameRoomPanel.removeAll();
 
+        int x = this.gameRoomPanel.getX() - 50;
+        int y = this.gameRoomPanel.getY();
 
-        this.titleLabel.setBounds(WIDTH / 2 - 100, 20, 200, 40);
-        this.onlinePlayersLabel.setBounds(WIDTH / 2 - 75, 70, 150, 30);
+        for(Game game :GameManager.getGames())
+        {
+            this.logger.debug("{}",game.getGameID());
+            JButton gameJoinButton = GUI.uiManager.createStyledButton("Game:" + game.getGameID());
+            gameJoinButton.setBounds(x, y, this.gameRoomPanel.getWidth(), 50);
+            gameJoinButton.addActionListener(a -> {
+                Main.NETWORK.getPackageHandler().sendRequest(new Request<>(game.getGameID(), RequestType.GAME_JOIN));
+            });
+            this.gameRoomPanel.add(gameJoinButton);
 
-        this.joinPublicGameButton.setBounds(WIDTH / 2 - 100, 100, 200, 40);
-        this.searchGameButton.setBounds(WIDTH / 2 - 100, 150, 200, 40);
-        this.createGameButton.setBounds(WIDTH / 2 - 100, 200, 200, 40);
-        this.profileButton.setBounds(WIDTH / 2 - 100, 250, 200, 40);
-        this.refreshButton.setBounds(0,400 , 200, 40);
-        this.logoutButton.setBounds(WIDTH - 200,400 , 200, 40);
-
-        this.updatePlayerCount();
-
-        super.onEnter();
-    }
-
-    private void updatePlayerCount() {
-        try {
-            Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.SERVER_INFORMATION));
-            Thread.sleep(200);
-            this.onlinePlayersLabel.setText("Online Players: " + GameManager.currentPlayerCount);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            y += gameJoinButton.getHeight();
         }
+
+        this.gameRoomPanel.revalidate();
+        this.gameRoomPanel.repaint();
     }
 }

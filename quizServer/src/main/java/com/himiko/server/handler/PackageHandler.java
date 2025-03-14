@@ -76,7 +76,6 @@ public class PackageHandler{
                 this.logger.debug("User data: Name:{} ID:{}", SessionManager.getUser(client).getName(), SessionManager.getUser(client).getId());
                 break;
             }
-
             case USER_LOGOUT -> {
                 this.logger.debug("Received Logout!");
 

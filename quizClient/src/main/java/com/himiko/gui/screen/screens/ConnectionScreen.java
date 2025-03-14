@@ -90,7 +90,7 @@ public class ConnectionScreen extends Screen {
                     if(Main.NETWORK.hasAccess()) {
                         //TODO:IMPLEMENT GAME SCREEN USW.
                         this.logger.debug("Has access..");
-                        ScreenHandler.INSTANCE.changeScreen(ScreenHandler.GAME_SELECTION_SCREEN);
+                        ScreenHandler.INSTANCE.changeScreen(ScreenHandler.ACTION_SELECTION_SCREEN);
                     }
                 }catch (Exception ex) {
                     this.logger.error("Something went wrong...");

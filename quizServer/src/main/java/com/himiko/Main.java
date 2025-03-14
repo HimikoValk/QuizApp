@@ -20,7 +20,7 @@ public class Main
     public static void main(String[] args)
     {
         //Default port
-        int port = 188;
+        int port = 8080;
 
         if(args.length > 0) {
             port = Integer.parseInt(args[0]);

@@ -1,43 +1,125 @@
-[13-03-2025 12:51:11][INFO] Initializing server...
-[13-03-2025 12:51:11][DEBUG] Thread:32 Server-Port:188 Server-IP:0.0.0.0/0.0.0.0:188
-[13-03-2025 12:51:11][INFO] Successfully started server!
-[13-03-2025 12:51:38][INFO] Client(/127.0.0.1:39328) connected to server and Thread successfully created...
-[13-03-2025 12:51:40][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[13-03-2025 12:51:40][DEBUG] Received Login!
-[13-03-2025 12:51:40][DEBUG] User data: Name:Username ID:922480
-[13-03-2025 12:51:44][DEBUG] Message Received:{"data":{"requestType":"USER_DATA"},"category":"REQUEST"}
-[13-03-2025 12:51:45][DEBUG] Message Received:{"data":{"requestType":"USER_DATA"},"category":"REQUEST"}
-[13-03-2025 12:53:53][DEBUG] Waiting for client thread to terminate...
-[13-03-2025 12:53:53][DEBUG] Thread terminated
-[13-03-2025 12:53:53][WARNING] Client(/127.0.0.1:39328) disconnected from Server
-[13-03-2025 12:53:53][WARNING] Client disconnected, closing client connection and thread
-[13-03-2025 12:55:37][INFO] Client(/127.0.0.1:39340) connected to server and Thread successfully created...
-[13-03-2025 12:55:39][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[13-03-2025 12:55:39][DEBUG] Received Login!
-[13-03-2025 12:55:39][DEBUG] User data: Name:Username ID:80300
-[13-03-2025 12:55:41][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[13-03-2025 13:03:52][DEBUG] Waiting for client thread to terminate...
-[13-03-2025 13:03:52][DEBUG] Thread terminated
-[13-03-2025 13:03:52][WARNING] Client(/127.0.0.1:39340) disconnected from Server
-[13-03-2025 13:03:52][WARNING] Client disconnected, closing client connection and thread
-[13-03-2025 13:04:22][INFO] Client(/127.0.0.1:39366) connected to server and Thread successfully created...
-[13-03-2025 13:04:24][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[13-03-2025 13:04:24][DEBUG] Received Login!
-[13-03-2025 13:04:24][DEBUG] User data: Name:Username ID:624978
-[13-03-2025 13:04:36][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[13-03-2025 13:04:40][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[13-03-2025 13:05:23][DEBUG] Waiting for client thread to terminate...
-[13-03-2025 13:05:23][DEBUG] Thread terminated
-[13-03-2025 13:05:23][WARNING] Client(/127.0.0.1:39366) disconnected from Server
-[13-03-2025 13:05:23][WARNING] Client disconnected, closing client connection and thread
-[13-03-2025 13:05:33][INFO] Client(/127.0.0.1:39376) connected to server and Thread successfully created...
-[13-03-2025 13:05:35][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[13-03-2025 13:05:35][DEBUG] Received Login!
-[13-03-2025 13:05:35][DEBUG] User data: Name:Username ID:276823
-[13-03-2025 13:05:37][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[13-03-2025 13:06:01][DEBUG] Message Received:{"data":{"requestType":"USER_LOGOUT"},"category":"REQUEST"}
-[13-03-2025 13:06:01][DEBUG] Received Logout!
-[13-03-2025 13:07:14][INFO] Client(/127.0.0.1:39378) connected to server and Thread successfully created...
-[13-03-2025 13:07:16][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[13-03-2025 13:07:16][DEBUG] Received Login!
-[13-03-2025 13:07:16][DEBUG] User data: Name:Username ID:949228
+[14-03-2025 12:52:48][INFO] Initializing server...
+[14-03-2025 12:52:48][DEBUG] Thread:32 Server-Port:8080 Server-IP:0.0.0.0/0.0.0.0:8080
+[14-03-2025 12:52:48][INFO] Successfully started server!
+[14-03-2025 12:52:48][DEBUG] Created game with id:56760962749
+[14-03-2025 12:52:48][DEBUG] Created game with id:34260247914
+[14-03-2025 12:52:48][DEBUG] Created game with id:48929762824
+[14-03-2025 12:52:48][DEBUG] Created game with id:42701692289
+[14-03-2025 12:52:48][DEBUG] Created game with id:51784389696
+[14-03-2025 12:52:48][DEBUG] Created game with id:29685344879
+[14-03-2025 12:52:48][DEBUG] Created game with id:21167551886
+[14-03-2025 12:52:48][DEBUG] Created game with id:75773802912
+[14-03-2025 12:52:48][DEBUG] Created game with id:5358059128
+[14-03-2025 12:52:48][DEBUG] Created game with id:18639339521
+[14-03-2025 12:52:59][INFO] Client(/127.0.0.1:51687) connected to server and Thread successfully created...
+[14-03-2025 12:53:01][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 12:53:01][DEBUG] Received Login!
+[14-03-2025 12:53:01][DEBUG] User data: Name:Username ID:61141
+[14-03-2025 12:53:01][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 12:53:03][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 12:56:59][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 12:56:59][DEBUG] Thread terminated
+[14-03-2025 12:56:59][WARNING] Client(/127.0.0.1:51687) disconnected from Server
+[14-03-2025 12:56:59][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 12:57:04][INFO] Client(/127.0.0.1:51699) connected to server and Thread successfully created...
+[14-03-2025 12:57:05][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 12:57:05][DEBUG] Received Login!
+[14-03-2025 12:57:05][DEBUG] User data: Name:Username ID:622164
+[14-03-2025 12:57:06][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 12:57:07][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 12:58:01][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 12:58:01][DEBUG] Thread terminated
+[14-03-2025 12:58:01][WARNING] Client(/127.0.0.1:51699) disconnected from Server
+[14-03-2025 12:58:01][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 12:58:07][INFO] Client(/127.0.0.1:51708) connected to server and Thread successfully created...
+[14-03-2025 12:58:09][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 12:58:09][DEBUG] Received Login!
+[14-03-2025 12:58:09][DEBUG] User data: Name:Username ID:850869
+[14-03-2025 12:58:09][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 12:58:11][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 12:59:14][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 12:59:14][DEBUG] Thread terminated
+[14-03-2025 12:59:14][WARNING] Client(/127.0.0.1:51708) disconnected from Server
+[14-03-2025 12:59:14][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 12:59:19][INFO] Client(/127.0.0.1:51712) connected to server and Thread successfully created...
+[14-03-2025 12:59:21][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 12:59:21][DEBUG] Received Login!
+[14-03-2025 12:59:21][DEBUG] User data: Name:Username ID:68096
+[14-03-2025 12:59:21][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 12:59:22][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 12:59:31][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 12:59:31][DEBUG] Thread terminated
+[14-03-2025 12:59:31][WARNING] Client(/127.0.0.1:51712) disconnected from Server
+[14-03-2025 12:59:31][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 12:59:37][INFO] Client(/127.0.0.1:51716) connected to server and Thread successfully created...
+[14-03-2025 12:59:39][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 12:59:39][DEBUG] Received Login!
+[14-03-2025 12:59:39][DEBUG] User data: Name:Username ID:990589
+[14-03-2025 12:59:39][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 12:59:44][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:05:46][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:05:46][DEBUG] Thread terminated
+[14-03-2025 13:05:46][WARNING] Client(/127.0.0.1:51716) disconnected from Server
+[14-03-2025 13:05:46][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 13:05:50][INFO] Client(/127.0.0.1:51740) connected to server and Thread successfully created...
+[14-03-2025 13:05:52][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 13:05:52][DEBUG] Received Login!
+[14-03-2025 13:05:52][DEBUG] User data: Name:Username ID:564970
+[14-03-2025 13:05:52][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 13:05:54][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:06:50][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:06:50][DEBUG] Thread terminated
+[14-03-2025 13:06:50][WARNING] Client(/127.0.0.1:51740) disconnected from Server
+[14-03-2025 13:06:50][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 13:06:54][INFO] Client(/127.0.0.1:51744) connected to server and Thread successfully created...
+[14-03-2025 13:06:56][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 13:06:56][DEBUG] Received Login!
+[14-03-2025 13:06:56][DEBUG] User data: Name:Username ID:658331
+[14-03-2025 13:06:56][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 13:06:58][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:07:23][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:07:23][DEBUG] Thread terminated
+[14-03-2025 13:07:23][WARNING] Client(/127.0.0.1:51744) disconnected from Server
+[14-03-2025 13:07:23][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 13:07:27][INFO] Client(/127.0.0.1:51748) connected to server and Thread successfully created...
+[14-03-2025 13:07:28][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 13:07:28][DEBUG] Received Login!
+[14-03-2025 13:07:28][DEBUG] User data: Name:Username ID:214572
+[14-03-2025 13:07:28][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 13:07:29][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:09:33][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:09:33][DEBUG] Thread terminated
+[14-03-2025 13:09:33][WARNING] Client(/127.0.0.1:51748) disconnected from Server
+[14-03-2025 13:09:33][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 13:09:48][INFO] Client(/127.0.0.1:51764) connected to server and Thread successfully created...
+[14-03-2025 13:09:50][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 13:09:50][DEBUG] Received Login!
+[14-03-2025 13:09:50][DEBUG] User data: Name:Username ID:810762
+[14-03-2025 13:09:51][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 13:09:52][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:10:21][DEBUG] Message Received:{"data":{"data":42701692289,"requestType":"GAME_JOIN"},"category":"REQUEST"}
+[14-03-2025 13:10:21][DEBUG] Received join request
+[14-03-2025 13:10:42][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:10:42][DEBUG] Thread terminated
+[14-03-2025 13:10:42][WARNING] Client(/127.0.0.1:51764) disconnected from Server
+[14-03-2025 13:10:42][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 13:10:46][INFO] Client(/127.0.0.1:51769) connected to server and Thread successfully created...
+[14-03-2025 13:10:49][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 13:10:49][DEBUG] Received Login!
+[14-03-2025 13:10:49][DEBUG] User data: Name:Username ID:706438
+[14-03-2025 13:10:49][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 13:10:50][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:13:27][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:13:27][DEBUG] Thread terminated
+[14-03-2025 13:13:27][WARNING] Client(/127.0.0.1:51769) disconnected from Server
+[14-03-2025 13:13:27][WARNING] Client disconnected, closing client connection and thread
+[14-03-2025 13:13:32][INFO] Client(/127.0.0.1:51788) connected to server and Thread successfully created...
+[14-03-2025 13:13:34][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
+[14-03-2025 13:13:34][DEBUG] Received Login!
+[14-03-2025 13:13:34][DEBUG] User data: Name:Username ID:500944
+[14-03-2025 13:13:34][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
+[14-03-2025 13:13:35][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
+[14-03-2025 13:13:38][DEBUG] Waiting for client thread to terminate...
+[14-03-2025 13:13:38][DEBUG] Thread terminated
+[14-03-2025 13:13:38][WARNING] Client(/127.0.0.1:51788) disconnected from Server
+[14-03-2025 13:13:38][WARNING] Client disconnected, closing client connection and thread

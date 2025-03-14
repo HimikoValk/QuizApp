@@ -67,11 +67,8 @@ public class PackageHandler extends Thread{
             case GAMES -> {
                 Type gameInfoListType = new TypeToken<List<GameInfo>>() {}.getType();
                 List<GameInfo> gameInfo = parseDataToClass(response.getData().toString(), gameInfoListType);
-                //TODO Implement usage of gmaeinfo in GameManager
-                /*
-                this.logger.debug("Received Game Infos:{}", gameInfo.size());
-                gameInfo.forEach(g -> this.logger.debug("Game Info: {}", g.getGameID()));
-                 */
+                //TODO Implement usage of gameinfo in GameManager
+                gameInfo.forEach(GameManager::addGame);
                 break;
             }
             case SERVER_INFORMATION ->  {

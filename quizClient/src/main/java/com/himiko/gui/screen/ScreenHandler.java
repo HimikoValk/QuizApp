@@ -1,7 +1,7 @@
 package com.himiko.gui.screen;
 
-import com.himiko.Main;
 import com.himiko.gui.screen.screens.ConnectionScreen;
+import com.himiko.gui.screen.screens.ActionSelectionScreen;
 import com.himiko.gui.screen.screens.GameSelectionScreen;
 
 public class ScreenHandler {
@@ -10,10 +10,11 @@ public class ScreenHandler {
 
     //Screens
     public static ConnectionScreen CONNECTION_SCREEN;
+    public static ActionSelectionScreen ACTION_SELECTION_SCREEN;
     public static GameSelectionScreen GAME_SELECTION_SCREEN;
-    static
     {
         CONNECTION_SCREEN = new ConnectionScreen();
+        ACTION_SELECTION_SCREEN = new ActionSelectionScreen();
         GAME_SELECTION_SCREEN = new GameSelectionScreen();
     }
 
