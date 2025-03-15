@@ -95,9 +95,7 @@ public class PackageHandler{
             }
 
             case GAME_JOIN -> {
-                //TODO:Fix game does not exist error
-                GameJoinData gameJoinData = this.parseDataToClass(rawPackage.getData().toString(), GameJoinData.class);
-                this.logger.debug("{}",gameJoinData.getGameID());
+                GameJoinData gameJoinData = this.parseDataToClass(request.getData().toString(), GameJoinData.class);
                 if(Main.gameManager.isPrivateGame(gameJoinData.getGameID()))
                 {
                     if(Main.gameManager.isCodeCorrect(gameJoinData.getGameID(), gameJoinData.getCode())) {
