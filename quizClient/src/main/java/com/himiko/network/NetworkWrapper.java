@@ -19,12 +19,25 @@ public class NetworkWrapper {
     public void connect(String serverIP, int port) throws Exception
     {
         this.logger.info("Initializing Connection...");
+        this.disconnect();
 
         this.connection = new Connection(serverIP, port);
         if(!this.connection.isConnected()) throw new Exception("No server connection");
         this.packageHandler = new PackageHandler(connection);
 
         this.logger.info("Successfully init connection!");
+    }
+
+    public void disconnect()
+    {
+        if(this.connection != null && this.connection.isConnected())
+        {
+            this.connection.close();
+            this.logger.warning("Disconnected from Server");
+        }else{
+            this.logger.warning("There was no connection to Server");
+        }
+
     }
 
     public void start() throws Exception

@@ -50,7 +50,6 @@ public class Connection {
         if (socket != null && !socket.isClosed())
             try {
                 socket.close();
-                System.out.println("Disconnected");
             } catch (IOException e) {
                 /*
                  * Falls eine Verbindung geschlossen werden soll, deren Endpunkt nicht

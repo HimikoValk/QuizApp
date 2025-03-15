@@ -62,8 +62,10 @@ public class PackageHandler{
     {
         Request<?> request = this.parseDataToClass(rawPackage.getData(), Request.class);
 
-        switch (request.getRequestType()) {
-            case USER_LOGIN -> {
+        switch (request.getRequestType())
+        {
+            case USER_LOGIN ->
+            {
                 this.logger.debug("Received Login!");
                 User userData = this.parseDataToClass(request.getData().toString(), User.class);
 
@@ -77,7 +79,9 @@ public class PackageHandler{
                 this.logger.debug("User data: Name:{} ID:{}", SessionManager.getUser(client).getName(), SessionManager.getUser(client).getId());
                 break;
             }
-            case USER_LOGOUT -> {
+
+            case USER_LOGOUT ->
+            {
                 this.logger.debug("Received Logout!");
 
                 if (SessionManager.getUser(client) == null) {
@@ -88,13 +92,15 @@ public class PackageHandler{
                 break;
             }
 
-            case GET_GAMES -> {
+            case GET_GAMES ->
+            {
                 List<GameInfo> gameList = Main.gameManager.getGameInfos();
                 this.sendResponse(new Response<>(gameList, ResponseType.GAMES), client);
                 break;
             }
 
-            case GAME_JOIN -> {
+            case GAME_JOIN ->
+            {
                 GameJoinData gameJoinData = this.parseDataToClass(request.getData().toString(), GameJoinData.class);
                 if(Main.gameManager.isPrivateGame(gameJoinData.getGameID()))
                 {
@@ -106,11 +112,13 @@ public class PackageHandler{
                     }
                 }else {
                     Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
+                    this.sendResponse(new Response<>("Succeed", null), client);
                 }
                 break;
             }
 
-            case SERVER_INFORMATION -> {
+            case SERVER_INFORMATION ->
+            {
                 ServerInformation serverInformation = new ServerInformation(SessionManager.getActiveSessionSize(), Main.gameManager.getPublicGames().size(), Main.version);
                 this.sendResponse(new Response<>(serverInformation,ResponseType.SERVER_INFORMATION), client);
             }
@@ -133,7 +141,7 @@ public class PackageHandler{
 
         String json = new Gson().toJson(data);
         client.sendData(json);
-
+        this.logger.debug("Send Package to Client..\nData:{}", json);
     }
 
     private <T> T parseDataToClass(JsonElement data, Class<T> type)
