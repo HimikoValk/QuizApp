@@ -3,10 +3,13 @@ package com.himiko.game;
 import com.himiko.Main;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
+import com.himiko.server.handler.PackageHandler;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.data.GameInfo;
 import com.himiko.server.protocol.request.Request;
 import com.himiko.server.protocol.request.RequestType;
+import com.himiko.server.protocol.response.Response;
+import com.himiko.server.protocol.response.ResponseType;
 import com.himiko.server.utils.NetworkClient;
 
 import java.util.*;
@@ -56,11 +59,19 @@ public class GameManager {
     {
         if(!doesGameExist(gameID)) return;
         Game game = games.get(gameID);
-
-        if(game.isPrivateGame()){
-            //TODO:
-        }
     }
+
+    public boolean isPrivateGame(long gameID)
+    {
+        if(games.get(gameID) == null) throw new RuntimeException("Game does not exist");
+        return games.get(gameID).isPrivateGame();
+    }
+    public boolean isCodeCorrect(long gameID,int code)
+    {
+        if(games.get(gameID) == null) throw new RuntimeException("Game does not exist");
+        return games.get(gameID).getCode() == code;
+    }
+
     public List<GameInfo> getGameInfos() {
         return games.values().stream()
                 .map(game -> new GameInfo(
@@ -69,7 +80,7 @@ public class GameManager {
                         game.getCurrentUserList().size(),
                         getPlayerNames(game),
                         game.isPrivateGame(),
-                        game.isPrivateGame() ? null : game.getCode(), //null , null???
+                        game.isPrivateGame() ? null : game.getCode(),
                         game.getGameCreator() != null ? game.getGameCreator().getName() : "Unknown"
                 ))
                 .collect(Collectors.toList());

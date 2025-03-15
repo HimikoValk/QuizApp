@@ -13,6 +13,7 @@ import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.Package;
 import com.himiko.server.protocol.PackageCategory;
 import com.himiko.server.protocol.data.GameInfo;
+import com.himiko.server.protocol.data.GameJoinData;
 import com.himiko.server.protocol.data.ServerInformation;
 import com.himiko.server.protocol.response.Response;
 import com.himiko.server.protocol.response.ResponseType;
@@ -94,15 +95,20 @@ public class PackageHandler{
             }
 
             case GAME_JOIN -> {
-                this.logger.debug("Received join request");
-                //TODO:Implement
-                /*
-                Main.gameManager.addUserToGame();
-                */
-                break;
-            }
-
-            case GAME_CODE -> {
+                //TODO:Fix game does not exist error
+                GameJoinData gameJoinData = this.parseDataToClass(rawPackage.getData().toString(), GameJoinData.class);
+                this.logger.debug("{}",gameJoinData.getGameID());
+                if(Main.gameManager.isPrivateGame(gameJoinData.getGameID()))
+                {
+                    if(Main.gameManager.isCodeCorrect(gameJoinData.getGameID(), gameJoinData.getCode())) {
+                        Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
+                        this.sendResponse(new Response<>("Succeed", null), client);
+                    }else {
+                        this.sendResponse(new Response<>(null, ResponseType.ERROR), client);
+                    }
+                }else {
+                    Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
+                }
                 break;
             }
 
@@ -125,7 +131,7 @@ public class PackageHandler{
 
     public <T> void sendPackage(Package<T> data, NetworkClient client)
     {
-        if(data == null) return;
+        if(data == null || client == null) return;
 
         String json = new Gson().toJson(data);
         client.sendData(json);

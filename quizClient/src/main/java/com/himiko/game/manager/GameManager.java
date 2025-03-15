@@ -25,7 +25,17 @@ public class GameManager {
 
     public static void addGame(GameInfo gameInfo)
     {
-        Game game = new Game(gameInfo.getGameID(),gameInfo.getCode());
+        Game game = null;
+
+        if(!gameInfo.isPrivateGame())
+        {
+            game = new Game(gameInfo.getGameID());
+        }else{
+            game = new Game(gameInfo.getGameID(), gameInfo.getCode());
+        }
+        game.setCurrentPlayers(gameInfo.getCurrentPlayers());
+        game.setMaxUserSize(gameInfo.getMaxUserSize());
+
         addGame(game.getGameID(), game);
     }
 

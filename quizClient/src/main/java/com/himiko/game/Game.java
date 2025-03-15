@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+    private int maxUserSize;
+    private int currentPlayers;
     private long gameID;
     private int code;
     private Question currentQuestion;
@@ -48,5 +50,29 @@ public class Game {
 
     public List<UserData> getUserList() {
         return this.userList;
+    }
+
+    public int getMaxUserSize() {
+        return maxUserSize;
+    }
+
+    public void setMaxUserSize(int maxUserSize) {
+        this.maxUserSize = maxUserSize;
+    }
+
+    public int getCurrentPlayers() {
+        return currentPlayers;
+    }
+
+    public void setCurrentPlayers(int currentPlayers) {
+        this.currentPlayers = currentPlayers;
+    }
+
+    public void setGameID(long gameID) {
+        this.gameID = gameID;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

@@ -8,6 +8,7 @@ import com.himiko.gui.GUI;
 import com.himiko.gui.manager.UIManager;
 import com.himiko.gui.screen.Screen;
 import com.himiko.logger.Logger;
+import com.himiko.network.protocol.data.GameJoinData;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
 
@@ -28,6 +29,7 @@ public class GameSelectionScreen extends Screen {
 
         this.logger = Main.logger;
         this.titelLabel = GUI.uiManager.createStyledLabel(this.getName());
+        this.titelLabel.setFont(new Font("Arial", Font.BOLD, 15));
 
         this.gameRoomPanel = new JPanel();
         this.gameRoomPanel.setLayout(new BoxLayout(this.gameRoomPanel, BoxLayout.Y_AXIS));
@@ -40,7 +42,7 @@ public class GameSelectionScreen extends Screen {
 
     @Override
     public void onEnter() {
-        this.titelLabel.setBounds(WIDTH / 2, HEIGHT, this.titelLabel.getWidth(), this.titelLabel.getHeight());
+        this.titelLabel.setBounds(WIDTH / 2, HEIGHT, this.titelLabel.getWidth() + (2* this.titelLabel.getText().length()), this.titelLabel.getHeight());
         this.updateGameButtons();
         super.onEnter();
     }
@@ -60,13 +62,14 @@ public class GameSelectionScreen extends Screen {
         for(Game game :GameManager.getGames())
         {
             this.logger.debug("{}",game.getGameID());
-            JButton gameJoinButton = GUI.uiManager.createStyledButton("Game:" + game.getGameID());
+            JButton gameJoinButton = GUI.uiManager.createStyledButton("Game:" + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
             gameJoinButton.setBounds(x, y, this.gameRoomPanel.getWidth(), 50);
             gameJoinButton.addActionListener(a -> {
-                Main.NETWORK.getPackageHandler().sendRequest(new Request<>(game.getGameID(), RequestType.GAME_JOIN));
+                GameJoinData gameJoinData = new GameJoinData(game.getGameID(), null);
+                Main.NETWORK.getPackageHandler().sendRequest(new Request<>(gameJoinData, RequestType.GAME_JOIN));
             });
-            this.gameRoomPanel.add(gameJoinButton);
 
+            this.gameRoomPanel.add(gameJoinButton);
             y += gameJoinButton.getHeight();
         }
 

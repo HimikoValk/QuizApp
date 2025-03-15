@@ -1,0 +1,19 @@
+package com.himiko.network.protocol.data;
+
+public class GameJoinData {
+    private long gameID;
+    private Integer code; //Koennte null sein deswegen Integer und nicht in
+
+    public GameJoinData(long gameID, Integer code) {
+        this.gameID = gameID;
+        this.code = code;
+    }
+
+    public long getGameID() {
+        return gameID;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+}
