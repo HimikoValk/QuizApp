@@ -26,7 +26,7 @@ public class PackageHandler extends Thread{
     private Logger logger;
     private Connection connection;
     private Gson gson;
-    //BlockingQueue  zur synchronen Uebergabe der Server Response
+    //BlockingQueue zur synchronen Uebergabe der Server Response
     private final BlockingQueue<Response<?>> responseQueue = new LinkedBlockingQueue<>();
 
     public PackageHandler(Connection connection)
@@ -69,7 +69,9 @@ public class PackageHandler extends Thread{
         Response<?> response = gson.fromJson(rawPackage.getData(), new TypeToken<Response<?>>() {}.getType());
         this.logger.debug("Handling response: {}", response.getResponseType());
 
-        this.responseQueue.offer(response);
+        if(this.responseQueue.offer(response)) {
+            this.logger.debug("Received requested response...");
+        }
 
         switch (response.getResponseType()) {
             case GAMES -> {
@@ -107,16 +109,12 @@ public class PackageHandler extends Thread{
     public Response<?> sendRequestWithCallBack(Request<?> request)
     {
         this.sendRequest(request);
-
         try
         {
-            //Warte 5 Sekunden bis der Server geantwortet hat
-            Response response = responseQueue.poll(5, TimeUnit.SECONDS);
-            return response;
+            return responseQueue.poll();
         }catch (Exception e)
         {
             this.logger.error("Something went wrong while waiting for response:{}", e.getMessage());
-            //Schliesze den Thread fuer die BlockingQueue
             Thread.currentThread().interrupt();
             return null;
         }

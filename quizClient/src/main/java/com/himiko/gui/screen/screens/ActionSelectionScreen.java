@@ -47,7 +47,6 @@ public class ActionSelectionScreen extends Screen {
 
         this.joinPublicGameButton.addActionListener(e -> {
             this.logger.debug("Joining public game...");
-            //TODO: Implement join game logic
             Main.NETWORK.getPackageHandler().sendRequest(new Request<>(null, RequestType.GET_GAMES));
             try {
                 Thread.sleep(300);

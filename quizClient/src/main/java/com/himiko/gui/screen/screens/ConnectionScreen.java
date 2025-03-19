@@ -42,27 +42,21 @@ public class ConnectionScreen extends Screen {
 
         this.titleLabel = GUI.uiManager.createStyledLabel("Connection Screen");
         this.titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        this.titleLabel.setSize(200, 100);
 
         this.serverAddressLabel = GUI.uiManager.createStyledLabel("Server-IP:");
 
         this.portLabel = GUI.uiManager.createStyledLabel("Port:");
 
         this.addressField = GUI.uiManager.createStyledTextField("127.0.0.1");
-        this.addressField.setSize(100, 30);
 
         this.portField = GUI.uiManager.createStyledTextField("8080");
-        this.portField.setSize(100, 30);
 
         this.usernameField = GUI.uiManager.createStyledTextField("Username");
-        this.usernameField.setSize(100, 30);
         this.usernameField.setEnabled(false);
 
         this.connectButton = GUI.uiManager.createStyledButton("Connect");
-        this.connectButton.setSize(150, 30);
 
         this.enterButton = GUI.uiManager.createStyledButton("Enter");
-        this.enterButton.setSize(150, 30);
         this.enterButton.setEnabled(false);
 
         this.connectButton.addActionListener(e -> {
@@ -109,27 +103,23 @@ public class ConnectionScreen extends Screen {
 
     @Override
     public void onEnter() {
-        WIDTH = Main.GUI.getWidth();
-        HEIGHT = Main.GUI.getHeight();
+        this.WIDTH = Main.GUI.getWidth();
+        this.HEIGHT = Main.GUI.getHeight();
 
-        this.titleLabel.setBounds(WIDTH / 2 - (this.titleLabel.getWidth() / 2), 0, this.titleLabel.getWidth(), this.titleLabel.getHeight());
+        int titleWidth = 300, titleHeight = 50;
+        int fieldWidth = 200, fieldHeight = 30;
+        int labelWidth = 100, labelHeight = 30;
+        int buttonWidth = 150, buttonHeight = 30;
+        int verticalGap = 10;
 
-        this.addressField.setBounds(WIDTH / 2 - (this.addressField.getWidth() / 2),
-                HEIGHT / 2, this.addressField.getWidth(), this.addressField.getHeight());
-        this.serverAddressLabel.setBounds(this.addressField.getX() - this.serverAddressLabel.getWidth(), this.addressField.getY() - (this.serverAddressLabel.getHeight() / 2 - 10), this.serverAddressLabel.getWidth(), this.serverAddressLabel.getHeight());
-
-        this.usernameField.setBounds(WIDTH / 2 - (this.usernameField.getWidth() / 2),
-                this.addressField.getY() - this.usernameField.getHeight(), this.usernameField.getWidth(), this.usernameField.getHeight());
-
-        this.portField.setBounds(WIDTH / 2 - (this.portField.getWidth() / 2),
-                this.addressField.getY() + this.portField.getHeight(), this.portField.getWidth(), this.portField.getHeight());
-        this.portLabel.setBounds(this.portField.getX() - this.portLabel.getWidth(), this.portField.getY(), this.portLabel.getWidth(), this.portLabel.getHeight());
-
-        this.connectButton.setBounds(WIDTH / 2 - (this.connectButton.getWidth() / 2),
-                this.portField.getY() + this.connectButton.getHeight() + 10, this.connectButton.getWidth(), this.connectButton.getHeight());
-
-        this.enterButton.setBounds(WIDTH / 2 - (this.enterButton.getWidth() / 2),
-                this.connectButton.getY() + this.enterButton.getHeight(), this.enterButton.getWidth(), this.enterButton.getHeight());
+        this.titleLabel.setBounds((this.WIDTH - titleWidth) / 2, 20, titleWidth, titleHeight);
+        this.usernameField.setBounds((this.WIDTH - fieldWidth) / 2, this.titleLabel.getY() + titleHeight + verticalGap, fieldWidth, fieldHeight);
+        this.addressField.setBounds((this.WIDTH - fieldWidth) / 2, this.usernameField.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.serverAddressLabel.setBounds(this.addressField.getX() - labelWidth - 10, this.addressField.getY(), labelWidth, labelHeight);
+        this.portField.setBounds((this.WIDTH - fieldWidth) / 2, this.addressField.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.portLabel.setBounds(this.portField.getX() - labelWidth - 10, this.portField.getY(), labelWidth, labelHeight);
+        this.connectButton.setBounds((WIDTH - buttonWidth) / 2, portField.getY() + fieldHeight + verticalGap, buttonWidth, buttonHeight);
+        this.enterButton.setBounds((WIDTH - buttonWidth) / 2, connectButton.getY() + buttonHeight + verticalGap, buttonWidth, buttonHeight);
 
         super.onEnter();
     }
