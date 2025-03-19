@@ -1,15 +1,11 @@
 package com.himiko.game;
 
 import com.himiko.Main;
+import com.himiko.game.elements.Question;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
-import com.himiko.server.Server;
-import com.himiko.server.handler.PackageHandler;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.data.GameInfo;
-import com.himiko.server.protocol.data.ServerInformation;
-import com.himiko.server.protocol.request.Request;
-import com.himiko.server.protocol.request.RequestType;
 import com.himiko.server.protocol.response.Response;
 import com.himiko.server.protocol.response.ResponseType;
 import com.himiko.server.utils.NetworkClient;
@@ -23,7 +19,6 @@ import java.util.stream.Collectors;
  */
 public class GameManager {
     private Logger logger;
-    //Key:ID (Long), Value:Game
     private static Map<Long, Game> games = new HashMap<>();
     private static final long maxID = 99999999999L;
 
@@ -33,6 +28,34 @@ public class GameManager {
         for(int i = 0; i < 10; i++) {
             //Create 10 Games
             this.createGame();
+        }
+    }
+
+    public void startGame(long gameID)
+    {
+        if(!this.doesGameExist(gameID)) return;
+
+        Game game = games.get(gameID);
+
+        if(game.getCurrentUserList().size() < 2)
+        {
+            this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
+            return;
+        }
+
+        game.setGameState(GameState.RUNNING);
+        this.logger.info("Starting game with id :{}", game.getGameID());
+
+        new Thread(() -> {
+            //TODO:
+        }).start();
+    }
+
+    public void sendQuestionToPlayers(Game game, Question question)
+    {
+        for(NetworkClient client : game.getCurrentUserList())
+        {
+            Main.server.packageHandler.sendResponse(new Response<>(question, ResponseType.QUESTION), client);
         }
     }
 
@@ -62,7 +85,8 @@ public class GameManager {
         if(!doesGameExist(gameID)) return false;
         Game game = games.get(gameID);
 
-        if(game.getCurrentUserList().size() >= game.getMaxUserSize()) {
+        if(game.getCurrentUserList().size() >= game.getMaxUserSize())
+        {
             Main.server.packageHandler.sendResponse(new Response<>("Game is already full!", ResponseType.FAILURE), client);
             return false;
         }
@@ -73,20 +97,46 @@ public class GameManager {
             return false;
         }
 
+        if(game.getGameState() == GameState.RUNNING)
+        {
+            Main.server.packageHandler.sendResponse(new Response<>("Game is already running!", ResponseType.FAILURE), client);
+            return false;
+        }
+
         game.addUser(client);
 
         return true;
     }
 
+    public void removeUser(NetworkClient client)
+    {
+        games.values().forEach(g ->{if(g.isUserInGame(client)) g.removeUser(client);});
+    }
+
+    public void removeUser(long gameID, NetworkClient client)
+    {
+        if(this.doesGameExist(gameID) && this.isUserInGame(gameID, client))
+        {
+            games.get(gameID).removeUser(client);
+        }
+    }
+
     public boolean isPrivateGame(long gameID)
     {
-        if(games.get(gameID) == null) throw new RuntimeException("Game does not exist");
+        if(!doesGameExist(gameID)) throw new RuntimeException("Game does not exist");
         return games.get(gameID).isPrivateGame();
     }
+
     public boolean isCodeCorrect(long gameID,int code)
     {
-        if(games.get(gameID) == null) throw new RuntimeException("Game does not exist");
+        if(!doesGameExist(gameID)) throw new RuntimeException("Game does not exist");
         return games.get(gameID).getCode() == code;
+    }
+
+    public boolean isUserInGame(long gameID, NetworkClient client)
+    {
+        if(!doesGameExist(gameID)) throw new RuntimeException("Game does not exist");
+        return games.get(gameID).isUserInGame(client);
     }
 
     public List<GameInfo> getGameInfos() {

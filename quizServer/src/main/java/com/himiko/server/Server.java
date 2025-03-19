@@ -96,6 +96,7 @@ public class Server extends Thread{
                             packageHandler.handelPackage(message, client);
                         } else {
                             closeConnection(client);
+                            Main.gameManager.removeUser(client);
                         }
                     }
                     logger.warning("Client disconnected, closing client connection and thread");

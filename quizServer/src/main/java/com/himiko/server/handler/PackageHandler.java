@@ -89,6 +89,7 @@ public class PackageHandler{
                     return;
                 }
                 SessionManager.removeSession(client);
+                Main.gameManager.removeUser(client);
                 break;
             }
 
@@ -114,7 +115,6 @@ public class PackageHandler{
                 }else
                 {
                     if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
-
                 }
                 break;
             }

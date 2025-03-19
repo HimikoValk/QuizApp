@@ -17,8 +17,8 @@ public class Game {
     private List<NetworkClient> currentUserList = new ArrayList<>();
     private List<Question> quetsionPool = new ArrayList<>();
     private User gameCreator;
-
     private Question currentQuestion;
+    private GameState gameState = GameState.WAITING;
 
     //Default constructor
     public Game(final long gameID)
@@ -124,10 +124,18 @@ public class Game {
     }
 
     public Question getCurrentQuestion() {
-        return currentQuestion;
+        return this.currentQuestion;
     }
 
     public void setCurrentQuestion(Question currentQuestion) {
         this.currentQuestion = currentQuestion;
+    }
+
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }
