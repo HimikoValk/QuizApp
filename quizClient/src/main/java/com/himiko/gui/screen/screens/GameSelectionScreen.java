@@ -40,11 +40,11 @@ public class GameSelectionScreen extends Screen {
         });
 
         this.gameRoomPanel = new JPanel();
+        this.gameRoomPanel.setLayout(new BoxLayout(this.gameRoomPanel, BoxLayout.Y_AXIS));
         this.gameRoomPanel.setBackground(GUI.uiManager.getCurrentTheme().backgroundColor.brighter());
 
         this.scrollPane = new JScrollPane(this.gameRoomPanel);
         this.scrollPane.setBounds((WIDTH / 2) + 150, (HEIGHT / 2) + 50, 200, 300);
-        this.scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         this.scrollPane.setBackground(GUI.uiManager.getCurrentTheme().backgroundColor.brighter());
 
         super.setComponents(this.backButton,this.gameRoomPanel,this.scrollPane, this.titelLabel);
@@ -75,13 +75,17 @@ public class GameSelectionScreen extends Screen {
         {
             this.logger.debug("{}",game.getGameID());
             JButton gameJoinButton = GUI.uiManager.createStyledButton("Game:" + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
-            gameJoinButton.setBounds(x, y, this.gameRoomPanel.getWidth(), 50);
-            gameJoinButton.addActionListener(a -> {
+            gameJoinButton.setBounds(x, y, this.scrollPane.getWidth() - 10, 50);
+            gameJoinButton.addActionListener(a ->
+            {
                 GameJoinData gameJoinData = new GameJoinData(game.getGameID(), null);
                 Main.NETWORK.getPackageHandler().sendRequest(new Request<>(gameJoinData, RequestType.GAME_JOIN));
+                //TODO:Implement function to check if game is full or await a response from server like ok or error#
+                ScreenHandler.INSTANCE.changeScreen(new GameScreen(game));
             });
 
             this.gameRoomPanel.add(gameJoinButton);
+            this.gameRoomPanel.add(Box.createRigidArea(new Dimension(0, 10)));
             y += gameJoinButton.getHeight();
         }
 

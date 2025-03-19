@@ -102,15 +102,18 @@ public class PackageHandler{
             case GAME_JOIN ->
             {
                 GameJoinData gameJoinData = this.parseDataToClass(request.getData().toString(), GameJoinData.class);
+                //Checking for private game
                 if(Main.gameManager.isPrivateGame(gameJoinData.getGameID()))
                 {
+                    assert gameJoinData.getCode() != null;
                     if(Main.gameManager.isCodeCorrect(gameJoinData.getGameID(), gameJoinData.getCode())) {
                         Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
                         this.sendResponse(new Response<>("Succeed", null), client);
                     }else {
                         this.sendResponse(new Response<>(null, ResponseType.ERROR), client);
                     }
-                }else {
+                }else
+                {
                     Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
                     this.sendResponse(new Response<>("Succeed", null), client);
                 }
@@ -121,6 +124,7 @@ public class PackageHandler{
             {
                 ServerInformation serverInformation = new ServerInformation(SessionManager.getActiveSessionSize(), Main.gameManager.getPublicGames().size(), Main.version);
                 this.sendResponse(new Response<>(serverInformation,ResponseType.SERVER_INFORMATION), client);
+                break;
             }
         }
     }

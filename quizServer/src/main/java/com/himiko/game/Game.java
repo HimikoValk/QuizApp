@@ -11,7 +11,7 @@ import java.util.List;
 public class Game {
     private int maxUserSize;
     private long gameID;
-    private int code;
+    private Integer code;
     private boolean privateGame = false;
 
     private List<NetworkClient> currentUserList = new ArrayList<>();
@@ -26,7 +26,7 @@ public class Game {
         this.maxUserSize = 4; //Default user size
         this.gameID = gameID;
         this.privateGame = false;
-        this.code = 0;
+        this.code = null;
     }
 
     //Custom game constructor (Private game)
@@ -87,11 +87,11 @@ public class Game {
         this.gameID = gameID;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
