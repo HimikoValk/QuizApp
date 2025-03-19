@@ -119,6 +119,23 @@ public class PackageHandler{
                 break;
             }
 
+            case GAME_LEAVE ->
+            {
+                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
+                if(gameID != null) {
+                    if (Main.gameManager.isUserInGame(gameID, client)) {
+                        Main.gameManager.removeUser(gameID, client);
+                        this.logger.info("Removed user from game (User:{} GameID:{})!", client.getClient().getRemoteSocketAddress(), gameID);
+                    }
+                }else
+                {
+                    Main.gameManager.removeUser(client);
+                    this.logger.info("Removed user from game (User:{})!", client.getClient().getRemoteSocketAddress());
+                }
+
+                break;
+            }
+
             case SERVER_INFORMATION ->
             {
                 ServerInformation serverInformation = new ServerInformation(SessionManager.getActiveSessionSize(), Main.gameManager.getPublicGames().size(), Main.version);
