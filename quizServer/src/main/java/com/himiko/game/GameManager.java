@@ -3,9 +3,11 @@ package com.himiko.game;
 import com.himiko.Main;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
+import com.himiko.server.Server;
 import com.himiko.server.handler.PackageHandler;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.data.GameInfo;
+import com.himiko.server.protocol.data.ServerInformation;
 import com.himiko.server.protocol.request.Request;
 import com.himiko.server.protocol.request.RequestType;
 import com.himiko.server.protocol.response.Response;
@@ -55,10 +57,25 @@ public class GameManager {
         this.logger.debug("Created game with id:{}", gameID);
     }
 
-    public void addUserToGame(long gameID, NetworkClient client)
+    public boolean addUserToGame(long gameID, NetworkClient client)
     {
-        if(!doesGameExist(gameID)) return;
+        if(!doesGameExist(gameID)) return false;
         Game game = games.get(gameID);
+
+        if(game.getCurrentUserList().size() >= game.getMaxUserSize()) {
+            Main.server.packageHandler.sendResponse(new Response<>("Game is already full!", ResponseType.FAILURE), client);
+            return false;
+        }
+
+        if(game.isUserInGame(client))
+        {
+            Main.server.packageHandler.sendResponse(new Response<>("You are already in game!", ResponseType.FAILURE), client);
+            return false;
+        }
+
+        game.addUser(client);
+
+        return true;
     }
 
     public boolean isPrivateGame(long gameID)

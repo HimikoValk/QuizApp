@@ -70,12 +70,12 @@ public class PackageHandler{
                 User userData = this.parseDataToClass(request.getData().toString(), User.class);
 
                 if (SessionManager.getUser(client) != null && SessionManager.doesUsernameExist(userData.getName())) {
-                    this.sendResponse(new Response<>(false,ResponseType.LOGIN_FAILED), client);
+                    this.sendResponse(new Response<>(false,ResponseType.FAILURE), client);
                     return;
                 }
 
                 SessionManager.addSession(client, userData);
-                this.sendResponse(new Response<>(true,ResponseType.LOGIN_SUCCESS), client);
+                this.sendResponse(new Response<>(true,ResponseType.SUCCESS), client);
                 this.logger.debug("User data: Name:{} ID:{}", SessionManager.getUser(client).getName(), SessionManager.getUser(client).getId());
                 break;
             }
@@ -84,7 +84,7 @@ public class PackageHandler{
             {
                 this.logger.debug("Received Logout!");
 
-                if (SessionManager.getUser(client) == null) {
+                if (!SessionManager.doesUserExist(client)) {
                     this.sendResponse(new Response<>(null, ResponseType.ERROR), client);
                     return;
                 }
@@ -107,15 +107,14 @@ public class PackageHandler{
                 {
                     assert gameJoinData.getCode() != null;
                     if(Main.gameManager.isCodeCorrect(gameJoinData.getGameID(), gameJoinData.getCode())) {
-                        Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
-                        this.sendResponse(new Response<>("Succeed", null), client);
+                        if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
                     }else {
-                        this.sendResponse(new Response<>(null, ResponseType.ERROR), client);
+                        this.sendResponse(new Response<>("Code is not correct..", ResponseType.ERROR), client);
                     }
                 }else
                 {
-                    Main.gameManager.addUserToGame(gameJoinData.getGameID(), client);
-                    this.sendResponse(new Response<>("Succeed", null), client);
+                    if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
+
                 }
                 break;
             }

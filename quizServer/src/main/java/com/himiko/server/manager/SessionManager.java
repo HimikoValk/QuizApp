@@ -34,6 +34,11 @@ public class SessionManager {
         return sessions.values().stream().anyMatch(u -> u.getName().equals(username));
     }
 
+    public static boolean doesUserExist(NetworkClient client)
+    {
+        return sessions.containsKey(client);
+    }
+
     public static int getActiveSessionSize()
     {
         return sessions.size();

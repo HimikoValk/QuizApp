@@ -1,8 +1,8 @@
 package com.himiko.server.protocol.response;
 
 public enum ResponseType {
-    LOGIN_SUCCESS,   // Erfolgreicher Login
-    LOGIN_FAILED,    // Fehlgeschlagener Login
+    SUCCESS,
+    FAILURE,    // Fehlgeschlagener Login
     USER_DATA,       // Antwort mit User-Daten
     PLAYER_COUNT,    // Anzahl aktiver Spieler
     GAMES,           // Aktuelle verfuegbare Spiele
