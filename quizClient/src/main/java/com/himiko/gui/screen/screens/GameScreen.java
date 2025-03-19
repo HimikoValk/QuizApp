@@ -20,36 +20,45 @@ public class GameScreen extends Screen {
     private Game game;
     private JLabel gameInfoLabel;
     private JButton leaveButton;
+    private JPanel mainPanel;
 
     public GameScreen(Game game) {
         super("Game: " + game.getGameID());
         this.game = game;
 
-        // Label mit Spielinformationen
-        this.gameInfoLabel = new JLabel("Spiel: " + game.getGameID() + " | Spieler: " + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
+        this.gameInfoLabel = GUI.uiManager.createStyledLabel("Game: " + game.getGameID() + " | Players: " + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
         this.gameInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        this.gameInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Leave-Button zum Verlassen des Spiels
         this.leaveButton = GUI.uiManager.createStyledButton("Leave");
-        this.leaveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.leaveButton.addActionListener(e -> {
             Main.NETWORK.getPackageHandler().sendRequest(new Request<>(this.game.getGameID(), RequestType.GAME_LEAVE));
             ScreenHandler.INSTANCE.changeScreen(ScreenHandler.GAME_SELECTION_SCREEN);
         });
 
         // Layout setzen
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.add(gameInfoLabel);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        mainPanel.add(leaveButton);
+        this.mainPanel = new JPanel();
+        this.mainPanel.setBackground(GUI.uiManager.getCurrentTheme().backgroundColor);
+        this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
+        this.mainPanel.add(this.gameInfoLabel);
+        this.mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        this.mainPanel.add(this.leaveButton);
 
         super.setComponents(mainPanel);
     }
 
     @Override
-    public void render(Graphics g) {
+    public void onEnter() {
+        this.WIDTH = Main.GUI.getWidth();
+        this.HEIGHT = Main.GUI.getHeight();
 
+        this.mainPanel.setBounds(0, 0, this.WIDTH, this.HEIGHT);
+        this.leaveButton.setVisible(true);
+        super.onEnter();
+    }
+
+    @Override
+    public void render(Graphics g) {
+        gameInfoLabel.setText("Game: " + game.getGameID() + " | Players: "
+                + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
     }
 }

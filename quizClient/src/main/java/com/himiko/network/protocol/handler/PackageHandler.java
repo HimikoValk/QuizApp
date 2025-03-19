@@ -69,9 +69,7 @@ public class PackageHandler extends Thread{
         Response<?> response = gson.fromJson(rawPackage.getData(), new TypeToken<Response<?>>() {}.getType());
         this.logger.debug("Handling response: {}", response.getResponseType());
 
-        if(this.responseQueue.offer(response)) {
-            this.logger.debug("Received requested response...");
-        }
+        this.responseQueue.offer(response);
 
         switch (response.getResponseType()) {
             case GAMES -> {
@@ -108,10 +106,12 @@ public class PackageHandler extends Thread{
 
     public Response<?> sendRequestWithCallBack(Request<?> request)
     {
+        this.responseQueue.clear();
+
         this.sendRequest(request);
         try
         {
-            return responseQueue.poll();
+            return this.responseQueue.poll(5, TimeUnit.SECONDS);
         }catch (Exception e)
         {
             this.logger.error("Something went wrong while waiting for response:{}", e.getMessage());

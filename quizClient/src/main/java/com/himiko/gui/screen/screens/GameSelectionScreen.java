@@ -17,6 +17,7 @@ import com.himiko.network.protocol.response.ResponseType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Valk on 14.03.2025
@@ -67,7 +68,6 @@ public class GameSelectionScreen extends Screen {
 
     @Override
     public void render(Graphics g) {
-
     }
 
     private void updateGameButtons()
@@ -84,7 +84,7 @@ public class GameSelectionScreen extends Screen {
             {
                 GameJoinData gameJoinData = new GameJoinData(game.getGameID(), null);
                 Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(gameJoinData, RequestType.GAME_JOIN));
-
+                this.logger.debug("Response Type from GAME_JOIN:{}", response.getResponseType());
                 if(response.getResponseType() == ResponseType.SUCCESS) {
                     ScreenHandler.INSTANCE.changeScreen(new GameScreen(game));
                 }else {

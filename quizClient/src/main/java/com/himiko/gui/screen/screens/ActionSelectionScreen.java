@@ -85,6 +85,7 @@ public class ActionSelectionScreen extends Screen {
 
     @Override
     public void render(Graphics g) {
+        this.updatePlayerCount();
         this.searchGameButton.repaint();
         this.createGameButton.repaint();
         this.profileButton.repaint();
@@ -106,7 +107,6 @@ public class ActionSelectionScreen extends Screen {
         this.refreshButton.setBounds(0,400 , 200, 40);
         this.logoutButton.setBounds(WIDTH - 200,400 , 200, 40);
 
-        this.updatePlayerCount();
 
         super.onEnter();
     }
@@ -114,7 +114,6 @@ public class ActionSelectionScreen extends Screen {
     private void updatePlayerCount() {
         try {
             Main.NETWORK.getPackageHandler().sendRequest(new Request<>(RequestType.SERVER_INFORMATION));
-            Thread.sleep(200);
             this.onlinePlayersLabel.setText("Online Players: " + GameManager.currentPlayerCount);
         } catch (Exception e) {
             throw new RuntimeException(e);
