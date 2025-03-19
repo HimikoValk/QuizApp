@@ -1,15 +1,15 @@
 package com.himiko.network.protocol.response;
 
 public enum ResponseType {
-    LOGIN_SUCCESS,   // Erfolgreicher Login
-    LOGIN_FAILED,    // Fehlgeschlagener Login
-    USER_DATA,       // Antwort mit User-Daten
-    PLAYER_COUNT,    // Anzahl aktiver Spieler
+    SUCCESS,
+    FAILURE,
+    USER_DATA,
+    PLAYER_COUNT,
     GAMES,
-    GAME_CREATED,    // Spiel erfolgreich erstellt
-    GAME_JOINED,     // Erfolgreich beigetreten
-    GAME_LEFT,       // Erfolgreich verlassen
-    GAME_EDITED,     // Spiel erfolgreich bearbeitet
-    ERROR,           // Allgemeine Fehlermeldung
+    GAME_CREATED,
+    GAME_JOINED,
+    GAME_LEFT,
+    GAME_EDITED,
+    ERROR,
     SERVER_INFORMATION;
 }

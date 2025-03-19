@@ -7,9 +7,10 @@ import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
 import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
-import com.himiko.network.protocol.PackageCategory;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
+import com.himiko.network.protocol.response.Response;
+import com.himiko.network.protocol.response.ResponseType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,16 +85,13 @@ public class ConnectionScreen extends Screen {
         this.enterButton.addActionListener(e -> {
             if (Main.NETWORK.getConnection().isConnected()) {
                 //Request login/access (ID will be generated on server side)
-                Main.NETWORK.getPackageHandler().sendRequest(new Request<UserData>(new UserData(this.usernameField.getText(), 0L), RequestType.USER_LOGIN));
-                try {
-                    Thread.sleep(200);
-                    if(Main.NETWORK.hasAccess()) {
-                        //TODO:IMPLEMENT GAME SCREEN USW.
-                        this.logger.debug("Has access..");
-                        ScreenHandler.INSTANCE.changeScreen(ScreenHandler.ACTION_SELECTION_SCREEN);
-                    }
-                }catch (Exception ex) {
-                    this.logger.error("Something went wrong...");
+                Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<UserData>(new UserData(this.usernameField.getText(), 0L), RequestType.USER_LOGIN));
+                if(response.getResponseType() == ResponseType.SUCCESS)
+                {
+                    this.logger.info("Successfully logged in");
+                    ScreenHandler.INSTANCE.changeScreen(ScreenHandler.ACTION_SELECTION_SCREEN);
+                }else {
+                    JOptionPane.showMessageDialog(null, "Failed to enter!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

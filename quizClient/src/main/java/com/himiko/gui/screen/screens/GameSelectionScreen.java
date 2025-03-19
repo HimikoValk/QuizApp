@@ -12,6 +12,8 @@ import com.himiko.logger.Logger;
 import com.himiko.network.protocol.data.GameJoinData;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
+import com.himiko.network.protocol.response.Response;
+import com.himiko.network.protocol.response.ResponseType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,9 +81,13 @@ public class GameSelectionScreen extends Screen {
             gameJoinButton.addActionListener(a ->
             {
                 GameJoinData gameJoinData = new GameJoinData(game.getGameID(), null);
-                Main.NETWORK.getPackageHandler().sendRequest(new Request<>(gameJoinData, RequestType.GAME_JOIN));
-                //TODO:Implement function to check if game is full or await a response from server like ok or error#
-                ScreenHandler.INSTANCE.changeScreen(new GameScreen(game));
+                Response response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(gameJoinData, RequestType.GAME_JOIN));
+
+                if(response.getResponseType() == ResponseType.SUCCESS) {
+                    ScreenHandler.INSTANCE.changeScreen(new GameScreen(game));
+                }else {
+                    JOptionPane.showMessageDialog(null, "Failed to enter! Room might be full...", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             });
 
             this.gameRoomPanel.add(gameJoinButton);

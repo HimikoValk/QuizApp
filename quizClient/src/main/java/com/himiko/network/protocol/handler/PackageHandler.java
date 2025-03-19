@@ -17,11 +17,17 @@ import com.himiko.network.protocol.PackageCategory;
 import javax.swing.*;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class PackageHandler extends Thread{
     private Logger logger;
     private Connection connection;
     private Gson gson;
+    //BlockingQueue  zur synchronen Uebergabe der Server Response
+    private final BlockingQueue<Response<?>> responseQueue = new LinkedBlockingQueue<>();
 
     public PackageHandler(Connection connection)
     {
@@ -33,8 +39,8 @@ public class PackageHandler extends Thread{
     public void handelPackage(String data)
     {
         this.logger.debug("Message Received:{}", data);
-        //Don't u dare to remove the exp catch!
-        // The Server will crash if an error will happen in here
+        // Mach das nicht weg
+        // Der Server wird crashen wenn hier irgendwas schief laeuft
         try {
             Package<JsonElement> rawPackage = gson.fromJson(data, new TypeToken<Package<JsonElement>>() {
             }.getType());
@@ -63,6 +69,8 @@ public class PackageHandler extends Thread{
         Response<?> response = gson.fromJson(rawPackage.getData(), new TypeToken<Response<?>>() {}.getType());
         this.logger.debug("Handling response: {}", response.getResponseType());
 
+        this.responseQueue.offer(response);
+
         switch (response.getResponseType()) {
             case GAMES -> {
                 Type gameInfoListType = new TypeToken<List<GameInfo>>() {}.getType();
@@ -77,18 +85,16 @@ public class PackageHandler extends Thread{
                 this.logger.debug("PlayerCount:{}", serverInformation.getPlayerCount());
                 break;
             }
-            case LOGIN_SUCCESS -> {
-                Main.NETWORK.setAccess(true);
-                this.logger.info("Successfully passed auth!");
-                break;
-            }
-            case LOGIN_FAILED -> {
-                Main.NETWORK.setAccess(false);
-                this.logger.info("Login attempt was a failure...");
-            }
             case ERROR -> {
                 this.logger.error("Received a error from server!");
-                JOptionPane.showMessageDialog(null, "Something went wrong on server side!", "Error", JOptionPane.ERROR_MESSAGE);
+                String errorMessage = "";
+
+                if(response.getData() != null)
+                {
+                    errorMessage = response.getData().toString();
+                }
+
+                JOptionPane.showMessageDialog(null, errorMessage.isEmpty() ? "Something went wrong on server side!" : "Something went wrong on server side!\nError Message:" + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             }
             default ->{
@@ -98,11 +104,24 @@ public class PackageHandler extends Thread{
         }
     }
 
-    public void handelRequest(Package<JsonElement> rawPackage)
+    public Response<?> sendRequestWithCallBack(Request<?> request)
     {
-        Request<?> request = gson.fromJson(rawPackage.getData(), new TypeToken<Request<?>>() {}.getType());
-        //TODO:
+        this.sendRequest(request);
+
+        try
+        {
+            //Warte 5 Sekunden bis der Server geantwortet hat
+            Response response = responseQueue.poll(5, TimeUnit.SECONDS);
+            return response;
+        }catch (Exception e)
+        {
+            this.logger.error("Something went wrong while waiting for response:{}", e.getMessage());
+            //Schliesze den Thread fuer die BlockingQueue
+            Thread.currentThread().interrupt();
+            return null;
+        }
     }
+
 
     @Override
     public void run() {
