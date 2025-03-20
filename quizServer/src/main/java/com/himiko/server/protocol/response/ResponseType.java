@@ -10,6 +10,7 @@ public enum ResponseType {
     GAME_EDITED,
     GAME_STARTED,
     GAME_ENDED,
+    GAME_INFO,
 
     GAMES,
     SERVER_INFORMATION,

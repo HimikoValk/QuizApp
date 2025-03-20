@@ -136,6 +136,22 @@ public class PackageHandler{
                 break;
             }
 
+            case GET_GAME_INFO ->
+            {
+                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
+                if(gameID == null) return;
+
+                if(!Main.gameManager.isUserInGame(gameID, client))
+                {
+                    this.sendResponse(new Response<>("Not in game..", ResponseType.ERROR), client);
+                    return;
+                }
+
+                GameInfo gameInfo = Main.gameManager.getGameInfo(gameID);
+                this.sendResponse(new Response<>(gameInfo, ResponseType.GAME_INFO),client);
+                break;
+            }
+
             case SERVER_INFORMATION ->
             {
                 ServerInformation serverInformation = new ServerInformation(SessionManager.getActiveSessionSize(), Main.gameManager.getPublicGames().size(), Main.version);

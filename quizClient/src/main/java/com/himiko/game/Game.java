@@ -14,6 +14,7 @@ public class Game {
     private int code;
     private Question currentQuestion;
     private List<UserData> userList;
+    private GameState gameState;
 
     public Game(long gameID) {
         this.gameID = gameID;
@@ -74,5 +75,13 @@ public class Game {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }

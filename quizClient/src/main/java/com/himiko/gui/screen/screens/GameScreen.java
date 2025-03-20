@@ -6,8 +6,11 @@ import com.himiko.game.Game;
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
 import com.himiko.gui.screen.ScreenHandler;
+import com.himiko.logger.Logger;
+import com.himiko.network.protocol.data.GameInfo;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
+import com.himiko.network.protocol.response.Response;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,17 +20,24 @@ import java.awt.*;
  * @project quizClient
  */
 public class GameScreen extends Screen {
+    private Logger logger;
     private Game game;
     private JLabel gameInfoLabel;
+    private JLabel gameStateLabel;
     private JButton leaveButton;
     private JPanel mainPanel;
 
     public GameScreen(Game game) {
         super("Game: " + game.getGameID());
+        this.logger = Main.logger;
+
         this.game = game;
 
         this.gameInfoLabel = GUI.uiManager.createStyledLabel("Game: " + game.getGameID() + " | Players: " + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
         this.gameInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        this.gameStateLabel = GUI.uiManager.createStyledLabel("" + game.getGameState());
+        this.gameStateLabel.setFont(new Font("Arial", Font.BOLD, 15));
 
         this.leaveButton = GUI.uiManager.createStyledButton("Leave");
         this.leaveButton.addActionListener(e -> {
@@ -35,7 +45,6 @@ public class GameScreen extends Screen {
             ScreenHandler.INSTANCE.changeScreen(ScreenHandler.GAME_SELECTION_SCREEN);
         });
 
-        // Layout setzen
         this.mainPanel = new JPanel();
         this.mainPanel.setBackground(GUI.uiManager.getCurrentTheme().backgroundColor);
         this.mainPanel.setLayout(new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS));
@@ -58,7 +67,14 @@ public class GameScreen extends Screen {
 
     @Override
     public void render(Graphics g) {
-        gameInfoLabel.setText("Game: " + game.getGameID() + " | Players: "
-                + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
+        this.gameInfoLabel.setText("Game: " + this.game.getGameID() + " | Players: "
+                + this.game.getCurrentPlayers() + "/" + this.game.getMaxUserSize());
+
+        //
+        Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(game.getGameID(), RequestType.GET_GAME_INFO));
+        GameInfo gameInfo = Main.NETWORK.getPackageHandler().parseDataToClass(response.getData().toString(), GameInfo.class);
+        this.logger.debug("Game info:{}", gameInfo.getGameState());
+        this.game.setGameState(gameInfo.getGameState());
+        this.game.setCurrentPlayers(gameInfo.getCurrentPlayers());
     }
 }

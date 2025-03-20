@@ -11,6 +11,7 @@ import com.himiko.server.protocol.response.ResponseType;
 import com.himiko.server.utils.NetworkClient;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -139,6 +140,18 @@ public class GameManager {
         return games.get(gameID).isUserInGame(client);
     }
 
+    public GameInfo getGameInfo(long gameID)
+    {
+        //??
+         AtomicReference<GameInfo> gameInfo = new AtomicReference<>();
+         this.getGameInfos().forEach(gameInfo1 -> {
+            assert gameInfo1.getGameID() == gameID;
+            gameInfo.set(gameInfo1);
+         });
+
+         return gameInfo.get();
+    }
+
     public List<GameInfo> getGameInfos() {
         return games.values().stream()
                 .map(game -> new GameInfo(
@@ -148,7 +161,8 @@ public class GameManager {
                         getPlayerNames(game),
                         game.isPrivateGame(),
                         game.isPrivateGame() ? null : game.getCode(),
-                        game.getGameCreator() != null ? game.getGameCreator().getName() : "Unknown"
+                        game.getGameCreator() != null ? game.getGameCreator().getName() : "Unknown",
+                        game.getGameState()
                 ))
                 .collect(Collectors.toList());
     }

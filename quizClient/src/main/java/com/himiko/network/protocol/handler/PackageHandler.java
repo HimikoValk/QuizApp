@@ -148,17 +148,17 @@ public class PackageHandler extends Thread{
         this.logger.debug("Send data to server... Data:{}", rawJSON);
     }
 
-    private <T> T parseDataToClass(JsonElement data, Class<T> type)
+    public <T> T parseDataToClass(JsonElement data, Class<T> type)
     {
         return new Gson().fromJson(data, type);
     }
 
-    private <T> T parseDataToClass(String data, Class<T> type)
+    public <T> T parseDataToClass(String data, Class<T> type)
     {
         return new Gson().fromJson(data, type);
     }
 
-    private <T> T parseDataToClass(String data, Type type) {
+    public <T> T parseDataToClass(String data, Type type) {
         return gson.fromJson(data, type);
     }
 }

@@ -1,14 +1,15 @@
 package com.himiko.server.protocol.request;
 
 public enum RequestType {
-    USER_LOGIN,   // Login-Request
-    USER_LOGOUT,  // Logout-Request
+    USER_LOGIN,
+    USER_LOGOUT,
 
-    GAME_CREATE,  // Create game
-    GAME_JOIN,    // Join game
+    GAME_CREATE,
+    GAME_JOIN,
     GET_GAMES,
-    GAME_LEAVE,   // Leave game
-    GAME_EDIT,    // Edit game
+    GAME_LEAVE,
+    GAME_EDIT,
+    GET_GAME_INFO,
 
     SERVER_INFORMATION
 }

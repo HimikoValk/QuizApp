@@ -1,5 +1,7 @@
 package com.himiko.network.protocol.data;
 
+import com.himiko.game.GameState;
+
 import java.util.List;
 
 public class GameInfo {
@@ -10,8 +12,9 @@ public class GameInfo {
     private boolean privateGame;
     private Integer code;
     private String creatorName;
+    private GameState gameState;
 
-    public GameInfo(long gameID, int maxUserSize, int currentPlayers, List<String> playerNames, boolean privateGame, Integer code, String creatorName) {
+    public GameInfo(long gameID, int maxUserSize, int currentPlayers, List<String> playerNames, boolean privateGame, Integer code, String creatorName, GameState gameState) {
         this.gameID = gameID;
         this.maxUserSize = maxUserSize;
         this.currentPlayers = currentPlayers;
@@ -19,6 +22,7 @@ public class GameInfo {
         this.privateGame = privateGame;
         this.code = code;
         this.creatorName = creatorName;
+        this.gameState = gameState;
     }
 
     public long getGameID() {
@@ -75,5 +79,13 @@ public class GameInfo {
 
     public void setCreatorName(String creatorName) {
         this.creatorName = creatorName;
+    }
+
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }
