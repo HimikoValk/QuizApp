@@ -5,11 +5,13 @@ public enum RequestType {
     USER_LOGOUT,
 
     GAME_CREATE,
+    GAME_START,
     GAME_JOIN,
     GET_GAMES,
     GAME_LEAVE,
     GAME_EDIT,
     GET_GAME_INFO,
 
-    SERVER_INFORMATION
+    SERVER_INFORMATION,
+    ANSWER
 }

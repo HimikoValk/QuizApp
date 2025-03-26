@@ -12,7 +12,10 @@ public class DarkTheme extends Theme {
                  new Color(30, 30, 30), // Secondary Color (Darker Gray)
                  new Color(80, 80, 80), // Hover Color (Lighter Gray)
                  new Color(220, 220, 220), // Text Color (Light Gray)
-                 new Color(20, 20, 20) // Background Color (Almost Black)
+                 new Color(20, 20, 20), // Background Color (Almost Black)
+                 "Arial", //Font Name
+                 Font.BOLD, //Font Type
+                 14         // Font Size
          );
      }
 }

@@ -75,7 +75,6 @@ public class PackageHandler extends Thread{
             case GAMES -> {
                 Type gameInfoListType = new TypeToken<List<GameInfo>>() {}.getType();
                 List<GameInfo> gameInfo = parseDataToClass(response.getData().toString(), gameInfoListType);
-                //TODO Implement usage of gameinfo in GameManager
                 gameInfo.forEach(GameManager::addGame);
                 break;
             }
@@ -94,7 +93,7 @@ public class PackageHandler extends Thread{
                     errorMessage = response.getData().toString();
                 }
 
-                JOptionPane.showMessageDialog(null, errorMessage.isEmpty() ? "Something went wrong on server side!" : "Something went wrong on server side!\nError Message:" + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, errorMessage.isEmpty() ? "Something went wrong on server side!" : "Received a error from server!\nError Message:" + errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             }
             default ->{

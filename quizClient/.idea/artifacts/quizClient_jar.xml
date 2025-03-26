@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="quizClient:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/quizClient_jar</output-path>
+    <root id="archive" name="quizClient.jar">
+      <element id="module-output" name="quizClient" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/23/javafx-controls-23-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/23/javafx-graphics-23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/23/javafx-base-23-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/23/javafx-controls-23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/resources/jars/Logger.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/23/javafx-base-23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/23/javafx-fxml-23-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/23/javafx-fxml-23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/23/javafx-graphics-23-win.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

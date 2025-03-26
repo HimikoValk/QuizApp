@@ -72,7 +72,6 @@ public class GameSelectionScreen extends Screen {
 
     private void updateGameButtons()
     {
-        //TODO:FIX!!!!!!!!!!!!
         this.gameRoomPanel.removeAll();
 
         for(Game game : GameManager.getGames())

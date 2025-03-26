@@ -3,6 +3,7 @@ package com.himiko;
 
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.ScreenHandler;
+import com.himiko.gui.screen.screens.CreateGameScreen;
 import com.himiko.logger.Logger;
 import com.himiko.logger.LoggerBuilder;
 import com.himiko.network.NetworkWrapper;

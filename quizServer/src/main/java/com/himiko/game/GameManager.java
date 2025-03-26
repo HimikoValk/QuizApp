@@ -26,6 +26,7 @@ public class GameManager {
     public GameManager()
     {
         this.logger = Main.logger;
+        //Just for a Test
         for(int i = 0; i < 10; i++) {
             //Create 10 Games
             this.createGame();
@@ -38,7 +39,7 @@ public class GameManager {
 
         Game game = games.get(gameID);
 
-        if(game.getCurrentUserList().size() < 2)
+        if(game.getCurrentUserList().size() < (game.getMaxUserSize() / 2))
         {
             this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
             return;
@@ -48,7 +49,13 @@ public class GameManager {
         this.logger.info("Starting game with id :{}", game.getGameID());
 
         new Thread(() -> {
-            //TODO:
+            if(game.getCurrentQuestion() == null)
+            {
+                game.pullNextQuestion();
+            }
+
+            this.sendQuestionToPlayers(game, game.getCurrentQuestion());
+            //TODO:Waiting for answer or until the time is off
         }).start();
     }
 
@@ -68,17 +75,38 @@ public class GameManager {
         this.logger.debug("Created game with id:{}", gameID);
     }
 
-    //Custom Game
-    public void createGame(NetworkClient client, int maxPlayerSize, boolean privateGame, int code)
+    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame)
     {
         User creator = SessionManager.getUser(client);
+
         if(creator == null) {
             this.logger.error("No session found for client:{}", client.getClient().getRemoteSocketAddress());
-            return;
+            return null;
         }
+
         long gameID = createID(maxID);
-        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame, code));
+        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame, this.createCode((int)maxID)));
         this.logger.debug("Created game with id:{}", gameID);
+        return this.getGameInfo(gameID);
+    }
+
+    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame, Question[] questions)
+    {
+        User creator = SessionManager.getUser(client);
+
+        if(creator == null) {
+            this.logger.error("No session found for client:{}", client.getClient().getRemoteSocketAddress());
+            return null;
+        }
+
+        long gameID = this.createID(maxID);
+        int code = this.createCode((int)maxID);
+        Game game = new Game(maxPlayerSize, gameID, creator, privateGame, code);
+        //Add questions to game
+        Arrays.stream(questions).forEach(game::addQuestion);
+        games.put(gameID, game);
+        this.logger.debug("Created game with id:{} User creator:{}", gameID, game.getGameCreator().getName());
+        return this.getGameInfo(gameID);
     }
 
     public boolean addUserToGame(long gameID, NetworkClient client)
@@ -90,15 +118,11 @@ public class GameManager {
         {
             Main.server.packageHandler.sendResponse(new Response<>("Game is already full!", ResponseType.FAILURE), client);
             return false;
-        }
-
-        if(game.isUserInGame(client))
+        }else if(game.isUserInGame(client))
         {
             Main.server.packageHandler.sendResponse(new Response<>("You are already in game!", ResponseType.FAILURE), client);
             return false;
-        }
-
-        if(game.getGameState() == GameState.RUNNING)
+        }else if(game.getGameState() == GameState.RUNNING)
         {
             Main.server.packageHandler.sendResponse(new Response<>("Game is already running!", ResponseType.FAILURE), client);
             return false;
@@ -140,19 +164,43 @@ public class GameManager {
         return games.get(gameID).isUserInGame(client);
     }
 
-    public GameInfo getGameInfo(long gameID)
+    public boolean isUserCreator(long gameID, NetworkClient client)
     {
-        //??
-         AtomicReference<GameInfo> gameInfo = new AtomicReference<>();
-         this.getGameInfos().forEach(gameInfo1 -> {
-            assert gameInfo1.getGameID() == gameID;
-            gameInfo.set(gameInfo1);
-         });
-
-         return gameInfo.get();
+        if(!doesGameExist(gameID)) throw new RuntimeException("Game does not exist");
+        return SessionManager.getUser(client).getId() == games.get(gameID).getGameCreator().getId();
     }
 
-    public List<GameInfo> getGameInfos() {
+    public boolean isUserInGame(NetworkClient client)
+    {
+        return games.values().stream().anyMatch(game -> {
+            return game.isUserInGame(client);
+        });
+    }
+
+    public Game getUserGame(NetworkClient client)
+    {
+        return games.values().stream().filter(g -> {
+            return g.isUserInGame(client);
+        }).findFirst().get();
+    }
+
+    public GameInfo getGameInfo(long gameID)
+    {
+        Game game = games.get(gameID);
+        if(game == null) return null;
+        return new GameInfo(
+                game.getGameID(),
+                game.getMaxUserSize(),
+                game.getCurrentUserList().size(),
+                getPlayerNames(game),
+                game.isPrivateGame(),
+                game.isPrivateGame() ? null : game.getCode(),
+                game.getGameCreator() == null ? "Unknown" : game.getGameCreator().getName(),
+                game.getGameState());
+    }
+
+    public List<GameInfo> getGameInfos()
+    {
         return games.values().stream()
                 .map(game -> new GameInfo(
                         game.getGameID(),
@@ -161,7 +209,7 @@ public class GameManager {
                         getPlayerNames(game),
                         game.isPrivateGame(),
                         game.isPrivateGame() ? null : game.getCode(),
-                        game.getGameCreator() != null ? game.getGameCreator().getName() : "Unknown",
+                        game.getGameCreator() == null ? "Unknown" : game.getGameCreator().getName(),
                         game.getGameState()
                 ))
                 .collect(Collectors.toList());
@@ -198,10 +246,22 @@ public class GameManager {
 
         if(games.get(id) != null) {
             this.logger.warning("SAME ID! CREATE A NEW ONE!");
-            return createID(maxID);
+            return this.createID(maxID);
         }
 
         return id;
+    }
+
+    private int createCode(int maxCodeRange)
+    {
+        int code = (int) (Math.random() * maxCodeRange);
+
+        if(this.getPrivateGames().stream().anyMatch(game -> this.isCodeCorrect(game.getGameID(), code)))
+        {
+            return this.createCode(maxCodeRange);
+        }
+
+        return code;
     }
 
     private boolean doesGameExist(long id)

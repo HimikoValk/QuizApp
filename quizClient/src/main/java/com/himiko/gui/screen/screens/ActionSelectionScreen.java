@@ -29,9 +29,6 @@ public class ActionSelectionScreen extends Screen {
 
         this.logger = Main.logger;
 
-        UIManager.put("Button.font", new Font("Arial", Font.BOLD, 14));
-        UIManager.put("Label.font", new Font("Arial", Font.PLAIN, 14));
-
         this.titleLabel = GUI.uiManager.createStyledLabel("Game Selection");
         this.titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         this.titleLabel.setSize(200, 100);
@@ -63,7 +60,7 @@ public class ActionSelectionScreen extends Screen {
 
         this.createGameButton.addActionListener(e -> {
             this.logger.debug("Creating a new game...");
-            // TODO: Implement game creation logic
+            ScreenHandler.INSTANCE.changeScreen(new CreateGameScreen());
         });
 
         this.profileButton.addActionListener(e -> {

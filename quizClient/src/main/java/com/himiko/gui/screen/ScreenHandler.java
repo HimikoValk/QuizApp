@@ -2,6 +2,7 @@ package com.himiko.gui.screen;
 
 import com.himiko.gui.screen.screens.ConnectionScreen;
 import com.himiko.gui.screen.screens.ActionSelectionScreen;
+import com.himiko.gui.screen.screens.CreateGameScreen;
 import com.himiko.gui.screen.screens.GameSelectionScreen;
 
 public class ScreenHandler {
@@ -12,10 +13,12 @@ public class ScreenHandler {
     public static ConnectionScreen CONNECTION_SCREEN;
     public static ActionSelectionScreen ACTION_SELECTION_SCREEN;
     public static GameSelectionScreen GAME_SELECTION_SCREEN;
+    public static CreateGameScreen CREATE_GAME_SCREEN;
     {
         CONNECTION_SCREEN = new ConnectionScreen();
         ACTION_SELECTION_SCREEN = new ActionSelectionScreen();
         GAME_SELECTION_SCREEN = new GameSelectionScreen();
+        CREATE_GAME_SCREEN = new CreateGameScreen();
     }
 
     public ScreenHandler()

@@ -25,6 +25,7 @@ public class Game {
     {
         this.maxUserSize = 4; //Default user size
         this.gameID = gameID;
+        this.gameCreator = null;
         this.privateGame = false;
         this.code = null;
     }
@@ -50,12 +51,24 @@ public class Game {
         this.currentUserList.remove(client);
     }
 
+    public void pullNextQuestion()
+    {
+        Question tmp = this.getRandomQuestion();
+        if(tmp.isUsed()) this.pullNextQuestion();
+        this.currentQuestion = tmp;
+    }
+
+    private Question getRandomQuestion()
+    {
+        int index = (int)(Math.random() * this.quetsionPool.size());
+        return this.quetsionPool.get(index);
+    }
+
     public void addQuestion(Question question)
     {
         this.quetsionPool.add(question);
     }
 
-    //TODO:??
     public void removeQuestion(Question question)
     {
         this.quetsionPool.remove(question);

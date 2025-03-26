@@ -1,10 +1,10 @@
 package com.himiko.server.protocol;
 
-
 /**
  * @author Valk on 16.02.2025
  * @project quizServer
  */
+
 public class Package<T>{
     private T data;
     private PackageCategory category;

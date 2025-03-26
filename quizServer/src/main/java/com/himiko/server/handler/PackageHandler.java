@@ -1,6 +1,5 @@
 package com.himiko.server.handler;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
@@ -12,6 +11,7 @@ import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.Package;
 import com.himiko.server.protocol.PackageCategory;
+import com.himiko.server.protocol.data.GameCreateData;
 import com.himiko.server.protocol.data.GameInfo;
 import com.himiko.server.protocol.data.GameJoinData;
 import com.himiko.server.protocol.data.ServerInformation;
@@ -100,22 +100,60 @@ public class PackageHandler{
                 break;
             }
 
+            case GAME_START ->
+            {
+                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
+                if(gameID == null) return;
+                if(!Main.gameManager.isUserInGame(gameID, client))
+                {
+                    this.sendResponse(new Response<>("You are not in game", ResponseType.ERROR), client);
+                    return;
+                }else if(!Main.gameManager.isUserCreator(gameID, client))
+                {
+                    this.sendResponse(new Response<>("Only the game Creator can start the game!", ResponseType.ERROR), client);
+                    return;
+                }
+                Main.gameManager.startGame(gameID);
+                this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
+                break;
+            }
+
             case GAME_JOIN ->
             {
                 GameJoinData gameJoinData = this.parseDataToClass(request.getData().toString(), GameJoinData.class);
                 //Checking for private game
                 if(Main.gameManager.isPrivateGame(gameJoinData.getGameID()))
                 {
-                    assert gameJoinData.getCode() != null;
+                    if(gameJoinData.getCode() == null) return;
                     if(Main.gameManager.isCodeCorrect(gameJoinData.getGameID(), gameJoinData.getCode())) {
                         if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
                     }else {
-                        this.sendResponse(new Response<>("Code is not correct..", ResponseType.ERROR), client);
+                        this.sendResponse(new Response<>("Invalid code..", ResponseType.ERROR), client);
                     }
                 }else
                 {
                     if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
                 }
+                break;
+            }
+
+            case GAME_CREATE ->
+            {
+                GameCreateData createData = this.parseDataToClass(request.getData().toString(), GameCreateData.class);
+                GameInfo info = null;
+                if(createData == null || Main.gameManager.isUserInGame(client)) return;
+
+                if(createData.getQuestions() == null)
+                {
+                    info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame());
+                }else
+                {
+                    info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.getQuestions());
+                }
+                this.logger.debug("User creator:{}", info.getCreatorName());
+                //Add user to his own game
+                Main.gameManager.addUserToGame(info.getGameID(), client);
+                this.sendResponse(new Response<>(info, ResponseType.SUCCESS),client);
                 break;
             }
 
@@ -132,7 +170,15 @@ public class PackageHandler{
                     Main.gameManager.removeUser(client);
                     this.logger.info("Removed user from game (User:{})!", client.getClient().getRemoteSocketAddress());
                 }
+                break;
+            }
 
+            case ANSWER ->
+            {
+                String answer = this.parseDataToClass(request.getData().toString(), String.class);
+                if(!Main.gameManager.isUserInGame(client)) return;
+                Game game = Main.gameManager.getUserGame(client);
+                //TODO:Implement Answer logic for Game
                 break;
             }
 
