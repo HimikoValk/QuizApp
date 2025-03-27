@@ -1,12 +1,14 @@
 package com.himiko.game;
 
+import com.himiko.Main;
 import com.himiko.game.elements.Question;
-import com.himiko.game.elements.QuestionCategory;
 import com.himiko.game.utils.User;
 import com.himiko.server.utils.NetworkClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
     private int maxUserSize;
@@ -15,10 +17,15 @@ public class Game {
     private boolean privateGame = false;
 
     private List<NetworkClient> currentUserList = new ArrayList<>();
-    private List<Question> quetsionPool = new ArrayList<>();
+    private List<Question> questions = new ArrayList<>();;
     private User gameCreator;
     private Question currentQuestion;
     private GameState gameState = GameState.WAITING;
+
+    //Client, Answer
+    private Map<NetworkClient, String> currentAnswers = new HashMap<>();
+    //Client, Points
+    private Map<NetworkClient, Integer> points = new HashMap<>();
 
     //Default constructor
     public Game(final long gameID)
@@ -51,27 +58,57 @@ public class Game {
         this.currentUserList.remove(client);
     }
 
+    public void awardPoints(NetworkClient client, int pts) {
+        if(this.points.get(client) == null){ this.points.put(client, pts); return;}
+        this.points.put(client, this.points.get(client) + pts);
+    }
+    public int getPoints(NetworkClient client) {
+        return points.getOrDefault(client, 0);
+    }
+
+    public void storeAnswer(NetworkClient client,String answer){
+        Main.logger.debug("Saved answer!Answer:{}",answer);
+        if(this.currentAnswers.get(client) != null) this.currentAnswers.remove(client);
+        this.currentAnswers.put(client,answer);
+    }
+
+    public void clearAnswers()
+    {
+        this.currentAnswers.clear();
+    }
+
     public void pullNextQuestion()
     {
+        this.clearAnswers();
         Question tmp = this.getRandomQuestion();
         if(tmp.isUsed()) this.pullNextQuestion();
         this.currentQuestion = tmp;
     }
 
-    private Question getRandomQuestion()
-    {
-        int index = (int)(Math.random() * this.quetsionPool.size());
-        return this.quetsionPool.get(index);
-    }
-
     public void addQuestion(Question question)
     {
-        this.quetsionPool.add(question);
+        Main.logger.debug("Add Question:{} With Options Size:{}", question.getQuestion(), question.getQuestion().length());
+        this.questions.add(question);
     }
 
     public void removeQuestion(Question question)
     {
-        this.quetsionPool.remove(question);
+        this.questions.remove(question);
+    }
+
+    public boolean questionAvailable()
+    {
+        return this.questions.stream().anyMatch(question -> !question.isUsed());
+    }
+
+    private Question getRandomQuestion()
+    {
+        int index = (int)(Math.random() * this.questions.size());
+        return this.questions.get(index);
+    }
+
+    public Map<NetworkClient, String> getCurrentAnswers() {
+        return currentAnswers;
     }
 
     public boolean isUserInGame(NetworkClient client)
@@ -120,12 +157,12 @@ public class Game {
         this.currentUserList = currentUserList;
     }
 
-    public List<Question> getQuetsionPool() {
-        return quetsionPool;
+    public List<Question> getQuestions() {
+        return questions;
     }
 
-    public void setQuetsionPool(List<Question> quetsionPool) {
-        this.quetsionPool = quetsionPool;
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 
     public User getGameCreator() {

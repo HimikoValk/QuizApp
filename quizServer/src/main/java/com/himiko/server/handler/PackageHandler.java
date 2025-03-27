@@ -11,10 +11,7 @@ import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.Package;
 import com.himiko.server.protocol.PackageCategory;
-import com.himiko.server.protocol.data.GameCreateData;
-import com.himiko.server.protocol.data.GameInfo;
-import com.himiko.server.protocol.data.GameJoinData;
-import com.himiko.server.protocol.data.ServerInformation;
+import com.himiko.server.protocol.data.*;
 import com.himiko.server.protocol.response.Response;
 import com.himiko.server.protocol.response.ResponseType;
 import com.himiko.server.utils.NetworkClient;
@@ -37,7 +34,7 @@ public class PackageHandler{
 
     public void handelPackage(String data, NetworkClient client)
     {
-        this.logger.debug("Message Received:{}", data);
+       // this.logger.debug("Message Received:{}", data);
         // Don't u dare to remove the exp catch!
         // The Server will crash if an error will happen in here
         try {
@@ -142,7 +139,7 @@ public class PackageHandler{
                 GameCreateData createData = this.parseDataToClass(request.getData().toString(), GameCreateData.class);
                 GameInfo info = null;
                 if(createData == null || Main.gameManager.isUserInGame(client)) return;
-
+                /* Das ist im Ternärer Operator drinnen
                 if(createData.getQuestions() == null)
                 {
                     info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame());
@@ -150,6 +147,8 @@ public class PackageHandler{
                 {
                     info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.getQuestions());
                 }
+                 */
+                info = createData.getQuestions() == null ? Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame()) : Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.getQuestions());
                 this.logger.debug("User creator:{}", info.getCreatorName());
                 //Add user to his own game
                 Main.gameManager.addUserToGame(info.getGameID(), client);
@@ -173,12 +172,26 @@ public class PackageHandler{
                 break;
             }
 
+            case GAME_EDIT ->
+            {
+                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
+                if(gameID == null) return;
+
+                if(!Main.gameManager.isUserInGame(gameID, client) || Main.gameManager.isUserCreator(gameID, client))
+                {
+                    this.sendResponse(new Response<>("You are not in game or the creator of the game", ResponseType.ERROR), client);
+                    return;
+                }
+
+            }
+
             case ANSWER ->
             {
                 String answer = this.parseDataToClass(request.getData().toString(), String.class);
                 if(!Main.gameManager.isUserInGame(client)) return;
                 Game game = Main.gameManager.getUserGame(client);
-                //TODO:Implement Answer logic for Game
+                game.storeAnswer(client, answer);
+                this.sendResponse(new Response<>("Answer received!", ResponseType.SUCCESS), client);
                 break;
             }
 
@@ -195,6 +208,19 @@ public class PackageHandler{
 
                 GameInfo gameInfo = Main.gameManager.getGameInfo(gameID);
                 this.sendResponse(new Response<>(gameInfo, ResponseType.GAME_INFO),client);
+                break;
+            }
+
+            case GET_QUESTION_INFO ->
+            {
+                if(!Main.gameManager.isUserInGame(client))
+                {
+                    this.sendResponse(new Response<>("Not in game..", ResponseType.ERROR), client);
+                    return;
+                }
+
+                QuestionInfo questionInfo = Main.gameManager.getQuestionInfo(Main.gameManager.getUserGame(client).getGameID());
+                this.sendResponse(new Response<>(questionInfo, ResponseType.QUESTION_INFO),client);
                 break;
             }
 
@@ -223,7 +249,7 @@ public class PackageHandler{
 
         String json = new Gson().toJson(data);
         client.sendData(json);
-        this.logger.debug("Send Package to Client..\nData:{}", json);
+        //this.logger.debug("Send Package to Client..\nData:{}", json);
     }
 
     private <T> T parseDataToClass(JsonElement data, Class<T> type)

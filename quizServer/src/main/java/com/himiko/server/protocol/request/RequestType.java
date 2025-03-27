@@ -11,6 +11,7 @@ public enum RequestType {
     GAME_LEAVE,
     GAME_EDIT,
     GET_GAME_INFO,
+    GET_QUESTION_INFO,
 
     SERVER_INFORMATION,
     ANSWER

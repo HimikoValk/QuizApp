@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class CreateGameScreen extends Screen {
     private Logger logger;
     private ArrayList<Question> questionList;
-
+    private JPanel mainPanel;
     private JLabel titleLabel;
     private JLabel maxUserSizeLabel;
     private JButton createButton;
@@ -39,6 +39,9 @@ public class CreateGameScreen extends Screen {
     private JComboBox<Integer> maxUserSizeBox;
     private JTextField questionTextField;
     private JTextField answerTextField;
+    private JTextField optionTextField1;
+    private JTextField optionTextField2;
+    private JTextField optionTextField3;
     private JList<String> questionOverviewList;
     private DefaultListModel<String> questionListModel;
     private JScrollPane questionListScrollPane;
@@ -47,6 +50,8 @@ public class CreateGameScreen extends Screen {
         super("Create Game");
         this.logger = Main.logger;
         this.questionList = new ArrayList<>();
+
+        this.mainPanel = GUI.uiManager.createStyledPanel(null);
 
         this.titleLabel = GUI.uiManager.createStyledLabel("" + this.getName());
         this.titleLabel.setFont(new Font("Arial", Font.BOLD,18));
@@ -78,6 +83,8 @@ public class CreateGameScreen extends Screen {
 
         this.addQuestionButton = GUI.uiManager.createStyledButton("Add Question");
         this.addQuestionButton.addActionListener(a ->{
+            //TODO:Options koennen nicht von gson richtig formatiert werden... Alternative finden...
+           // this.questionList.add(new Question(this.questionTextField.getText(), this.answerTextField.getText(), new String[]{optionTextField1.getText(), optionTextField2.getText(), optionTextField3.getText()}, QuestionCategory.OTHER));
             this.questionList.add(new Question(this.questionTextField.getText(), this.answerTextField.getText(), QuestionCategory.OTHER));
             this.questionListModel.addElement(this.questionTextField.getText());
         });
@@ -102,7 +109,10 @@ public class CreateGameScreen extends Screen {
         this.maxUserSizeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 
         this.questionTextField = GUI.uiManager.createStyledTextField("Question");
-        this.answerTextField = GUI.uiManager.createStyledTextField("Answer");
+        this.answerTextField = GUI.uiManager.createStyledTextField("Correct Answer");
+        this.optionTextField1 = GUI.uiManager.createStyledTextField("Option 2");
+        this.optionTextField2 = GUI.uiManager.createStyledTextField("Option 3");
+        this.optionTextField3 = GUI.uiManager.createStyledTextField("Option 4");
 
         this.questionListModel = new DefaultListModel<>();
         this.questionOverviewList = new JList<>(questionListModel);
@@ -110,18 +120,22 @@ public class CreateGameScreen extends Screen {
         this.questionOverviewList.setVisibleRowCount(5);
         this.questionListScrollPane = new JScrollPane(this.questionOverviewList);
 
-        super.setComponents(
-                this.titleLabel,
-                this.createButton,
-                this.addQuestionButton,
-                this.removeQuestionButton,
-                this.backButton,
-                this.questionTextField,
-                this.answerTextField,
-                this.privateGameCheckBox,
-                this.maxUserSizeBox,
-                this.maxUserSizeLabel,
-                this.questionListScrollPane
+        this.mainPanel.add(this.titleLabel);
+        this.mainPanel.add(this.createButton);
+        this.mainPanel.add(this.addQuestionButton);
+        this.mainPanel.add(this.removeQuestionButton);
+        this.mainPanel.add(this.backButton);
+        this.mainPanel.add(this.questionTextField);
+        this.mainPanel.add(this.answerTextField);
+        this.mainPanel.add(this.optionTextField1);
+        this.mainPanel.add(this.optionTextField2);
+        this.mainPanel.add(this.optionTextField3);
+        this.mainPanel.add(this.privateGameCheckBox);
+        this.mainPanel.add(this.maxUserSizeBox);
+        this.mainPanel.add(this.maxUserSizeLabel);
+        this.mainPanel.add(this.questionListScrollPane);
+
+        super.setComponents(this.mainPanel
         );
     }
 
@@ -134,19 +148,21 @@ public class CreateGameScreen extends Screen {
         int fieldWidth = 200, fieldHeight = 30;
         int buttonWidth = 150, buttonHeight = 30;
         int labelWidth = 120, labelHeight = 30;
-        int checkBoxWidth = 100, checkBoxHeight = 20;
         int verticalGap = 10;
 
-
-        this.titleLabel.setBounds((WIDTH - titleWidth) / 2, 20, titleWidth, titleHeight);
+        this.mainPanel.setBounds(0, 0, WIDTH, HEIGHT);
+        this.titleLabel.setBounds((WIDTH - (titleWidth / 2)) / 2, 20, titleWidth, titleHeight);
         this.questionTextField.setBounds((WIDTH - fieldWidth) / 2, titleLabel.getY() + titleHeight + verticalGap, fieldWidth, fieldHeight);
         this.answerTextField.setBounds((WIDTH - fieldWidth) / 2, questionTextField.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
-        this.addQuestionButton.setBounds((WIDTH - buttonWidth) / 2, answerTextField.getY() + fieldHeight + verticalGap, buttonWidth, buttonHeight);
+        this.optionTextField1.setBounds((WIDTH - fieldWidth) / 2, answerTextField.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.optionTextField2.setBounds((WIDTH - fieldWidth) / 2, optionTextField1.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.optionTextField3.setBounds((WIDTH - fieldWidth) / 2, optionTextField2.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.addQuestionButton.setBounds((WIDTH - buttonWidth) / 2, optionTextField3.getY() + fieldHeight + verticalGap, buttonWidth, buttonHeight);
         this.removeQuestionButton.setBounds((WIDTH - buttonWidth) / 2, addQuestionButton.getY() + buttonHeight + verticalGap, buttonWidth, buttonHeight);
         this.maxUserSizeLabel.setBounds((WIDTH - fieldWidth) / 2, removeQuestionButton.getY() + buttonHeight + verticalGap, labelWidth, labelHeight);
         this.maxUserSizeBox.setBounds(maxUserSizeLabel.getX() + labelWidth + 10, maxUserSizeLabel.getY(), fieldWidth - labelWidth - 10, fieldHeight);
-        this.privateGameCheckBox.setBounds((WIDTH - fieldWidth) / 2, maxUserSizeBox.getY() + fieldHeight + verticalGap, checkBoxWidth, checkBoxHeight);
-        this.questionListScrollPane.setBounds((WIDTH - fieldWidth) / 2, privateGameCheckBox.getY() + checkBoxHeight + verticalGap, fieldWidth, 100);
+        this.privateGameCheckBox.setBounds((WIDTH - fieldWidth) / 2, maxUserSizeBox.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.questionListScrollPane.setBounds((WIDTH - fieldWidth) / 2, privateGameCheckBox.getY() + fieldHeight + verticalGap, fieldWidth, 100);
         this.createButton.setBounds((WIDTH - buttonWidth) / 2, questionListScrollPane.getY() + 100 + verticalGap, buttonWidth, buttonHeight);
         this.backButton.setBounds((WIDTH - buttonWidth) / 2, createButton.getY() + buttonHeight + verticalGap, buttonWidth, buttonHeight);
 

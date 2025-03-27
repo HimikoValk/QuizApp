@@ -12,5 +12,6 @@ public enum ResponseType {
     GAME_EDITED,
     GAME_INFO,
     ERROR,
+    QUESTION_INFO,
     SERVER_INFORMATION;
 }

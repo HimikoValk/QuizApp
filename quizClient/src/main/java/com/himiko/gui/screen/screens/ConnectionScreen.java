@@ -112,7 +112,7 @@ public class ConnectionScreen extends Screen {
         int buttonWidth = 150, buttonHeight = 30;
         int verticalGap = 10;
 
-        this.titleLabel.setBounds((this.WIDTH - titleWidth) / 2, 20, titleWidth, titleHeight);
+        this.titleLabel.setBounds((this.WIDTH - (titleWidth/ 2)) / 2, 20, titleWidth, titleHeight);
         this.usernameField.setBounds((this.WIDTH - fieldWidth) / 2, this.titleLabel.getY() + titleHeight + verticalGap, fieldWidth, fieldHeight);
         this.addressField.setBounds((this.WIDTH - fieldWidth) / 2, this.usernameField.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
         this.serverAddressLabel.setBounds(this.addressField.getX() - labelWidth - 10, this.addressField.getY(), labelWidth, labelHeight);

@@ -14,6 +14,6 @@ public enum ResponseType {
 
     GAMES,
     SERVER_INFORMATION,
-    QUESTION,
+    QUESTION_INFO,
     ANSWER_RESULT
 }

@@ -2,14 +2,17 @@ package com.himiko.game;
 
 import com.himiko.Main;
 import com.himiko.game.elements.Question;
+import com.himiko.game.elements.QuestionCategory;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.data.GameInfo;
+import com.himiko.server.protocol.data.QuestionInfo;
 import com.himiko.server.protocol.response.Response;
 import com.himiko.server.protocol.response.ResponseType;
 import com.himiko.server.utils.NetworkClient;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -22,6 +25,7 @@ public class GameManager {
     private Logger logger;
     private static Map<Long, Game> games = new HashMap<>();
     private static final long maxID = 99999999999L;
+    private Thread gameCheckThread; //Thread check if game can be started..
 
     public GameManager()
     {
@@ -31,17 +35,29 @@ public class GameManager {
             //Create 10 Games
             this.createGame();
         }
+        //Check thread for games
+        this.createCheckThread();
     }
 
-    public void startGame(long gameID)
-    {
-        if(!this.doesGameExist(gameID)) return;
+
+    public void startGame(long gameID) {
+        if (!this.doesGameExist(gameID)) return;
 
         Game game = games.get(gameID);
 
-        if(game.getCurrentUserList().size() < (game.getMaxUserSize() / 2))
+        if (game.getCurrentUserList().size() < (game.getMaxUserSize() / 2)) {
+           // this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
+            return;
+        }
+
+        if (game.getGameState() == GameState.RUNNING){
+            this.logger.warning("Game is already running.. (Game ID:{})", game.getGameID());
+            return;
+        }else if(game.getGameState() == GameState.FINISHED)
         {
-            this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
+            //Remove game..
+            this.logger.warning("Game finished... Removing game(Game ID:{})", game.getGameID());
+            games.remove(game.getGameID());
             return;
         }
 
@@ -49,29 +65,74 @@ public class GameManager {
         this.logger.info("Starting game with id :{}", game.getGameID());
 
         new Thread(() -> {
-            if(game.getCurrentQuestion() == null)
-            {
-                game.pullNextQuestion();
-            }
+            this.logger.debug("Started game thread for Game-ID:{}", game.getGameID());
 
-            this.sendQuestionToPlayers(game, game.getCurrentQuestion());
-            //TODO:Waiting for answer or until the time is off
+            while(game.questionAvailable()) {
+                if(game.getCurrentUserList().isEmpty()) break;
+                if (game.getCurrentQuestion() == null || game.getCurrentQuestion().isUsed()) {
+                    game.pullNextQuestion();
+                    this.logger.debug("Pulled next question! Question:{}", game.getCurrentQuestion().getQuestion());
+                }
+
+                this.sendQuestionToPlayers(game, this.getQuestionInfo(game.getGameID()));
+
+                try {
+                    Thread.sleep(20000); // 20 Sekunden warten
+                } catch (InterruptedException e) {
+                    logger.error("Game thread interrupted: " + e.getMessage());
+                    Thread.currentThread().interrupt();
+                }
+
+                this.evaluateQuestions(game, game.getCurrentQuestion());
+                game.getCurrentQuestion().setUsed(true);
+            }
+            this.logger.debug("Finished Game!");
+            game.setGameState(GameState.FINISHED);
+            this.logger.debug("Terminating thread:{}",Thread.currentThread().getName());
+            Thread.currentThread().interrupt();
         }).start();
     }
 
-    public void sendQuestionToPlayers(Game game, Question question)
+    private void sendQuestionToPlayers(Game game, QuestionInfo question)
     {
         for(NetworkClient client : game.getCurrentUserList())
         {
-            Main.server.packageHandler.sendResponse(new Response<>(question, ResponseType.QUESTION), client);
+            Main.server.packageHandler.sendResponse(new Response<>(question, ResponseType.QUESTION_INFO), client);
         }
+    }
+
+    private void evaluateQuestions(Game game, Question question)
+    {
+        Map<NetworkClient, String> answers = game.getCurrentAnswers();
+
+        for(Map.Entry<NetworkClient, String> entry : answers.entrySet())
+        {
+            String answer = entry.getValue();
+            if(answer.equalsIgnoreCase(question.getAnswer()))
+            {
+                this.logger.info("User:{} choose the right answer! Current Points:{}",entry.getKey().getClient().getRemoteSocketAddress(), game.getPoints(entry.getKey()) + 10);
+                game.awardPoints(entry.getKey(), 10);
+            }
+        }
+        game.clearAnswers();
     }
 
     //Default
     public void createGame()
     {
         long gameID = this.createID(maxID);
-        games.put(gameID, new Game(gameID));
+        Game game = new Game(gameID);
+        //For test
+        List<Question> questions = new ArrayList<>();
+        questions.add(new Question("Test1", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
+        questions.add(new Question("Test2", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
+        questions.add(new Question("Test3", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
+        questions.add(new Question("Test4", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
+        questions.add(new Question("Test5", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
+        game.setQuestions(questions);
+        game.setMaxUserSize(2);
+
+        games.put(gameID,game);
         this.logger.debug("Created game with id:{}", gameID);
     }
 
@@ -107,6 +168,19 @@ public class GameManager {
         games.put(gameID, game);
         this.logger.debug("Created game with id:{} User creator:{}", gameID, game.getGameCreator().getName());
         return this.getGameInfo(gameID);
+    }
+
+    public QuestionInfo getQuestionInfo(long gameID)
+    {
+        if(!this.doesGameExist(gameID)) return null;
+        Game game = games.get(gameID);
+
+        if(game.getGameState() != GameState.RUNNING) return null;
+        List<String> options = new ArrayList<>(Arrays.asList(game.getCurrentQuestion().getOptions()));
+        options.add(game.getCurrentQuestion().getAnswer());
+
+        Collections.shuffle(options);
+        return new QuestionInfo(game.getCurrentQuestion().getQuestion(), options.toArray(new String[0]));
     }
 
     public boolean addUserToGame(long gameID, NetworkClient client)
@@ -192,7 +266,7 @@ public class GameManager {
                 game.getGameID(),
                 game.getMaxUserSize(),
                 game.getCurrentUserList().size(),
-                getPlayerNames(game),
+                this.getPlayerNames(game),
                 game.isPrivateGame(),
                 game.isPrivateGame() ? null : game.getCode(),
                 game.getGameCreator() == null ? "Unknown" : game.getGameCreator().getName(),
@@ -238,6 +312,24 @@ public class GameManager {
     public List<Game> getPrivateGames()
     {
         return games.values().stream().filter(Game::isPrivateGame).toList();
+    }
+
+    private void createCheckThread()
+    {
+        this.gameCheckThread = new Thread(() -> {
+            while (Main.server.isAlive())
+            {
+               if (games.isEmpty()) break;
+               games.keySet().stream().forEach(id -> this.startGame(id));
+                try {
+                    //Check every 5 seconds if a Game can be started...
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+           });
+        gameCheckThread.start();
     }
 
     private long createID(long maxID)

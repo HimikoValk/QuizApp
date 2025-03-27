@@ -25,11 +25,11 @@ public class ActionSelectionScreen extends Screen {
     private JLabel onlinePlayersLabel;
 
     public ActionSelectionScreen() {
-        super("Game Selection Screen");
+        super("Action Selection Screen");
 
         this.logger = Main.logger;
 
-        this.titleLabel = GUI.uiManager.createStyledLabel("Game Selection");
+        this.titleLabel = GUI.uiManager.createStyledLabel("Action Selection");
         this.titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         this.titleLabel.setSize(200, 100);
 
@@ -55,7 +55,6 @@ public class ActionSelectionScreen extends Screen {
 
         this.searchGameButton.addActionListener(e -> {
             this.logger.debug("Searching for a game...");
-            // TODO: Implement game search logic
         });
 
         this.createGameButton.addActionListener(e -> {
@@ -90,11 +89,11 @@ public class ActionSelectionScreen extends Screen {
 
     @Override
     public void onEnter() {
-        WIDTH = Main.GUI.getWidth();
-        HEIGHT = Main.GUI.getHeight();
+        this.WIDTH = Main.GUI.getWidth();
+        this.HEIGHT = Main.GUI.getHeight();
 
 
-        this.titleLabel.setBounds(WIDTH / 2 - 100, 20, 200, 40);
+        this.titleLabel.setBounds(WIDTH / 2 - 70, 20, 200, 40);
         this.onlinePlayersLabel.setBounds(WIDTH / 2 - 75, 70, 150, 30);
 
         this.joinPublicGameButton.setBounds(WIDTH / 2 - 100, 100, 200, 40);

@@ -4,11 +4,13 @@ package com.himiko.gui.screen.screens;
 import com.himiko.Main;
 import com.himiko.game.Game;
 import com.himiko.game.GameState;
+import com.himiko.game.elemtents.Question;
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
 import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.data.GameInfo;
+import com.himiko.network.protocol.data.QuestionInfo;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
 import com.himiko.network.protocol.response.Response;
@@ -24,8 +26,10 @@ import java.awt.*;
 public class GameScreen extends Screen {
     private Logger logger;
     private Game game;
+
     private JLabel gameInfoLabel;
     private JLabel gameStateLabel;
+    private JLabel questionLabel;
     private JButton leaveButton;
     private JButton startButton;
     private JList<String> userList;
@@ -33,6 +37,10 @@ public class GameScreen extends Screen {
     private JPanel mainPanel;
     private JPanel questionPanel;
     private JPanel finishPanel;
+
+    private Timer questionTimer;
+    private int timeRemaining = 20;
+    private QuestionInfo lastQuestionInfo;
 
     public GameScreen(Game game) {
         super("Game: " + game.getGameID());
@@ -42,6 +50,7 @@ public class GameScreen extends Screen {
 
         this.mainPanel = GUI.uiManager.createStyledPanel(null);
         this.questionPanel = GUI.uiManager.createStyledPanel(null);
+        this.finishPanel = GUI.uiManager.createStyledPanel(null);
 
         this.gameStateLabel = GUI.uiManager.createStyledLabel("" + game.getGameState());
         this.gameStateLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -49,13 +58,16 @@ public class GameScreen extends Screen {
         this.gameInfoLabel = GUI.uiManager.createStyledLabel("Game: " + game.getGameID() + " | Players: " + game.getCurrentPlayers() + "/" + game.getMaxUserSize());
         this.gameInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
+        this.questionLabel = GUI.uiManager.createStyledLabel("Question:");
+        this.questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
         this.startButton = GUI.uiManager.createStyledButton("Start");
         this.startButton.addActionListener(a -> {
             Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(this.game.getGameID(), RequestType.GAME_START));
 
-            if(response.getResponseType() != ResponseType.SUCCESS) {
+            if (response.getResponseType() != ResponseType.SUCCESS) {
                 JOptionPane.showMessageDialog(null, response.getData() != null ? "Something went wrong...\nMessage:" + response.getData().toString() : "Something went wrong...");
-            }else{
+            } else {
                 this.logger.info("Successfully started game!");
             }
         });
@@ -73,17 +85,27 @@ public class GameScreen extends Screen {
         this.userList.setVisibleRowCount(5);
         JScrollPane userScrollPane = new JScrollPane(userList);
 
+        this.questionTimer = new Timer(1000, e->{
+           this.timeRemaining--;
+           this.questionLabel.setText("Question: " + (this.lastQuestionInfo != null ? this.lastQuestionInfo.getQuestion() : "Waiting...")
+                   + "(Time: " + this.timeRemaining + "s)");
+            if(this.timeRemaining <= 0) {
+                this.questionTimer.stop();
+                this.timeRemaining = 20;
+            }
+        });
+
         this.mainPanel.add(gameInfoLabel);
         this.mainPanel.add(gameStateLabel);
         this.mainPanel.add(startButton);
         this.mainPanel.add(leaveButton);
         this.mainPanel.add(userScrollPane);
 
-        //TODO:Implement function to Visualize the Questions, User list, User creator, Points,
-        //TODO:Implement dynamic gui
+        this.questionPanel.add(questionLabel);
         super.setComponents(
                 mainPanel,
-                questionPanel);
+                questionPanel,
+                finishPanel);
     }
 
     @Override
@@ -93,11 +115,13 @@ public class GameScreen extends Screen {
 
         this.mainPanel.setBounds(0, 0, WIDTH, HEIGHT);
         this.questionPanel.setBounds(0, 0, WIDTH, HEIGHT);
-        this.gameInfoLabel.setBounds(WIDTH / 2 - 100, 40,150, 30);
-        this.gameStateLabel.setBounds(WIDTH / 2 - 100, 20,200, 40);
-        this.startButton.setBounds(WIDTH / 2 - 50, HEIGHT / 2 - 40,100, 40);
-        this.leaveButton.setBounds(WIDTH / 2 - 50, HEIGHT / 2,100, 40);
-        userList.getParent().setBounds(WIDTH - 100, this.gameInfoLabel.getY() + 50, 100, 50);
+        this.finishPanel.setBounds(0, 0, WIDTH, HEIGHT);
+        this.gameInfoLabel.setBounds(WIDTH / 2 - 100, 40, 150, 30);
+        this.gameStateLabel.setBounds(WIDTH / 2 - 100, 20, 200, 40);
+        this.startButton.setBounds(WIDTH / 2 - 50, HEIGHT / 2 - 40, 100, 40);
+        this.leaveButton.setBounds(WIDTH / 2 - 50, HEIGHT / 2, 100, 40);
+        //userList.getParent().setBounds(WIDTH - 100, this.gameInfoLabel.getY() + 50, 100, 50);
+        //
         super.onEnter();
     }
 
@@ -105,21 +129,52 @@ public class GameScreen extends Screen {
     public void render(Graphics g) {
         //Request game info (State,Users,usw...)
         Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(game.getGameID(), RequestType.GET_GAME_INFO));
-        GameInfo gameInfo = Main.NETWORK.getPackageHandler().parseDataToClass(response.getData().toString(), GameInfo.class);
+        GameInfo gameInfo = null;
+        try {
+            gameInfo = Main.NETWORK.getPackageHandler().parseDataToClass(response.getData().toString(), GameInfo.class);
+        } catch(Exception ex) {
+            this.logger.error("Error parsing GameInfo: " + ex.getMessage());
+            return;
+        }
 
         this.logger.debug("Game info:{}", gameInfo.getGameState());
         //Update Components
         this.updateComponents(gameInfo);
+
+        if (this.game.getGameState() == GameState.RUNNING)
+        {
+            Response<?> questionResponse = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(null, RequestType.GET_QUESTION_INFO));
+            if(questionResponse.getData() == null) return;
+            QuestionInfo questionInfo = null;
+            try {
+                questionInfo = Main.NETWORK.getPackageHandler().parseDataToClass(questionResponse.getData().toString(), QuestionInfo.class);
+            } catch(Exception ex) {
+                logger.error("Error parsing QuestionInfo: " + ex.getMessage());
+                return;
+            }
+            //Muss dann nicht noch mal alles rendern ...
+            if(this.lastQuestionInfo != null && this.lastQuestionInfo.getQuestion().equals(questionInfo.getQuestion())) return;
+
+            this.logger.info("Received info:\nQuestion:{} Options Size:{}", questionInfo.getQuestion(), questionInfo.getOptions().length);
+            this.updateQuizComponents(questionInfo);
+            this.lastQuestionInfo = questionInfo;
+        }else if(this.game.getGameState() == GameState.FINISHED)
+        {
+
+            this.questionTimer.stop();
+            this.questionPanel.setVisible(false);
+            this.mainPanel.setVisible(false);
+            this.finishPanel.setVisible(true);
+        }
+        else
+        {
+            this.questionTimer.stop();
+            this.questionPanel.setVisible(false);
+            this.mainPanel.setVisible(true);
+        }
     }
 
-    private void updateComponents(GameInfo gameInfo)
-    {
-        if(gameInfo.getGameState() == GameState.RUNNING)
-        {
-            this.questionPanel.setVisible(true);
-            this.mainPanel.setVisible(false);
-        }
-
+    private void updateComponents(GameInfo gameInfo) {
         this.game.setGameState(gameInfo.getGameState());
         this.game.setCurrentPlayers(gameInfo.getCurrentPlayers());
 
@@ -128,9 +183,43 @@ public class GameScreen extends Screen {
         this.gameStateLabel.setText("Game State:" + this.game.getGameState());
     }
 
-    private void createQuizComponents()
-    {
+    private void updateQuizComponents(QuestionInfo questionInfo) {
+        this.questionPanel.setVisible(true);
+        this.mainPanel.setVisible(false);
 
+        this.questionPanel.removeAll();
+        if (questionInfo != null)
+        {
+            this.questionLabel.setText("Question: " + questionInfo.getQuestion() + " (Time: 20s)");
+            this.logger.debug("Question:{} (Time: 20s)", questionInfo.getQuestion());
+            this.questionLabel.setBounds(20, 20, this.WIDTH + 100, 60);
+
+            if(!this.questionTimer.isRunning()) {
+                this.timeRemaining = 20;
+                this.questionTimer.start();
+            }
+
+            if (questionInfo.getQuestion() != null)
+            {
+                this.questionPanel.removeAll();
+                this.questionPanel.add(this.questionLabel);
+                //Buttons
+                int btnWidth = (WIDTH - 80) / 2, btnHeight = 40;
+                int i = 0;
+                for (String option : questionInfo.getOptions()) {
+                    JButton answerButton = GUI.uiManager.createStyledButton(option);
+                    int x = 20 + (i % 2) * (btnWidth + 20);
+                    int y = 100 + (i / 2) * (btnHeight + 20);
+                    answerButton.setBounds(x, y, btnWidth, btnHeight);
+                    answerButton.addActionListener(a -> {
+                        Main.NETWORK.getPackageHandler().sendRequest(new Request<>(answerButton.getText(), RequestType.ANSWER));
+                    });
+                    this.questionPanel.add(answerButton);
+                    i++;
+                }
+            }
+            this.questionPanel.add(this.leaveButton);
+        }
     }
 
 }
