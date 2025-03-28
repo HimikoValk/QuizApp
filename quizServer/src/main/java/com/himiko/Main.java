@@ -1,6 +1,5 @@
 package com.himiko;
 
-
 import com.himiko.game.GameManager;
 import com.himiko.logger.Logger;
 import com.himiko.logger.LoggerBuilder;
@@ -12,6 +11,7 @@ import com.himiko.server.Server;
  */
 public class Main
 {
+    public static int PORT = 8080; //default port
     public static final String version = "0.0";
     public static Server server = null;
     public static GameManager gameManager = null;
@@ -19,15 +19,12 @@ public class Main
 
     public static void main(String[] args)
     {
-        //Default port
-        int port = 8080;
-
         if(args.length > 0) {
-            port = Integer.parseInt(args[0]);
+            PORT = Integer.parseInt(args[0]);
         }
 
         try {
-            server = new Server(port);
+            server = new Server(PORT);
             gameManager = new GameManager();
         }catch (Exception e)
         {

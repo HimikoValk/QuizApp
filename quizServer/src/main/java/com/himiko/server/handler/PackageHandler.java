@@ -211,6 +211,18 @@ public class PackageHandler{
                 break;
             }
 
+            case SCORE_INFO ->
+            {
+                if(!Main.gameManager.isUserInGame(client))
+                {
+                    this.sendResponse(new Response<>("Not in game..", ResponseType.ERROR), client);
+                    return;
+                }
+
+                ScoreData scoreData = Main.gameManager.getScoreData(client, Main.gameManager.getUserGame(client).getGameID());
+                this.sendResponse(new Response<>(scoreData, ResponseType.SCORE_INFO), client);
+            }
+
             case GET_QUESTION_INFO ->
             {
                 if(!Main.gameManager.isUserInGame(client))

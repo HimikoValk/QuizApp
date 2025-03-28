@@ -1,0 +1,82 @@
+{
+  "questions": [
+    {
+      "question": "Was ist die Hauptstadt von Frankreich?",
+      "answer": "Paris",
+      "options": ["London", "Berlin", "Madrid"],
+      "category": "GENERAL"
+    },
+    {
+      "question": "Was ist 2 + 2?",
+      "answer": "4",
+      "options": ["3", "5", "6"],
+      "category": "MATH"
+    },
+    {
+      "question": "Wer hat Hamlet geschrieben?",
+      "answer": "Shakespeare",
+      "options": ["Hemingway", "Tolstoy", "Dickens"],
+      "category": "LITERATURE"
+    },
+    {
+      "question": "Was ist die Wurzel aus 81?",
+      "answer": "9",
+      "options": ["7", "8", "10"],
+      "category": "MATH"
+    },
+    {
+      "question": "Welches Jahr wird als das offizielle Gründungsjahr der Vereinten Nationen angesehen?",
+      "answer": "1945",
+      "options": ["1950", "1960", "1939"],
+      "category": "POLITICS"
+    },
+    {
+      "question": "Wer schrieb 'Faust'?",
+      "answer": "Goethe",
+      "options": ["Schiller", "Lessing", "Heine"],
+      "category": "LITERATURE"
+    },
+    {
+      "question": "Was ist das chemische Symbol für Gold?",
+      "answer": "Au",
+      "options": ["Ag", "Pb", "Fe"],
+      "category": "SCIENCE"
+    },
+    {
+      "question": "Welche Stadt ist die Hauptstadt von Kanada?",
+      "answer": "Ottawa",
+      "options": ["Toronto", "Vancouver", "Montreal"],
+      "category": "GENERAL"
+    },
+    {
+      "question": "Welcher Maler schuf das berühmte Gemälde 'Die Sternennacht'?",
+      "answer": "Van Gogh",
+      "options": ["Monet", "Picasso", "Da Vinci"],
+      "category": "CULTURE"
+    },
+    {
+      "question": "Welches Element ist das häufigste in der Erdatmosphäre?",
+      "answer": "Stickstoff",
+      "options": ["Sauerstoff", "Kohlenstoff", "Wasserstoff"],
+      "category": "SCIENCE"
+    },
+    {
+      "question": "Welcher Planet ist der größte in unserem Sonnensystem?",
+      "answer": "Jupiter",
+      "options": ["Mars", "Saturn", "Uranus"],
+      "category": "SCIENCE"
+    },
+    {
+      "question": "Welche Zeitung ist für ihre Enthüllungen über die NSA bekannt?",
+      "answer": "The Guardian",
+      "options": ["The New York Times", "Die Welt", "Washington Post"],
+      "category": "NEWS"
+    },
+    {
+      "question": "Wer war der erste Präsident der Vereinigten Staaten?",
+      "answer": "George Washington",
+      "options": ["Abraham Lincoln", "Thomas Jefferson", "John Adams"],
+      "category": "POLITICS"
+    }
+  ]
+}

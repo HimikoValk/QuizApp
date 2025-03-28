@@ -1,16 +1,19 @@
 package com.himiko.gui.screen.screens;
 
 
+import com.google.gson.Gson;
 import com.himiko.Main;
 import com.himiko.game.Game;
 import com.himiko.game.GameState;
 import com.himiko.game.elemtents.Question;
+import com.himiko.game.utils.UserData;
 import com.himiko.gui.GUI;
 import com.himiko.gui.screen.Screen;
 import com.himiko.gui.screen.ScreenHandler;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.data.GameInfo;
 import com.himiko.network.protocol.data.QuestionInfo;
+import com.himiko.network.protocol.data.ScoreData;
 import com.himiko.network.protocol.request.Request;
 import com.himiko.network.protocol.request.RequestType;
 import com.himiko.network.protocol.response.Response;
@@ -18,6 +21,8 @@ import com.himiko.network.protocol.response.ResponseType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author Valk on 16.03.2025
@@ -30,6 +35,7 @@ public class GameScreen extends Screen {
     private JLabel gameInfoLabel;
     private JLabel gameStateLabel;
     private JLabel questionLabel;
+    private JLabel pointsLabel;
     private JButton leaveButton;
     private JButton startButton;
     private JList<String> userList;
@@ -37,7 +43,6 @@ public class GameScreen extends Screen {
     private JPanel mainPanel;
     private JPanel questionPanel;
     private JPanel finishPanel;
-
     private Timer questionTimer;
     private int timeRemaining = 20;
     private QuestionInfo lastQuestionInfo;
@@ -59,7 +64,9 @@ public class GameScreen extends Screen {
         this.gameInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
         this.questionLabel = GUI.uiManager.createStyledLabel("Question:");
-        this.questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        this.questionLabel.setFont(new Font("Arial", Font.BOLD, 15));
+
+        this.pointsLabel = GUI.uiManager.createStyledLabel("Points:");
 
         this.startButton = GUI.uiManager.createStyledButton("Start");
         this.startButton.addActionListener(a -> {
@@ -87,8 +94,8 @@ public class GameScreen extends Screen {
 
         this.questionTimer = new Timer(1000, e->{
            this.timeRemaining--;
-           this.questionLabel.setText("Question: " + (this.lastQuestionInfo != null ? this.lastQuestionInfo.getQuestion() : "Waiting...")
-                   + "(Time: " + this.timeRemaining + "s)");
+           this.questionLabel.setText("<html>" + (this.lastQuestionInfo != null ? this.lastQuestionInfo.getQuestion() : "Waiting...")
+                   + "<br>(Time: " + this.timeRemaining + "s) </html>");
             if(this.timeRemaining <= 0) {
                 this.questionTimer.stop();
                 this.timeRemaining = 20;
@@ -102,6 +109,7 @@ public class GameScreen extends Screen {
         this.mainPanel.add(userScrollPane);
 
         this.questionPanel.add(questionLabel);
+        this.questionPanel.add(pointsLabel);
         super.setComponents(
                 mainPanel,
                 questionPanel,
@@ -116,7 +124,7 @@ public class GameScreen extends Screen {
         this.mainPanel.setBounds(0, 0, WIDTH, HEIGHT);
         this.questionPanel.setBounds(0, 0, WIDTH, HEIGHT);
         this.finishPanel.setBounds(0, 0, WIDTH, HEIGHT);
-        this.gameInfoLabel.setBounds(WIDTH / 2 - 100, 40, 150, 30);
+        this.gameInfoLabel.setBounds(WIDTH / 2 - 100, 40, 300, 30);
         this.gameStateLabel.setBounds(WIDTH / 2 - 100, 20, 200, 40);
         this.startButton.setBounds(WIDTH / 2 - 50, HEIGHT / 2 - 40, 100, 40);
         this.leaveButton.setBounds(WIDTH / 2 - 50, HEIGHT / 2, 100, 40);
@@ -147,7 +155,8 @@ public class GameScreen extends Screen {
             if(questionResponse.getData() == null) return;
             QuestionInfo questionInfo = null;
             try {
-                questionInfo = Main.NETWORK.getPackageHandler().parseDataToClass(questionResponse.getData().toString(), QuestionInfo.class);
+              //   questionInfo = Main.NETWORK.getPackageHandler().parseDataToClass(questionResponse.getData(), QuestionInfo.class);
+                questionInfo = Main.NETWORK.getPackageHandler().parseDataToClass(questionResponse, QuestionInfo.class);
             } catch(Exception ex) {
                 logger.error("Error parsing QuestionInfo: " + ex.getMessage());
                 return;
@@ -160,7 +169,6 @@ public class GameScreen extends Screen {
             this.lastQuestionInfo = questionInfo;
         }else if(this.game.getGameState() == GameState.FINISHED)
         {
-
             this.questionTimer.stop();
             this.questionPanel.setVisible(false);
             this.mainPanel.setVisible(false);
@@ -194,10 +202,9 @@ public class GameScreen extends Screen {
             this.logger.debug("Question:{} (Time: 20s)", questionInfo.getQuestion());
             this.questionLabel.setBounds(20, 20, this.WIDTH + 100, 60);
 
-            if(!this.questionTimer.isRunning()) {
-                this.timeRemaining = 20;
-                this.questionTimer.start();
-            }
+            this.timeRemaining = 20;
+            this.questionTimer.start();
+
 
             if (questionInfo.getQuestion() != null)
             {
@@ -220,6 +227,37 @@ public class GameScreen extends Screen {
             }
             this.questionPanel.add(this.leaveButton);
         }
+    }
+
+    private void updateFinishComponents()
+    {
+        Response<?> scoreResponse = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(null, RequestType.SCORE_INFO));
+        if(scoreResponse.getData() == null)return;
+        ScoreData scoreData = Main.NETWORK.getPackageHandler().parseDataToClass(scoreResponse, ScoreData.class);
+        Map<UserData, Integer> scores = scoreData.getUserScoreMap();
+        ArrayList<Map.Entry<UserData, Integer>> sortedScores = new ArrayList<>(scores.entrySet());
+        sortedScores.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
+
+        StringBuilder scoreboardText = new StringBuilder("Final Scores:\n");
+        int rank = 1;
+        int playerRank = -1;
+        String currentUser = Main.NETWORK.userData.getName();
+
+        for (Map.Entry<UserData, Integer> entry : sortedScores) {
+            scoreboardText.append(rank).append(". ").append(entry.getKey().getName()).append(" - ").append(entry.getValue()).append(" points\n");
+            if (entry.getKey().getName().equals(currentUser)) {
+                playerRank = rank;
+            }
+            rank++;
+        }
+
+        JLabel scoreboardLabel = GUI.uiManager.createStyledLabel("<html>" + scoreboardText.toString().replace("\n", "<br>") + "</html>");
+        JLabel rankLabel = GUI.uiManager.createStyledLabel("Your Rank: " + playerRank);
+
+        finishPanel.removeAll();
+        finishPanel.add(scoreboardLabel);
+        finishPanel.add(rankLabel);
+        finishPanel.setVisible(true);
     }
 
 }

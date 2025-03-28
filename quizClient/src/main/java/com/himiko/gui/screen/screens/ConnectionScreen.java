@@ -82,6 +82,7 @@ public class ConnectionScreen extends Screen {
                 Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<UserData>(new UserData(this.usernameField.getText(), 0L), RequestType.USER_LOGIN));
                 if(response.getResponseType() == ResponseType.SUCCESS)
                 {
+                    Main.NETWORK.userData = new UserData(this.usernameField.getName(), 0L);
                     this.logger.info("Successfully logged in");
                     ScreenHandler.INSTANCE.changeScreen(ScreenHandler.ACTION_SELECTION_SCREEN);
                 }else {

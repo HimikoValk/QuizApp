@@ -79,6 +79,8 @@ public class Game {
 
     public void pullNextQuestion()
     {
+        if(!this.questionAvailable()) return;
+        
         this.clearAnswers();
         Question tmp = this.getRandomQuestion();
         if(tmp.isUsed()) this.pullNextQuestion();

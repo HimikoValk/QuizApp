@@ -1,20 +1,19 @@
 package com.himiko.game;
 
 import com.himiko.Main;
+import com.himiko.game.config.QuestionConfigLoader;
 import com.himiko.game.elements.Question;
-import com.himiko.game.elements.QuestionCategory;
 import com.himiko.game.utils.User;
 import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.data.GameInfo;
 import com.himiko.server.protocol.data.QuestionInfo;
+import com.himiko.server.protocol.data.ScoreData;
 import com.himiko.server.protocol.response.Response;
 import com.himiko.server.protocol.response.ResponseType;
 import com.himiko.server.utils.NetworkClient;
 
-import javax.print.attribute.standard.MediaSize;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -41,56 +40,60 @@ public class GameManager {
 
 
     public void startGame(long gameID) {
-        if (!this.doesGameExist(gameID)) return;
+        try {
+            if (!this.doesGameExist(gameID)) return;
 
-        Game game = games.get(gameID);
+            Game game = games.get(gameID);
 
-        if (game.getCurrentUserList().size() < (game.getMaxUserSize() / 2)) {
-           // this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
-            return;
-        }
-
-        if (game.getGameState() == GameState.RUNNING){
-            this.logger.warning("Game is already running.. (Game ID:{})", game.getGameID());
-            return;
-        }else if(game.getGameState() == GameState.FINISHED)
-        {
-            //Remove game..
-            this.logger.warning("Game finished... Removing game(Game ID:{})", game.getGameID());
-            games.remove(game.getGameID());
-            return;
-        }
-
-        game.setGameState(GameState.RUNNING);
-        this.logger.info("Starting game with id :{}", game.getGameID());
-
-        new Thread(() -> {
-            this.logger.debug("Started game thread for Game-ID:{}", game.getGameID());
-
-            while(game.questionAvailable()) {
-                if(game.getCurrentUserList().isEmpty()) break;
-                if (game.getCurrentQuestion() == null || game.getCurrentQuestion().isUsed()) {
-                    game.pullNextQuestion();
-                    this.logger.debug("Pulled next question! Question:{}", game.getCurrentQuestion().getQuestion());
-                }
-
-                this.sendQuestionToPlayers(game, this.getQuestionInfo(game.getGameID()));
-
-                try {
-                    Thread.sleep(20000); // 20 Sekunden warten
-                } catch (InterruptedException e) {
-                    logger.error("Game thread interrupted: " + e.getMessage());
-                    Thread.currentThread().interrupt();
-                }
-
-                this.evaluateQuestions(game, game.getCurrentQuestion());
-                game.getCurrentQuestion().setUsed(true);
+            if (game.getCurrentUserList().size() < (game.getMaxUserSize() / 2)) {
+                // this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
+                return;
             }
-            this.logger.debug("Finished Game!");
-            game.setGameState(GameState.FINISHED);
-            this.logger.debug("Terminating thread:{}",Thread.currentThread().getName());
-            Thread.currentThread().interrupt();
-        }).start();
+
+            if (game.getGameState() == GameState.RUNNING) {
+                this.logger.warning("Game is already running.. (Game ID:{})", game.getGameID());
+                return;
+            } else if (game.getGameState() == GameState.FINISHED) {
+                //Remove game..
+                this.logger.warning("Game finished... Removing game(Game ID:{})", game.getGameID());
+                //games.remove(game.getGameID());
+                return;
+            }
+
+            game.setGameState(GameState.RUNNING);
+            this.logger.info("Starting game with id :{}", game.getGameID());
+
+            new Thread(() -> {
+                this.logger.debug("Started game thread for Game-ID:{}", game.getGameID());
+
+                while (game.questionAvailable()) {
+                    if (game.getCurrentUserList().isEmpty()) break;
+                    if (game.getCurrentQuestion() == null || game.getCurrentQuestion().isUsed()) {
+                        game.pullNextQuestion();
+                        this.logger.debug("Pulled next question! Question:{}", game.getCurrentQuestion().getQuestion());
+                    }
+
+                    this.sendQuestionToPlayers(game, this.getQuestionInfo(game.getGameID()));
+
+                    try {
+                        Thread.sleep(20000); // 20 Sekunden warten
+                    } catch (InterruptedException e) {
+                        logger.error("Game thread interrupted: " + e.getMessage());
+                        Thread.currentThread().interrupt();
+                    }
+
+                    this.evaluateQuestions(game, game.getCurrentQuestion());
+                    game.getCurrentQuestion().setUsed(true);
+                }
+                this.logger.debug("Finished Game!");
+                game.setGameState(GameState.FINISHED);
+                this.logger.debug("Terminating thread:{}", Thread.currentThread().getName());
+                Thread.currentThread().interrupt();
+            }).start();
+        }catch (Exception e)
+        {
+            this.logger.error("Something went wrong while starting a game... Error:{}", e.getMessage());
+        }
     }
 
     private void sendQuestionToPlayers(Game game, QuestionInfo question)
@@ -117,18 +120,46 @@ public class GameManager {
         game.clearAnswers();
     }
 
+    public ScoreData getScoreData(NetworkClient client,long gameID)
+    {
+        if(!doesGameExist(gameID) || !isUserInGame(gameID, client)) return null;
+
+        Game game = games.get(gameID);
+
+        int clientScore = game.getPoints(client);
+        Map<User, Integer> clientScores = new HashMap<>();
+
+        game.getCurrentUserList().forEach(c -> {
+            clientScores.put(SessionManager.getUser(c), game.getPoints(c));
+        });
+
+        return new ScoreData(clientScores, clientScore);
+    }
+
     //Default
     public void createGame()
     {
         long gameID = this.createID(maxID);
         Game game = new Game(gameID);
+        List<Question> questions = QuestionConfigLoader.loadQuestionData("questions.json");
+
+        /* Limit auf 4 Fragen...
+
+        while(questions.size() > 5)
+        {
+            questions.remove(((int) (Math.random() * questions.size() - 1)));
+        }
+        */
+
         //For test
-        List<Question> questions = new ArrayList<>();
+        /*
         questions.add(new Question("Test1", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
         questions.add(new Question("Test2", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
         questions.add(new Question("Test3", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
         questions.add(new Question("Test4", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
         questions.add(new Question("Test5", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
+         */
+
         game.setQuestions(questions);
         game.setMaxUserSize(2);
 

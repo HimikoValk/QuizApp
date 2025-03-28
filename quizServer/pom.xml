@@ -20,6 +20,14 @@
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.himiko</groupId>
+            <artifactId>0</artifactId>
+            <version>0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/jars/Logger.jar</systemPath>
+        </dependency>
     </dependencies>
 
 </project>

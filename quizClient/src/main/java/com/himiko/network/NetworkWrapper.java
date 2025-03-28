@@ -1,6 +1,7 @@
 package com.himiko.network;
 
 import com.himiko.Main;
+import com.himiko.game.utils.UserData;
 import com.himiko.logger.Logger;
 import com.himiko.network.protocol.handler.PackageHandler;
 import com.himiko.network.utils.Connection;
@@ -9,6 +10,7 @@ public class NetworkWrapper {
     private Logger logger;
     private Connection connection;
     private PackageHandler packageHandler;
+    public UserData userData = null;
 
     public NetworkWrapper()
     {

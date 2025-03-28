@@ -17,6 +17,7 @@ import com.himiko.network.protocol.PackageCategory;
 import javax.swing.*;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -160,4 +161,12 @@ public class PackageHandler extends Thread{
     public <T> T parseDataToClass(String data, Type type) {
         return gson.fromJson(data, type);
     }
+
+    public <T> T parseDataToClass(Response<?> response, Class<T> type)
+    {
+        Map<String, Object> questionMap = (Map<String, Object>) response.getData();
+        String fixedJson = new Gson().toJson(questionMap);
+        return this.parseDataToClass(fixedJson, type);
+    }
+
 }

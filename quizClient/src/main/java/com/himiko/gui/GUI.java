@@ -25,7 +25,7 @@ public class GUI extends JFrame
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         super.setVisible(true);
         super.setLocationRelativeTo(null);
-
+        super.setResizable(false);
     }
 
     public Panel getRenderPanel() {
