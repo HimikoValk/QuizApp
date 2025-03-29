@@ -66,8 +66,8 @@ public class PackageHandler{
                 this.logger.debug("Received Login!");
                 User userData = this.parseDataToClass(request.getData().toString(), User.class);
 
-                if (SessionManager.getUser(client) != null && SessionManager.doesUsernameExist(userData.getName())) {
-                    this.sendResponse(new Response<>(false,ResponseType.FAILURE), client);
+                if (SessionManager.getUser(client) != null || SessionManager.doesUsernameExist(userData.getName())) {
+                    this.sendResponse(new Response<>("Sorry username already used!",ResponseType.ERROR), client);
                     return;
                 }
 
