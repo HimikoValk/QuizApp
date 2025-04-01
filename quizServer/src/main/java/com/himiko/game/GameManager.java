@@ -24,7 +24,10 @@ public class GameManager {
     private Logger logger;
     private static Map<Long, Game> games = new HashMap<>();
     private static final long maxID = 99999999999L;
+    private static String QUESTION_CONFIG_PATH = "questions.json";
+    private static List<Question> defaultQuestions = QuestionConfigLoader.loadQuestionData(QUESTION_CONFIG_PATH);
     private Thread gameCheckThread; //Thread check if game can be started..
+
 
     public GameManager()
     {
@@ -141,29 +144,12 @@ public class GameManager {
     {
         long gameID = this.createID(maxID);
         Game game = new Game(gameID);
-        //Loading Questions from JSON
-        List<Question> questions = QuestionConfigLoader.loadQuestionData("questions.json");
-
-        game.setQuestions(questions);
+        //Loading default Questions
+        game.setQuestions(defaultQuestions);
         game.setMaxUserSize(2);
 
         games.put(gameID,game);
         this.logger.debug("Created game with id:{}", gameID);
-    }
-
-    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame,boolean autoStart)
-    {
-        User creator = SessionManager.getUser(client);
-
-        if(creator == null) {
-            this.logger.error("No session found for client:{}", client.getClient().getRemoteSocketAddress());
-            return null;
-        }
-
-        long gameID = createID(maxID);
-        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame,autoStart,this.createCode((int)maxID)));
-        this.logger.debug("Created game with id:{}", gameID);
-        return this.getGameInfo(gameID);
     }
 
     public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame,boolean autoStart, Question[] questions)
@@ -176,13 +162,18 @@ public class GameManager {
         }
 
         long gameID = this.createID(maxID);
-        int code = this.createCode((int)maxID);
+        Integer code = privateGame ? this.createCode((int)maxID) : null;
         Game game = new Game(maxPlayerSize, gameID, creator, privateGame,autoStart, code);
         //Add questions to game
         Arrays.stream(questions).forEach(game::addQuestion);
         games.put(gameID, game);
         this.logger.debug("Created game with id:{} User creator:{}", gameID, game.getGameCreator().getName());
         return this.getGameInfo(gameID);
+    }
+
+    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame,boolean autoStart)
+    {
+        return this.createGame(client, maxPlayerSize, privateGame, autoStart, QuestionConfigLoader.loadQuestionData(QUESTION_CONFIG_PATH).toArray(new Question[0]));
     }
 
     public QuestionInfo getQuestionInfo(long gameID)
@@ -283,7 +274,7 @@ public class GameManager {
                 game.getCurrentUserList().size(),
                 this.getPlayerNames(game),
                 game.isPrivateGame(),
-                game.isPrivateGame() ? null : game.getCode(),
+                game.isPrivateGame() ? game.getCode() : null,
                 game.getGameCreator() == null ? "Unknown" : game.getGameCreator().getName(),
                 game.getGameState());
     }

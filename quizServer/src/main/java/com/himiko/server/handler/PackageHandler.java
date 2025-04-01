@@ -149,7 +149,7 @@ public class PackageHandler{
                 }
                  */
                 info = createData.getQuestions() == null ? Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.isAutoStart()) : Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.isAutoStart(),createData.getQuestions());
-                this.logger.debug("User creator:{}", info.getCreatorName());
+                this.logger.debug("User creator:{} Game Code:{}", info.getCreatorName(), info.getCode());
                 //Add user to his own game
                 Main.gameManager.addUserToGame(info.getGameID(), client);
                 this.sendResponse(new Response<>(info, ResponseType.SUCCESS),client);

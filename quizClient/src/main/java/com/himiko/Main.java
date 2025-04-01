@@ -21,7 +21,7 @@ public class Main{
         try {
             NETWORK = new NetworkWrapper();
             GUI = new GUI("Quizapp", "0.0", 500, 800);
-            ScreenHandler.INSTANCE.changeScreen(ScreenHandler.CREATE_GAME_SCREEN);
+            ScreenHandler.INSTANCE.changeScreen(ScreenHandler.CONNECTION_SCREEN);
         }catch (Exception e)
         {
             logger.error("Something went wrong... Error:{}", e.getMessage());
