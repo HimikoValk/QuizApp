@@ -14,7 +14,8 @@ public class ScreenHandler {
     public static ActionSelectionScreen ACTION_SELECTION_SCREEN;
     public static GameSelectionScreen GAME_SELECTION_SCREEN;
     public static CreateGameScreen CREATE_GAME_SCREEN;
-    {
+
+    static {
         CONNECTION_SCREEN = new ConnectionScreen();
         ACTION_SELECTION_SCREEN = new ActionSelectionScreen();
         GAME_SELECTION_SCREEN = new GameSelectionScreen();

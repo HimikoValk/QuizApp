@@ -15,6 +15,7 @@ public class Game {
     private long gameID;
     private Integer code;
     private boolean privateGame = false;
+    private boolean autoStart = true;
 
     private List<NetworkClient> currentUserList = new ArrayList<>();
     private List<Question> questions = new ArrayList<>();;
@@ -38,12 +39,13 @@ public class Game {
     }
 
     //Custom game constructor (Private game)
-    public Game(int maxPlayerSize, final long gameID, final User gameCreator, boolean privateGame, final int code)
+    public Game(int maxPlayerSize, final long gameID, final User gameCreator, boolean privateGame, boolean autoStart,final int code)
     {
         this.maxUserSize = maxPlayerSize;
         this.gameID = gameID;
         this.gameCreator = gameCreator;
         this.privateGame = privateGame;
+        this.autoStart = autoStart;
         this.code = code;
     }
 
@@ -189,5 +191,25 @@ public class Game {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
+    }
+
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+    }
+
+    public void setCurrentAnswers(Map<NetworkClient, String> currentAnswers) {
+        this.currentAnswers = currentAnswers;
+    }
+
+    public Map<NetworkClient, Integer> getPoints() {
+        return points;
+    }
+
+    public void setPoints(Map<NetworkClient, Integer> points) {
+        this.points = points;
     }
 }

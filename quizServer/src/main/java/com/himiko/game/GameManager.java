@@ -45,7 +45,7 @@ public class GameManager {
 
             Game game = games.get(gameID);
 
-            if (game.getCurrentUserList().size() < (game.getMaxUserSize() / 2)) {
+            if (!game.isAutoStart() || game.getCurrentUserList().size() < (game.getMaxUserSize() / 2)) {
                 // this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
                 return;
             }
@@ -141,24 +141,8 @@ public class GameManager {
     {
         long gameID = this.createID(maxID);
         Game game = new Game(gameID);
+        //Loading Questions from JSON
         List<Question> questions = QuestionConfigLoader.loadQuestionData("questions.json");
-
-        /* Limit auf 4 Fragen...
-
-        while(questions.size() > 5)
-        {
-            questions.remove(((int) (Math.random() * questions.size() - 1)));
-        }
-        */
-
-        //For test
-        /*
-        questions.add(new Question("Test1", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
-        questions.add(new Question("Test2", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
-        questions.add(new Question("Test3", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
-        questions.add(new Question("Test4", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
-        questions.add(new Question("Test5", "ANSWERRIGHTHTHTHH", new String[]{"option2", "option3", "option4"}, QuestionCategory.OTHER));
-         */
 
         game.setQuestions(questions);
         game.setMaxUserSize(2);
@@ -167,7 +151,7 @@ public class GameManager {
         this.logger.debug("Created game with id:{}", gameID);
     }
 
-    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame)
+    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame,boolean autoStart)
     {
         User creator = SessionManager.getUser(client);
 
@@ -177,12 +161,12 @@ public class GameManager {
         }
 
         long gameID = createID(maxID);
-        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame, this.createCode((int)maxID)));
+        games.put(gameID, new Game(maxPlayerSize, gameID, creator, privateGame,autoStart,this.createCode((int)maxID)));
         this.logger.debug("Created game with id:{}", gameID);
         return this.getGameInfo(gameID);
     }
 
-    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame, Question[] questions)
+    public GameInfo createGame(NetworkClient client, int maxPlayerSize, boolean privateGame,boolean autoStart, Question[] questions)
     {
         User creator = SessionManager.getUser(client);
 
@@ -193,7 +177,7 @@ public class GameManager {
 
         long gameID = this.createID(maxID);
         int code = this.createCode((int)maxID);
-        Game game = new Game(maxPlayerSize, gameID, creator, privateGame, code);
+        Game game = new Game(maxPlayerSize, gameID, creator, privateGame,autoStart, code);
         //Add questions to game
         Arrays.stream(questions).forEach(game::addQuestion);
         games.put(gameID, game);

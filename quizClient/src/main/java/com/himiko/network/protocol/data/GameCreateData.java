@@ -10,11 +10,13 @@ import com.himiko.game.elemtents.Question;
 public class GameCreateData {
     private int maxUserSize;
     private boolean privateGame;
+    private boolean autoStart;
     private Question[] questions; //
 
-    public GameCreateData(int maxUserSize, boolean privateGame, Question[] questions) {
+    public GameCreateData(int maxUserSize, boolean privateGame,boolean autoStart, Question[] questions) {
         this.maxUserSize = maxUserSize;
         this.privateGame = privateGame;
+        this.autoStart = autoStart;
         this.questions = questions;
     }
 
@@ -32,6 +34,14 @@ public class GameCreateData {
 
     public void setPrivateGame(boolean privateGame) {
         this.privateGame = privateGame;
+    }
+
+    public boolean isAutoStart() {
+        return this.autoStart;
+    }
+
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
     }
 
     public Question[] getQuestions() {

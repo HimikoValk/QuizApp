@@ -148,7 +148,7 @@ public class PackageHandler{
                     info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.getQuestions());
                 }
                  */
-                info = createData.getQuestions() == null ? Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame()) : Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.getQuestions());
+                info = createData.getQuestions() == null ? Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.isAutoStart()) : Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.isAutoStart(),createData.getQuestions());
                 this.logger.debug("User creator:{}", info.getCreatorName());
                 //Add user to his own game
                 Main.gameManager.addUserToGame(info.getGameID(), client);

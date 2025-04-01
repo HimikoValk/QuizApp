@@ -36,6 +36,7 @@ public class CreateGameScreen extends Screen {
     private JButton removeQuestionButton;
     private JButton backButton;
     private JCheckBox privateGameCheckBox;
+    private JCheckBox autoStartCheckBox;
     private JComboBox<Integer> maxUserSizeBox;
     private JTextField questionTextField;
     private JTextField answerTextField;
@@ -58,7 +59,7 @@ public class CreateGameScreen extends Screen {
 
         this.createButton = GUI.uiManager.createStyledButton("Create Game");
         this.createButton.addActionListener(a ->{
-            GameCreateData createData = new GameCreateData((int)this.maxUserSizeBox.getSelectedItem(), this.privateGameCheckBox.isSelected(), this.questionList.toArray(new Question[0]));
+            GameCreateData createData = new GameCreateData((int)this.maxUserSizeBox.getSelectedItem(), this.privateGameCheckBox.isSelected(), this.autoStartCheckBox.isSelected(),this.questionList.toArray(new Question[0]));
             Response<?> response = Main.NETWORK.getPackageHandler().sendRequestWithCallBack(new Request<>(createData, RequestType.GAME_CREATE));
 
             if(response.getResponseType() == ResponseType.SUCCESS)
@@ -100,9 +101,7 @@ public class CreateGameScreen extends Screen {
         });
 
         this.privateGameCheckBox = GUI.uiManager.createStyledCheckBox("Private");
-        this.privateGameCheckBox.addActionListener(a -> {
-            this.logger.debug("{}",this.privateGameCheckBox.isSelected());
-        });
+        this.autoStartCheckBox = GUI.uiManager.createStyledCheckBox("Auto Start");
 
         this.maxUserSizeBox = new JComboBox<>(new Integer[]{2,3,4,5,6,7,8,9,10,11,12});
         this.maxUserSizeLabel = GUI.uiManager.createStyledLabel("Max User Size:");
@@ -131,6 +130,7 @@ public class CreateGameScreen extends Screen {
         this.mainPanel.add(this.optionTextField2);
         this.mainPanel.add(this.optionTextField3);
         this.mainPanel.add(this.privateGameCheckBox);
+        this.mainPanel.add(this.autoStartCheckBox);
         this.mainPanel.add(this.maxUserSizeBox);
         this.mainPanel.add(this.maxUserSizeLabel);
         this.mainPanel.add(this.questionListScrollPane);
@@ -162,7 +162,8 @@ public class CreateGameScreen extends Screen {
         this.maxUserSizeLabel.setBounds((WIDTH - fieldWidth) / 2, removeQuestionButton.getY() + buttonHeight + verticalGap, labelWidth, labelHeight);
         this.maxUserSizeBox.setBounds(maxUserSizeLabel.getX() + labelWidth + 10, maxUserSizeLabel.getY(), fieldWidth - labelWidth - 10, fieldHeight);
         this.privateGameCheckBox.setBounds((WIDTH - fieldWidth) / 2, maxUserSizeBox.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
-        this.questionListScrollPane.setBounds((WIDTH - fieldWidth) / 2, privateGameCheckBox.getY() + fieldHeight + verticalGap, fieldWidth, 100);
+        this.autoStartCheckBox.setBounds((WIDTH - fieldWidth)/ 2, privateGameCheckBox.getY() + fieldHeight + verticalGap, fieldWidth, fieldHeight);
+        this.questionListScrollPane.setBounds((WIDTH - fieldWidth) / 2,autoStartCheckBox.getY() + fieldHeight + verticalGap, fieldWidth, 100);
         this.createButton.setBounds((WIDTH - buttonWidth) / 2, questionListScrollPane.getY() + 100 + verticalGap, buttonWidth, buttonHeight);
         this.backButton.setBounds((WIDTH - buttonWidth) / 2, createButton.getY() + buttonHeight + verticalGap, buttonWidth, buttonHeight);
 

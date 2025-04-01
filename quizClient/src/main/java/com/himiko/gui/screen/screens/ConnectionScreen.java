@@ -85,8 +85,6 @@ public class ConnectionScreen extends Screen {
                     Main.NETWORK.userData = new UserData(this.usernameField.getName(), 0L);
                     this.logger.info("Successfully logged in");
                     ScreenHandler.INSTANCE.changeScreen(ScreenHandler.ACTION_SELECTION_SCREEN);
-                }else {
-                    JOptionPane.showMessageDialog(null, response.getData() == null ? "Failed to enter!" : "Error:" + response.getData(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
