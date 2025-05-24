@@ -31,4 +31,5 @@ public class Main
             logger.error("Something went wrong while building server Error:{}", e.getMessage());
         }
     }
+
 }

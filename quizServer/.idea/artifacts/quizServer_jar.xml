@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="quizServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/quizServer_jar</output-path>
+    <root id="archive" name="quizServer.jar">
+      <element id="module-output" name="quizServer" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/main/resources/jars/Logger.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

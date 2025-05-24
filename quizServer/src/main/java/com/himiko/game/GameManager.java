@@ -24,7 +24,7 @@ public class GameManager {
     private Logger logger;
     private static Map<Long, Game> games = new HashMap<>();
     private static final long maxID = 99999999999L;
-    private static String QUESTION_CONFIG_PATH = "questions.json";
+    private static String QUESTION_CONFIG_PATH = "questions.json"; //Quesiotn
     private static List<Question> defaultQuestions = QuestionConfigLoader.loadQuestionData(QUESTION_CONFIG_PATH);
     private Thread gameCheckThread; //Thread check if game can be started..
 
@@ -41,32 +41,18 @@ public class GameManager {
         this.createCheckThread();
     }
 
-
     public void startGame(long gameID) {
         try {
             if (!this.doesGameExist(gameID)) return;
 
             Game game = games.get(gameID);
 
-            if (!game.isAutoStart() || game.getCurrentUserList().size() < (game.getMaxUserSize() / 2)) {
-                // this.logger.warning("Not enough players to start the game.. (Game ID:{})", game.getGameID());
-                return;
-            }
-
-            if (game.getGameState() == GameState.RUNNING) {
-                this.logger.warning("Game is already running.. (Game ID:{})", game.getGameID());
-                return;
-            } else if (game.getGameState() == GameState.FINISHED) {
-                //Remove game..
-                this.logger.warning("Game finished... Removing game(Game ID:{})", game.getGameID());
-                //games.remove(game.getGameID());
-                return;
-            }
+            if(!game.canGameStart()) return;
 
             game.setGameState(GameState.RUNNING);
             this.logger.info("Starting game with id :{}", game.getGameID());
-
-            new Thread(() -> {
+            //creating game thread
+            Thread gameThread = new Thread(() -> {
                 this.logger.debug("Started game thread for Game-ID:{}", game.getGameID());
 
                 while (game.questionAvailable()) {
@@ -92,7 +78,9 @@ public class GameManager {
                 game.setGameState(GameState.FINISHED);
                 this.logger.debug("Terminating thread:{}", Thread.currentThread().getName());
                 Thread.currentThread().interrupt();
-            }).start();
+            });
+
+            gameThread.start();
         }catch (Exception e)
         {
             this.logger.error("Something went wrong while starting a game... Error:{}", e.getMessage());
@@ -167,7 +155,7 @@ public class GameManager {
         //Add questions to game
         Arrays.stream(questions).forEach(game::addQuestion);
         games.put(gameID, game);
-        this.logger.debug("Created game with id:{} User creator:{}", gameID, game.getGameCreator().getName());
+        this.logger.debug("Created game with id:%l User creator:%s".formatted(gameID, game.getGameCreator().getName()));
         return this.getGameInfo(gameID);
     }
 
@@ -215,7 +203,9 @@ public class GameManager {
 
     public void removeUser(NetworkClient client)
     {
-        games.values().forEach(g ->{if(g.isUserInGame(client)) g.removeUser(client);});
+        games.values().forEach(g ->{
+            if(g.isUserInGame(client)) g.removeUser(client);
+        });
     }
 
     public void removeUser(long gameID, NetworkClient client)

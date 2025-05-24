@@ -1,125 +1,333 @@
-[14-03-2025 12:52:48][INFO] Initializing server...
-[14-03-2025 12:52:48][DEBUG] Thread:32 Server-Port:8080 Server-IP:0.0.0.0/0.0.0.0:8080
-[14-03-2025 12:52:48][INFO] Successfully started server!
-[14-03-2025 12:52:48][DEBUG] Created game with id:56760962749
-[14-03-2025 12:52:48][DEBUG] Created game with id:34260247914
-[14-03-2025 12:52:48][DEBUG] Created game with id:48929762824
-[14-03-2025 12:52:48][DEBUG] Created game with id:42701692289
-[14-03-2025 12:52:48][DEBUG] Created game with id:51784389696
-[14-03-2025 12:52:48][DEBUG] Created game with id:29685344879
-[14-03-2025 12:52:48][DEBUG] Created game with id:21167551886
-[14-03-2025 12:52:48][DEBUG] Created game with id:75773802912
-[14-03-2025 12:52:48][DEBUG] Created game with id:5358059128
-[14-03-2025 12:52:48][DEBUG] Created game with id:18639339521
-[14-03-2025 12:52:59][INFO] Client(/127.0.0.1:51687) connected to server and Thread successfully created...
-[14-03-2025 12:53:01][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 12:53:01][DEBUG] Received Login!
-[14-03-2025 12:53:01][DEBUG] User data: Name:Username ID:61141
-[14-03-2025 12:53:01][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 12:53:03][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 12:56:59][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 12:56:59][DEBUG] Thread terminated
-[14-03-2025 12:56:59][WARNING] Client(/127.0.0.1:51687) disconnected from Server
-[14-03-2025 12:56:59][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 12:57:04][INFO] Client(/127.0.0.1:51699) connected to server and Thread successfully created...
-[14-03-2025 12:57:05][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 12:57:05][DEBUG] Received Login!
-[14-03-2025 12:57:05][DEBUG] User data: Name:Username ID:622164
-[14-03-2025 12:57:06][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 12:57:07][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 12:58:01][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 12:58:01][DEBUG] Thread terminated
-[14-03-2025 12:58:01][WARNING] Client(/127.0.0.1:51699) disconnected from Server
-[14-03-2025 12:58:01][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 12:58:07][INFO] Client(/127.0.0.1:51708) connected to server and Thread successfully created...
-[14-03-2025 12:58:09][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 12:58:09][DEBUG] Received Login!
-[14-03-2025 12:58:09][DEBUG] User data: Name:Username ID:850869
-[14-03-2025 12:58:09][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 12:58:11][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 12:59:14][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 12:59:14][DEBUG] Thread terminated
-[14-03-2025 12:59:14][WARNING] Client(/127.0.0.1:51708) disconnected from Server
-[14-03-2025 12:59:14][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 12:59:19][INFO] Client(/127.0.0.1:51712) connected to server and Thread successfully created...
-[14-03-2025 12:59:21][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 12:59:21][DEBUG] Received Login!
-[14-03-2025 12:59:21][DEBUG] User data: Name:Username ID:68096
-[14-03-2025 12:59:21][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 12:59:22][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 12:59:31][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 12:59:31][DEBUG] Thread terminated
-[14-03-2025 12:59:31][WARNING] Client(/127.0.0.1:51712) disconnected from Server
-[14-03-2025 12:59:31][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 12:59:37][INFO] Client(/127.0.0.1:51716) connected to server and Thread successfully created...
-[14-03-2025 12:59:39][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 12:59:39][DEBUG] Received Login!
-[14-03-2025 12:59:39][DEBUG] User data: Name:Username ID:990589
-[14-03-2025 12:59:39][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 12:59:44][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:05:46][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:05:46][DEBUG] Thread terminated
-[14-03-2025 13:05:46][WARNING] Client(/127.0.0.1:51716) disconnected from Server
-[14-03-2025 13:05:46][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 13:05:50][INFO] Client(/127.0.0.1:51740) connected to server and Thread successfully created...
-[14-03-2025 13:05:52][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 13:05:52][DEBUG] Received Login!
-[14-03-2025 13:05:52][DEBUG] User data: Name:Username ID:564970
-[14-03-2025 13:05:52][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 13:05:54][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:06:50][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:06:50][DEBUG] Thread terminated
-[14-03-2025 13:06:50][WARNING] Client(/127.0.0.1:51740) disconnected from Server
-[14-03-2025 13:06:50][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 13:06:54][INFO] Client(/127.0.0.1:51744) connected to server and Thread successfully created...
-[14-03-2025 13:06:56][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 13:06:56][DEBUG] Received Login!
-[14-03-2025 13:06:56][DEBUG] User data: Name:Username ID:658331
-[14-03-2025 13:06:56][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 13:06:58][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:07:23][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:07:23][DEBUG] Thread terminated
-[14-03-2025 13:07:23][WARNING] Client(/127.0.0.1:51744) disconnected from Server
-[14-03-2025 13:07:23][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 13:07:27][INFO] Client(/127.0.0.1:51748) connected to server and Thread successfully created...
-[14-03-2025 13:07:28][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 13:07:28][DEBUG] Received Login!
-[14-03-2025 13:07:28][DEBUG] User data: Name:Username ID:214572
-[14-03-2025 13:07:28][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 13:07:29][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:09:33][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:09:33][DEBUG] Thread terminated
-[14-03-2025 13:09:33][WARNING] Client(/127.0.0.1:51748) disconnected from Server
-[14-03-2025 13:09:33][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 13:09:48][INFO] Client(/127.0.0.1:51764) connected to server and Thread successfully created...
-[14-03-2025 13:09:50][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 13:09:50][DEBUG] Received Login!
-[14-03-2025 13:09:50][DEBUG] User data: Name:Username ID:810762
-[14-03-2025 13:09:51][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 13:09:52][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:10:21][DEBUG] Message Received:{"data":{"data":42701692289,"requestType":"GAME_JOIN"},"category":"REQUEST"}
-[14-03-2025 13:10:21][DEBUG] Received join request
-[14-03-2025 13:10:42][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:10:42][DEBUG] Thread terminated
-[14-03-2025 13:10:42][WARNING] Client(/127.0.0.1:51764) disconnected from Server
-[14-03-2025 13:10:42][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 13:10:46][INFO] Client(/127.0.0.1:51769) connected to server and Thread successfully created...
-[14-03-2025 13:10:49][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 13:10:49][DEBUG] Received Login!
-[14-03-2025 13:10:49][DEBUG] User data: Name:Username ID:706438
-[14-03-2025 13:10:49][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 13:10:50][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:13:27][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:13:27][DEBUG] Thread terminated
-[14-03-2025 13:13:27][WARNING] Client(/127.0.0.1:51769) disconnected from Server
-[14-03-2025 13:13:27][WARNING] Client disconnected, closing client connection and thread
-[14-03-2025 13:13:32][INFO] Client(/127.0.0.1:51788) connected to server and Thread successfully created...
-[14-03-2025 13:13:34][DEBUG] Message Received:{"data":{"data":{"name":"Username","id":0},"requestType":"USER_LOGIN"},"category":"REQUEST"}
-[14-03-2025 13:13:34][DEBUG] Received Login!
-[14-03-2025 13:13:34][DEBUG] User data: Name:Username ID:500944
-[14-03-2025 13:13:34][DEBUG] Message Received:{"data":{"requestType":"SERVER_INFORMATION"},"category":"REQUEST"}
-[14-03-2025 13:13:35][DEBUG] Message Received:{"data":{"requestType":"GET_GAMES"},"category":"REQUEST"}
-[14-03-2025 13:13:38][DEBUG] Waiting for client thread to terminate...
-[14-03-2025 13:13:38][DEBUG] Thread terminated
-[14-03-2025 13:13:38][WARNING] Client(/127.0.0.1:51788) disconnected from Server
-[14-03-2025 13:13:38][WARNING] Client disconnected, closing client connection and thread
+[14-05-2025 17:36:59][INFO] Initializing server...
+[14-05-2025 17:36:59][DEBUG] Thread:30 Server-Port:8080 Server-IP:0.0.0.0/0.0.0.0:8080
+[14-05-2025 17:36:59][INFO] Successfully started server!
+[14-05-2025 17:36:59][DEBUG] Created game with id:95129836437
+[14-05-2025 17:36:59][DEBUG] Created game with id:86081962681
+[14-05-2025 17:36:59][DEBUG] Created game with id:12503390208
+[14-05-2025 17:36:59][DEBUG] Created game with id:41475851677
+[14-05-2025 17:36:59][DEBUG] Created game with id:27847628158
+[14-05-2025 17:36:59][DEBUG] Created game with id:71585558876
+[14-05-2025 17:36:59][DEBUG] Created game with id:50071080863
+[14-05-2025 17:36:59][DEBUG] Created game with id:12715671330
+[14-05-2025 17:36:59][DEBUG] Created game with id:61641556589
+[14-05-2025 17:36:59][DEBUG] Created game with id:78850099475
+[14-05-2025 17:36:59][INFO] Starting game with id :12503390208
+[14-05-2025 17:36:59][INFO] Starting game with id :27847628158
+[14-05-2025 17:36:59][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:36:59][INFO] Starting game with id :41475851677
+[14-05-2025 17:36:59][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:36:59][INFO] Starting game with id :78850099475
+[14-05-2025 17:36:59][DEBUG] Started game thread for Game-ID:41475851677
+[14-05-2025 17:36:59][INFO] Starting game with id :71585558876
+[14-05-2025 17:36:59][DEBUG] Finished Game!
+[14-05-2025 17:36:59][INFO] Starting game with id :12715671330
+[[14-05-202514- 17:36:0559][DEBU[14-05-2025 17[14:36:59][DEBUG] Started[ 1-2025 17:36:59][G] Finished Game!
+-05-2025 17:36:59][DEBUG] Started ggame athread for Game-ID:71585558876
+4-05-2025 17:36:59][DEBUG] Terminating thread:ThrDead-2
+EBUG] Finished Game!
+[14-05-2025 17:36:59][INFO] Startimng game we thread for Game-ID:7[14-05-2025 17:36:59][DEBUG] Terminatiing thth id :50071080863
+[14-05-2025 17:36:59][D8EBUG] T850099475
+read:Thread-3
+erminating thread:Thread-4
+[14-05-2025 17:36:59][DEBUG] Finished Game!
+[14-05-2025 17:36:59][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-[14-05-2025 17:36:59][DEBUG] Finished Game!
+2025 17:36:59][INFO] Starting game with id :61641556589
+[14-05-2025 17:36:59][DEBUG] Terminating thread:Thread-6
+[14-05-2025 17:36:59][DEBUG] Finished Game!
+[14-05-2025 17:36:59][DEBUG] T[14-05-2025 17:36:59][Derminating thread:Thread-5
+EBUG] Started game thread for Game-ID:50071080863
+[14-05-2025 17:36:59][DEBUG] Terminating threa[14-0d:5-2025 17Th:3read-7
+[14-05-2025 17:366:59][INFO] Starting game with id :95129836437
+:59][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:36:59][DEBUG] Finished Game!
+[14-05-2[[10124-05-2025 17:36:59][INFO] Starting game with id :864-05-2025 17:36:595][D 17:36:59][DEBUG] Terminating thread:Thread-8
+[14-05-2025 17:36:59][DEBUG] Started game thread for Game-ID:95129836437
+081962681
+EBUG] Finished Game!
+[14-05-2025 17:36:59][DEBUG] Finished Game!
+[14-05-2025 17:36:59][DEBUG] Terminating thread:Thread-9
+[14-05-2025 1[147-:0365:-2059][DEBUG] S2tarte5d 17:36:59 ga][DEBUG] Termime thread for Game-ID:86081962681
+nating thread:Thread-10
+[14-05-2025 17:36:59][DEBUG] Finished Game!
+[14-05-2025 17:36:59][DEBUG] Terminating thread:Thread-11
+[14-05-2025 17:37:04][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:04][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:04][DEBUG] Started game thread for Game-ID:12503390208
+[14[-051-2025 17:37:04][DEBUG] Finished Game!
+4-05-2025 17:37:04][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-12
+[14-05-2025 17:37:04][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:04][DEBUG] Started game thread for Game-ID:41475851677
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-13
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-14
+[14-05-2025 17:37:04][INFO] Starting game with id :78850099475
+[14-05-2025 17:37:04][INFO] Starting game with id :71585558876
+[14-05-[14-05-2025 17:37:04][DEBUG] Started 2025 1gam7:37:0e thr4]e[aINFO] Stad for Garting game with id :12715671330
+[14-05-2025 17:37:04][DEBUG] mStarted game thread for Game-ID:71585558876
+e-ID:78850099475
+[14-05-2025 17:37:04][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-15
+[14-05-2025 17:37:04][DEBUG] Started game thread for Game-ID:50071080863
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-18
+[14-05-2025 17:37:04][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][INFO] Starting game with id :61641556589
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-17
+[14-05-2025 17:37:04][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-16
+[14-05-2025 17:37:04][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:37:04][INFO] Starting game with id :86081962681
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-19
+[14-05-2025 17:37:0[14-05-2025 17:37:04][DEBUG] Starte4][DEd game thread for Game-ID:86081962681
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+BUG] Started game thread for Game-ID:95129836437
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-21
+[14-05-2025 17:37:04][DEBUG] Finished Game!
+[14-05-2025 17:37:04][DEBUG] Terminating thread:Thread-20
+[14-05-2025 17:37:09][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:09][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:09][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:09][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:37:09][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:09][DEBUG] Fin[14-05-2025 17:37:09][INFO] Starting gamished Game!
+e with id :78850099475
+[14-05-2025 17:37:09][DEBUG] Started game thread for Game-ID:41475851677
+[14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:[09][1INFO] Sta4-0r5ting ga-202me with id :71585558876
+5 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG[] Terminating thread:Thread-23
+[14-05-2025 17:37:09][DEBUG] T14-erminating 05-202th5 17:3read7:09][INFO] Starting:Thread-22
+ game with id :12715671330
+[14-05-2025 17:37:09][DEBUG] Started game t[14-05hread for -2025 G17ame-ID:7885:00994737:09][DEBUG] Terminating thread:Thread-24
+5
+[14-05[-2025 17:37:09][DEBUG] Started game thread for Game-ID:71585558876
+14-05-2025 17:37:09][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:09][INFO] Starting game with id :61641556589
+[[14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG] Sta[rted game thread for Game-ID:5007108086314-05-2025 17:37:09][DEBUG] Terminating thread:Thread-14-05-2025 17:37:09][DEBUG] Terminatin
+g thread:Thread-25
+26
+[14-05-[2025 17:37:09][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:09][DEBUG] Terminating thread:Thread-27
+14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:37:09][INFO] Starting game with id :86081962681
+[14-05-2025 17:37:09][DEBUG] Fini[14-05-2025 17:3[7:09][DEBUG] Started game thread for Gamse-ID:95129836437
+hed Game!
+14-05-2025 17:37:09][DEBUG] Terminating thread:Thread-28
+[14-05-2025 17:37:09][DEBUG] Terminating thread:Thread-29
+[14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG] Started game thread for Game-ID:86081962681
+[14-05-2025 17:37:09][DEBUG] Terminating thread:Thread-30
+[14-05-2025 17:37:09][DEBUG] Finished Game!
+[14-05-2025 17:37:09][DEBUG] Terminating thread:Thread-31
+[14-05-2025 17:37:14][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:14][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:14][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][INFO] Starting game with id :7[14-05-2025 17:37:14][DEBUG] Finished Game!
+8850099475
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-32
+[14-05-2025 17:37:14][INFO] Starting game with id :71585558876
+[[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:414-05-2025 17:37:141475851677
+][DEBUG] Terminating thread:Thread-33
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:78850099475
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-34
+[14-05-2025 17:37:14][INFO] Starting game with id :12715671330
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:71585558876
+[14-05-2025 17:37:14][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-35
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-36
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][INFO] Starting game with id :61641556589
+[14-05-2025 17:37:14][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-37
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:50071080863
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][INFO] Starting game with id :86081962681
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-38
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-39
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:95129836437
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-40
+[14-05-2025 17:37:14][DEBUG] Started game thread for Game-ID:86081962681
+[14-05-2025 17:37:14][DEBUG] Finished Game!
+[14-05-2025 17:37:14][DEBUG] Terminating thread:Thread-41
+[14-05-2025 17:37:19][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:19][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:37:19][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][INFO] Starting game with id :78850099475
+[14-05-2025 17:37:19][DEBUG] Started game thread for G[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-42
+ame-ID:41475851677
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-43
+[14-05-2025 17:37:19][INFO] Starting game with id :71585558876
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:78850099475
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-44
+[14-05-2025 17:37:19][INFO] Starting game with id :12715671330
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-45
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:71585558876
+[14-05-2025 17:37:19][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-46
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:19][INFO] Starting game with id :61641556589
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-47
+[14-05-2025 17:37:19][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:50071080863
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-48
+[14-05-2025 17:37:19][INFO] Starting game with id :86081962681
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:95129836[14-05-2025 17:37:19][DEBUG] Terminating thr437
+ead:Thread-49
+[14-05-2025 17:37:19][DEBUG] Started game thread for Game-ID:86081962681
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Finished Game!
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-50
+[14-05-2025 17:37:19][DEBUG] Terminating thread:Thread-51
+[14-05-2025 17:37:24][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:24][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:24][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:37:24][INFO] Starting game with id :78850099475
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][INFO] Starting game with id :71585558876
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-52
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:41475851677
+[14-05-2025 17:37:24][INFO] Starting game with id :12715671330
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:78850099475
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:71585558876
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-53
+[14-05-2025 17:37:24][INFO] Starting game with id :61641556589
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-56
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-55
+[14-05-2025 17:37:24][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-54
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:24][INFO] Starting game with id :86081962681
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:50071080863
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:86081962681
+[14-05-2025 17:37:24][DEBUG] Started game thread for Game-ID:95129836437
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-57
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Finished Game!
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-59
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-58
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-60
+[14-05-2025 17:37:24][DEBUG] Terminating thread:Thread-61
+[14-05-2025 17:37:29][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:29][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:37:29][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-62
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][INFO] Starting game with id :78850099475
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:41475851677
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-63
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][INFO] Starting game with id :71585558876
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:78850099475
+[14-05-2025 17:37:29][INFO] Starting game with id :12715671330
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-64
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:71585558876
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-65
+[14-05-2025 17:37:29][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:29][INFO] Starting game with id :61641556589
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-66
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-67
+[14-05-2025 17:37:29][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:50071080863
+[[14-05-2025 17:37:29][DEBUG] Started game thre14-05-2025 17:37:29][INFO] Starting game with id :86081962681
+ad for Game-ID:61641556589
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:95129836437
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-69
+[14-05-2025 17:37:29][DEBUG] Finished Game!
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-68
+[14-05-2025 17:37:29][DEBUG] Started game thread for Game-ID:86081962681
+[14-05-2025 1[7:37:29][DEBUG] Finished Game!
+14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-70
+[14-05-2025 17:37:29][DEBUG] Terminating thread:Thread-71
+[14-05-2025 17:37:34][INFO] Starting game with id :12503390208
+[14-05-2025 17:37:34][INFO] Starting game with id :27847628158
+[14-05-2025 17:37:34][INFO] Starting game with id :41475851677
+[14-05-2025 17:37:34][INFO] Starting game with id :78850099475
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:12503390208
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:27847628158
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:41475851677
+[14-05-2025 17:37:34][INFO] Starting game with id :71585558876
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-72
+[14-05-2025 17:37:34][INFO] Starting game with id :12715671330
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-73
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-74
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:71585558876
+[14-05-2025 17:37:34][INFO] Starting game with id :50071080863
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:78850099475
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][INFO] Starting game with id :61641556589
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-76
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-75
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:50071080863
+[14-05-2025 17:37:34][INFO] Starting game with id :95129836437
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-78
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:61641556589
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:12715671330
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][INFO] Starting game with id :86081962681
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-79
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-77
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:95129836437
+[14-05-2025 17:37:34][DEBUG] Started game thread for Game-ID:86081962681
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Finished Game!
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-80
+[14-05-2025 17:37:34][DEBUG] Terminating thread:Thread-81

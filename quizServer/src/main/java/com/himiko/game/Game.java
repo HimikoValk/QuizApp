@@ -105,6 +105,11 @@ public class Game {
         return this.questions.stream().anyMatch(question -> !question.isUsed());
     }
 
+    public boolean canGameStart()
+    {
+        return !this.isAutoStart() || this.getCurrentUserList().size() < (this.getMaxUserSize() / 2) || this.gameState != GameState.RUNNING;
+    }
+
     private Question getRandomQuestion()
     {
         int index = (int)(Math.random() * this.questions.size());

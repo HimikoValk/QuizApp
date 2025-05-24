@@ -1,16 +1,17 @@
-import WebSocket from "ws";
+import { Network } from "./network";
 
-const port = 8080
-const server_url:string = `ws://localhost:${port}`;
-const clientSocket:WebSocket = new WebSocket(server_url);
+let network:Network;
 
-//Tetsing webscoket!
-clientSocket.on('open', ()=>{ 
-    console.log("Connected to server!");
-    clientSocket.close();    
+window.addEventListener("DOMContentLoaded", () =>{
+   const connectButton = document.getElementById("connect_button"); 
+   
+   if(!connectButton) return; 
+
+    connectButton.addEventListener("click", () => {
+        console.log("button clicked!");
+        const server_ip:string = (document.getElementById("server_ip")?.ariaValueText as string);
+        const port:number = (parseInt((document.getElementById("port")?.ariaValueText as string)) as number);  
+        network = new Network(server_ip, port); 
+        network.connect();
+    });
 });
-
-clientSocket.on('close', () => {
-    console.log("Closed connection!");
-});
-
