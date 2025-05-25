@@ -15,7 +15,6 @@ window.addEventListener("DOMContentLoaded", () =>{
         const port:number = parseInt(portInput.value, 10);
         console.log("Init connection to server... IP:%s Port:%d", server_ip, port);
         network = new Network(server_ip, port); 
-        network.connect();
     });
 
    

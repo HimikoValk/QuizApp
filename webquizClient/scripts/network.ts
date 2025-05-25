@@ -7,14 +7,20 @@ export class Network
     {
         this.server_url = `ws://${server_ip}:${port}/ws`;
         this.connectionSocket = new WebSocket(this.server_url); 
+        //Event listerner for socket
+        this.initEvents();
     }
 
-    public connect() : void
-    {
+    private initEvents() : void
+    { 
         this.connectionSocket.addEventListener("open", () => {
             alert("Connected to server!");
             console.log("Connected to server!");
-        }); 
+        });
+        this.connectionSocket.addEventListener("close", () => {
+            alert("🔒 Connection closed");
+            console.log("🔒 Connection closed");
+        });
     }
 
     public disconnect():void

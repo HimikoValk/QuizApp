@@ -25,7 +25,7 @@ public class RawWebSocketConfig implements WebSocketConfigurer {
 
             @Override
             public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-                System.out.println("✅ WebSocket verbunden: " + session.getId());
+                System.out.println("✅ WebSocket verbunden... Session ID:" + session.getId());
             }
 
             @Override
