@@ -1,15 +1,23 @@
 {
     "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
-        "target": "ES2022",
-        "jsx": "react",
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "sourceMap": true
+      // 1. Modul-Format für Browser-ESM
+      "module": "ES2020",
+      // 2. Wie Module aufgelöst werden (für lokale ./module.js-Imports)
+      "moduleResolution": "node",
+      // 3. Ziel-JavaScript-Version
+      "target": "ES2022",
+      // 5. Quell-Maps, falls du Debugging willst
+      "sourceMap": true,
+      // 6. Strenge Typprüfung
+      "strict": true,
+      // 7. Damit du “export =” und CommonJS besser nutzen kannst
+      "esModuleInterop": true,
+      // Optional: Root-Verzeichnis, falls du alles im Projektdir hast
+      "rootDir": "."
     },
+    "include": ["index.ts", "network.ts"],
     "exclude": [
-        "node_modules",
-        "**/node_modules/*"
+      "node_modules",
+      "scripts"       // das Kompilat selbst nicht nochmal kompilieren
     ]
-}
+  }
