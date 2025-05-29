@@ -7,19 +7,34 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
     connectButton.addEventListener("click", () => {
         const ipInput = document.getElementById("server_ip");
-        const server_ip = ipInput.value;
         const portInput = document.getElementById("port");
+        const userInput = document.getElementById("username");
+        const server_ip = ipInput.value;
         const port = parseInt(portInput.value, 10);
-        console.log("Init connection to server... IP:%s Port:%d", server_ip, port);
+        const username = userInput.value.trim();
+        console.log("Init connection to server... IP:%s Port:%d\nAnd sending login for test", server_ip, port);
         network = new Network(server_ip, port);
-    });
+        network.getConnectionSocket().addEventListener("open", () => {
+            const pkg = {
+                category: "REQUEST",
+                data: {
+                    requestType: "USER_LOGIN",
+                    data: {
+                        name: username,
+                        id: null,
+                    },
+                },
+            };
+            network.send(pkg);
+        });
+    }); // ← Hier schließen wir den connectButton-Handler
     disconnectButton.addEventListener("click", () => {
         if (network === undefined) {
-            alert(" You need to establish a connectio first!");
+            alert("You need to establish a connection first!");
             return;
         }
         network.disconnect();
         alert("Disconnected from Server!");
     });
-});
+}); // ← Und hier den DOMContentLoaded-Handler
 //# sourceMappingURL=index.js.map

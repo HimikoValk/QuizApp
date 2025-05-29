@@ -2,29 +2,30 @@ package com.himiko.server.manager;
 
 import com.himiko.game.utils.User;
 import com.himiko.server.utils.NetworkClient;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionManager {
-    private static final ConcurrentHashMap<NetworkClient, User> sessions = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<WebSocketSession, User> sessions = new ConcurrentHashMap<>();
 
-    public static void addSession(NetworkClient client, User user)
+    public static void addSession(WebSocketSession clientSession, User user)
     {
-        user.setId(createID(999999L));
-        sessions.put(client, user);
+        user.setId(sessions.size() + 1);
+        sessions.put(clientSession, user);
     }
 
-    public static void removeSession(NetworkClient client)
+    public static void removeSession(WebSocketSession session)
     {
-        sessions.remove(client);
+        sessions.remove(session);
     }
 
-    public static User getUser(NetworkClient client)
+    public static User getUser(WebSocketSession client)
     {
         return sessions.get(client);
     }
 
-    public static boolean doesSessionExist(NetworkClient client)
+    public static boolean doesSessionExist(WebSocketSession client)
     {
         return sessions.containsKey(client);
     }
@@ -34,7 +35,7 @@ public class SessionManager {
         return sessions.values().stream().anyMatch(u -> u.getName().equals(username));
     }
 
-    public static boolean doesUserExist(NetworkClient client)
+    public static boolean doesUserExist(WebSocketSession client)
     {
         return sessions.containsKey(client);
     }
@@ -42,15 +43,5 @@ public class SessionManager {
     public static int getActiveSessionSize()
     {
         return sessions.size();
-    }
-
-    private static long createID(long maxID)
-    {
-        long id = (long) (Math.random() * maxID);
-
-        if(sessions.values().stream().anyMatch(user -> user.getId() == id)) {
-            return createID(maxID);
-        }
-        return id;
     }
 }

@@ -1,3 +1,18 @@
+export type Package<T> ={
+    category:"REQUEST" | "RESPONSE"; 
+    data:T;
+};
+export type Request<T> = {
+    requestType: ""
+    data:T;
+     
+};
+
+// TODO
+export type Response = {
+    
+};
+
 export class Network
 {
     private connectionSocket:WebSocket;  
@@ -11,6 +26,13 @@ export class Network
         this.initEvents();
     }
 
+    public send(obj:any) : void
+    {
+        const json:string = JSON.stringify(obj);
+        this.connectionSocket.send(json); 
+        console.log("Successfully send data to Server!");
+    }
+
     private initEvents() : void
     { 
         this.connectionSocket.addEventListener("open", () => {
@@ -21,6 +43,14 @@ export class Network
             alert("🔒 Connection closed");
             console.log("🔒 Connection closed");
         });
+        this.connectionSocket.addEventListener("message", (message) => {
+            console.log("Recevied message:%s", message.data);
+        });
+    }
+
+    public handelMessage()
+    {
+
     }
 
     public disconnect():void

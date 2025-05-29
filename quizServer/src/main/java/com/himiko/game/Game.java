@@ -1,9 +1,8 @@
 package com.himiko.game;
 
-import com.himiko.Main;
 import com.himiko.game.elements.Question;
 import com.himiko.game.utils.User;
-import com.himiko.server.utils.NetworkClient;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,30 +16,25 @@ public class Game {
     private boolean privateGame = false;
     private boolean autoStart = true;
 
-    private List<NetworkClient> currentUserList = new ArrayList<>();
-    private List<Question> questions = new ArrayList<>();;
+    private List<WebSocketSession> currentUserList = new ArrayList<>();
+    private List<Question> questions = new ArrayList<>();
     private User gameCreator;
     private Question currentQuestion;
     private GameState gameState = GameState.WAITING;
 
-    //Client, Answer
-    private Map<NetworkClient, String> currentAnswers = new HashMap<>();
-    //Client, Points
-    private Map<NetworkClient, Integer> points = new HashMap<>();
+    // Session, Answer
+    private Map<WebSocketSession, String> currentAnswers = new HashMap<>();
+    // Session, Points
+    private Map<WebSocketSession, Integer> points = new HashMap<>();
 
-    //Default constructor
-    public Game(final long gameID)
-    {
-        this.maxUserSize = 4; //Default user size
+    // Default constructor
+    public Game(final long gameID) {
+        this.maxUserSize = 4; // Default user size
         this.gameID = gameID;
-        this.gameCreator = null;
-        this.privateGame = false;
-        this.code = null;
     }
 
-    //Custom game constructor (Private game)
-    public Game(int maxPlayerSize, final long gameID, final User gameCreator, boolean privateGame, boolean autoStart,final int code)
-    {
+    // Custom game constructor (Private game)
+    public Game(int maxPlayerSize, final long gameID, final User gameCreator, boolean privateGame, boolean autoStart, final int code) {
         this.maxUserSize = maxPlayerSize;
         this.gameID = gameID;
         this.gameCreator = gameCreator;
@@ -49,84 +43,77 @@ public class Game {
         this.code = code;
     }
 
-    public void addUser(NetworkClient client) {
-        if(this.isUserInGame(client)) return;
-        this.currentUserList.add(client);
+    public void addUser(WebSocketSession session) {
+        if (this.isUserInGame(session)) return;
+        this.currentUserList.add(session);
+        this.points.put(session, 0);
     }
 
-    public void removeUser(NetworkClient client)
-    {
-        if(!this.isUserInGame(client)) return;
-        this.currentUserList.remove(client);
+    public void removeUser(WebSocketSession session) {
+        if (!this.isUserInGame(session)) return;
+        this.currentUserList.remove(session);
+        this.currentAnswers.remove(session);
+        this.points.remove(session);
     }
 
-    public void awardPoints(NetworkClient client, int pts) {
-        if(this.points.get(client) == null){ this.points.put(client, pts); return;}
-        this.points.put(client, this.points.get(client) + pts);
-    }
-    public int getPoints(NetworkClient client) {
-        return points.getOrDefault(client, 0);
+    public void awardPoints(WebSocketSession session, int pts) {
+        this.points.merge(session, pts, Integer::sum);
     }
 
-    public void storeAnswer(NetworkClient client,String answer){
-        Main.logger.debug("Saved answer!Answer:{}",answer);
-        if(this.currentAnswers.get(client) != null) this.currentAnswers.remove(client);
-        this.currentAnswers.put(client,answer);
+    public int getPoints(WebSocketSession session) {
+        return points.getOrDefault(session, 0);
     }
 
-    public void clearAnswers()
-    {
+    public void storeAnswer(WebSocketSession session, String answer) {
+        this.currentAnswers.put(session, answer);
+    }
+
+    public void clearAnswers() {
         this.currentAnswers.clear();
     }
 
-    public void pullNextQuestion()
-    {
-        if(!this.questionAvailable()) return;
-        
+    public void pullNextQuestion() {
+        if (!this.questionAvailable()) return;
+
         this.clearAnswers();
         Question tmp = this.getRandomQuestion();
-        if(tmp.isUsed()) this.pullNextQuestion();
+        if (tmp.isUsed()) {
+            this.pullNextQuestion();
+            return;
+        }
         this.currentQuestion = tmp;
     }
 
-    public void addQuestion(Question question)
-    {
-        Main.logger.debug("Add Question:{} With Options Size:{}", question.getQuestion(), question.getQuestion().length());
+    public void addQuestion(Question question) {
         this.questions.add(question);
     }
 
-    public void removeQuestion(Question question)
-    {
+    public void removeQuestion(Question question) {
         this.questions.remove(question);
     }
 
-    public boolean questionAvailable()
-    {
+    public boolean questionAvailable() {
         return this.questions.stream().anyMatch(question -> !question.isUsed());
     }
 
-    public boolean canGameStart()
-    {
-        return !this.isAutoStart() || this.getCurrentUserList().size() < (this.getMaxUserSize() / 2) || this.gameState != GameState.RUNNING;
+    public boolean canGameStart() {
+        return !this.autoStart || this.currentUserList.size() < (this.maxUserSize / 2) || this.gameState != GameState.RUNNING;
     }
 
-    private Question getRandomQuestion()
-    {
-        int index = (int)(Math.random() * this.questions.size());
+    private Question getRandomQuestion() {
+        int index = (int) (Math.random() * this.questions.size());
         return this.questions.get(index);
     }
 
-    public Map<NetworkClient, String> getCurrentAnswers() {
+    public Map<WebSocketSession, String> getCurrentAnswers() {
         return currentAnswers;
     }
 
-    public boolean isUserInGame(NetworkClient client)
-    {
-        return this.currentUserList.stream().anyMatch(c -> c.getClient().getRemoteSocketAddress().equals(client.getClient().getRemoteSocketAddress()));
+    public boolean isUserInGame(WebSocketSession session) {
+        return this.currentUserList.contains(session);
     }
 
-    public boolean isPrivateGame()
-    {
+    public boolean isPrivateGame() {
         return this.privateGame;
     }
 
@@ -158,11 +145,11 @@ public class Game {
         this.privateGame = privateGame;
     }
 
-    public List<NetworkClient> getCurrentUserList() {
+    public List<WebSocketSession> getCurrentUserList() {
         return currentUserList;
     }
 
-    public void setCurrentUserList(List<NetworkClient> currentUserList) {
+    public void setCurrentUserList(List<WebSocketSession> currentUserList) {
         this.currentUserList = currentUserList;
     }
 
@@ -206,15 +193,11 @@ public class Game {
         this.autoStart = autoStart;
     }
 
-    public void setCurrentAnswers(Map<NetworkClient, String> currentAnswers) {
-        this.currentAnswers = currentAnswers;
-    }
-
-    public Map<NetworkClient, Integer> getPoints() {
+    public Map<WebSocketSession, Integer> getPoints() {
         return points;
     }
 
-    public void setPoints(Map<NetworkClient, Integer> points) {
+    public void setPoints(Map<WebSocketSession, Integer> points) {
         this.points = points;
     }
 }

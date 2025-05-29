@@ -3,274 +3,182 @@ package com.himiko.server.handler;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import com.himiko.Main;
-import com.himiko.game.Game;
-import com.himiko.game.GameManager;
 import com.himiko.game.utils.User;
-import com.himiko.logger.Logger;
 import com.himiko.server.manager.SessionManager;
 import com.himiko.server.protocol.Package;
 import com.himiko.server.protocol.PackageCategory;
-import com.himiko.server.protocol.data.*;
 import com.himiko.server.protocol.response.Response;
 import com.himiko.server.protocol.response.ResponseType;
-import com.himiko.server.utils.NetworkClient;
 import com.himiko.server.protocol.request.Request;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 /**
  * @author Valk on 14.02.2025
  * @project quizServer
  */
-public class PackageHandler{
-    private Logger logger;
+public class PackageHandler {
+    private final Logger logger = LoggerFactory.getLogger(PackageHandler.class);
+    private final Gson gson = new Gson();
 
-    public PackageHandler()
-    {
-        this.logger = Main.logger;
+    public PackageHandler() {
+
     }
 
-    public void handelPackage(String data, NetworkClient client)
-    {
-       // this.logger.debug("Message Received:{}", data);
-        // Don't u dare to remove the exp catch!
-        // The Server will crash if an error will happen in here
+    public void handlePackage(String data, WebSocketSession session) {
         try {
-            Package<JsonElement> rawPackage = new Gson().fromJson(data, new TypeToken<Package<JsonElement>>() {}.getType());
-            switch (rawPackage.getAction()) {
-                case REQUEST -> {
-                    this.handleRequest(rawPackage, client);
-                }
-                default -> {
-                    this.logger.warning("Unknown PackageType received!");
-                    break;
-                }
+            Package<JsonElement> rawPackage = gson.fromJson(data,
+                    new TypeToken<Package<JsonElement>>() {}.getType());
+
+            if (rawPackage.getAction() == PackageCategory.REQUEST) {
+                this.handleRequest(rawPackage, session);
+            } else {
+                logger.warn("Unknown PackageType received: {}", rawPackage.getAction());
+                this.sendResponse(new Response<>("Unknown PackageType", ResponseType.ERROR), session);
             }
-        }catch (Exception e)
-        {
-            this.sendResponse(new Response<>(null, ResponseType.ERROR), client);
-            this.logger.error("Something went wrong while handling the package... Error:{}", e.getMessage());
+        } catch (Exception e) {
+            this.sendResponse(new Response<>(null, ResponseType.ERROR), session);
+            logger.error("Error handling package: {}", e.getMessage());
         }
     }
 
-    private void handleRequest(Package<JsonElement> rawPackage, NetworkClient client)
-    {
+    private void handleRequest(Package<JsonElement> rawPackage, WebSocketSession session) {
         Request<?> request = this.parseDataToClass(rawPackage.getData(), Request.class);
+        switch (request.getRequestType()) {
+            case USER_LOGIN -> this.handleLogin(request, session);
+      /*
+            case USER_LOGOUT -> handleLogout(session);
+            case GET_GAMES -> sendResponse(
+                    new Response<>(Main.gameManager.getGameInfos(), ResponseType.GAMES), session);
+            case GAME_START -> handleGameStart(request, session);
+            case GAME_JOIN -> handleGameJoin(request, session);
+            case GAME_CREATE -> handleGameCreate(request, session);
+            case GAME_LEAVE -> handleGameLeave(request, session);
+            case ANSWER -> handleAnswer(request, session);
+            case GET_GAME_INFO -> handleGetGameInfo(request, session);
+            case SCORE_INFO -> handleScoreInfo(session);
+            case GET_QUESTION_INFO -> handleQuestionInfo(session);
+            case SERVER_INFORMATION -> sendResponse(
+                    new Response<>(new ServerInformation(
+                            SessionManager.getActiveSessionSize(),
+                            Main.gameManager.getPublicGames().size(),
+                            Main.version),
+                            ResponseType.SERVER_INFORMATION), session);
 
-        switch (request.getRequestType())
-        {
-            case USER_LOGIN ->
-            {
-                this.logger.debug("Received Login!");
-                User userData = this.parseDataToClass(request.getData().toString(), User.class);
 
-                if (SessionManager.getUser(client) != null || SessionManager.doesUsernameExist(userData.getName())) {
-                    this.sendResponse(new Response<>("Sorry username already used!",ResponseType.ERROR), client);
-                    return;
-                }
-
-                SessionManager.addSession(client, userData);
-                this.sendResponse(new Response<>(true,ResponseType.SUCCESS), client);
-                this.logger.debug("User data: Name:{} ID:{}", SessionManager.getUser(client).getName(), SessionManager.getUser(client).getId());
-                break;
-            }
-
-            case USER_LOGOUT ->
-            {
-                this.logger.debug("Received Logout!");
-
-                if (!SessionManager.doesUserExist(client)) {
-                    this.sendResponse(new Response<>(null, ResponseType.ERROR), client);
-                    return;
-                }
-                SessionManager.removeSession(client);
-                Main.gameManager.removeUser(client);
-                break;
-            }
-
-            case GET_GAMES ->
-            {
-                List<GameInfo> gameList = Main.gameManager.getGameInfos();
-                this.sendResponse(new Response<>(gameList, ResponseType.GAMES), client);
-                break;
-            }
-
-            case GAME_START ->
-            {
-                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
-                if(gameID == null) return;
-                if(!Main.gameManager.isUserInGame(gameID, client))
-                {
-                    this.sendResponse(new Response<>("You are not in game", ResponseType.ERROR), client);
-                    return;
-                }else if(!Main.gameManager.isUserCreator(gameID, client))
-                {
-                    this.sendResponse(new Response<>("Only the game Creator can start the game!", ResponseType.ERROR), client);
-                    return;
-                }
-                Main.gameManager.startGame(gameID);
-                this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
-                break;
-            }
-
-            case GAME_JOIN ->
-            {
-                GameJoinData gameJoinData = this.parseDataToClass(request.getData().toString(), GameJoinData.class);
-                //Checking for private game
-                if(Main.gameManager.isPrivateGame(gameJoinData.getGameID()))
-                {
-                    if(gameJoinData.getCode() == null) return;
-                    if(Main.gameManager.isCodeCorrect(gameJoinData.getGameID(), gameJoinData.getCode())) {
-                        if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
-                    }else {
-                        this.sendResponse(new Response<>("Invalid code..", ResponseType.ERROR), client);
-                    }
-                }else
-                {
-                    if(Main.gameManager.addUserToGame(gameJoinData.getGameID(), client)) this.sendResponse(new Response<>(null, ResponseType.SUCCESS), client);
-                }
-                break;
-            }
-
-            case GAME_CREATE ->
-            {
-                GameCreateData createData = this.parseDataToClass(request.getData().toString(), GameCreateData.class);
-                GameInfo info = null;
-                if(createData == null || Main.gameManager.isUserInGame(client)) return;
-                /* Das ist im Ternärer Operator drinnen
-                if(createData.getQuestions() == null)
-                {
-                    info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame());
-                }else
-                {
-                    info = Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.getQuestions());
-                }
-                 */
-                info = createData.getQuestions() == null ? Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.isAutoStart()) : Main.gameManager.createGame(client, createData.getMaxUserSize(), createData.isPrivateGame(), createData.isAutoStart(),createData.getQuestions());
-                this.logger.debug("User creator:{} Game Code:{}", info.getCreatorName(), info.getCode());
-                //Add user to his own game
-                Main.gameManager.addUserToGame(info.getGameID(), client);
-                this.sendResponse(new Response<>(info, ResponseType.SUCCESS),client);
-                break;
-            }
-
-            case GAME_LEAVE ->
-            {
-                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
-                if(gameID != null) {
-                    if (Main.gameManager.isUserInGame(gameID, client)) {
-                        Main.gameManager.removeUser(gameID, client);
-                        this.logger.info("Removed user from game (User:{} GameID:{})!", client.getClient().getRemoteSocketAddress(), gameID);
-                    }
-                }else
-                {
-                    Main.gameManager.removeUser(client);
-                    this.logger.info("Removed user from game (User:{})!", client.getClient().getRemoteSocketAddress());
-                }
-                break;
-            }
-
-            case GAME_EDIT ->
-            {
-                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
-                if(gameID == null) return;
-
-                if(!Main.gameManager.isUserInGame(gameID, client) || Main.gameManager.isUserCreator(gameID, client))
-                {
-                    this.sendResponse(new Response<>("You are not in game or the creator of the game", ResponseType.ERROR), client);
-                    return;
-                }
-
-            }
-
-            case ANSWER ->
-            {
-                String answer = this.parseDataToClass(request.getData().toString(), String.class);
-                if(!Main.gameManager.isUserInGame(client)) return;
-                Game game = Main.gameManager.getUserGame(client);
-                game.storeAnswer(client, answer);
-                this.sendResponse(new Response<>("Answer received!", ResponseType.SUCCESS), client);
-                break;
-            }
-
-            case GET_GAME_INFO ->
-            {
-                Long gameID = this.parseDataToClass(request.getData().toString(), Long.class);
-                if(gameID == null) return;
-
-                if(!Main.gameManager.isUserInGame(gameID, client))
-                {
-                    this.sendResponse(new Response<>("Not in game..", ResponseType.ERROR), client);
-                    return;
-                }
-
-                GameInfo gameInfo = Main.gameManager.getGameInfo(gameID);
-                this.sendResponse(new Response<>(gameInfo, ResponseType.GAME_INFO),client);
-                break;
-            }
-
-            case SCORE_INFO ->
-            {
-                if(!Main.gameManager.isUserInGame(client))
-                {
-                    this.sendResponse(new Response<>("Not in game..", ResponseType.ERROR), client);
-                    return;
-                }
-
-                ScoreData scoreData = Main.gameManager.getScoreData(client, Main.gameManager.getUserGame(client).getGameID());
-                this.sendResponse(new Response<>(scoreData, ResponseType.SCORE_INFO), client);
-            }
-
-            case GET_QUESTION_INFO ->
-            {
-                if(!Main.gameManager.isUserInGame(client))
-                {
-                    this.sendResponse(new Response<>("Not in game..", ResponseType.ERROR), client);
-                    return;
-                }
-
-                QuestionInfo questionInfo = Main.gameManager.getQuestionInfo(Main.gameManager.getUserGame(client).getGameID());
-                this.sendResponse(new Response<>(questionInfo, ResponseType.QUESTION_INFO),client);
-                break;
-            }
-
-            case SERVER_INFORMATION ->
-            {
-                ServerInformation serverInformation = new ServerInformation(SessionManager.getActiveSessionSize(), Main.gameManager.getPublicGames().size(), Main.version);
-                this.sendResponse(new Response<>(serverInformation,ResponseType.SERVER_INFORMATION), client);
-                break;
-            }
+       */
+            default -> logger.warn("Unhandled request type: {}", request.getRequestType());
         }
     }
 
-    public <T> void sendResponse(Response<T> response, NetworkClient client)
-    {
-        this.sendPackage(new Package<>(response, PackageCategory.RESPONSE), client);
+    private void handleLogin(Request<?> request, WebSocketSession session) {
+        logger.debug("Received Login from session {}", session.getId());
+        User userData = this.parseDataToClass(request.getData().toString(), User.class);
+
+        if(SessionManager.doesUsernameExist(userData.getName())) {
+            this.sendResponse(new Response<>(false, ResponseType.FAILURE), session);
+            return;
+        }
+
+        SessionManager.addSession(session, userData);
+        this.sendResponse(new Response<>(true, ResponseType.SUCCESS), session);
+    }
+/*
+    private void handleLogout(WebSocketSession session) {
+        logger.debug("Received Logout for session {}", session.getId());
+      //  SessionManager.removeSession(session);
+        Main.gameManager.removeUser(session);
     }
 
-    public <T> void sendRequest(Request<T> request, NetworkClient client)
-    {
-        this.sendPackage(new Package<>(request, PackageCategory.REQUEST), client);
+    private void handleGameStart(Request<?> request, WebSocketSession session) {
+        Long gameID = parseDataToClass(request.getData().toString(), Long.class);
+        Main.gameManager.startGame(gameID);
+        sendResponse(new Response<>(null, ResponseType.SUCCESS), session);
     }
 
-    public <T> void sendPackage(Package<T> data, NetworkClient client)
-    {
-        if(data == null || client == null) return;
-
-        String json = new Gson().toJson(data);
-        client.sendData(json);
-        //this.logger.debug("Send Package to Client..\nData:{}", json);
+    private void handleGameJoin(Request<?> request, WebSocketSession session) {
+        GameJoinData data = parseDataToClass(request.getData().toString(), GameJoinData.class);
+        boolean joined = Main.gameManager.addUserToGame(
+                data.getGameID(), session, data.getCode());
+        sendResponse(new Response<>(joined, joined ? ResponseType.SUCCESS : ResponseType.ERROR), session);
     }
 
-    private <T> T parseDataToClass(JsonElement data, Class<T> type)
-    {
-        return new Gson().fromJson(data, type);
+    private void handleGameCreate(Request<?> request, WebSocketSession session) {
+        GameCreateData data = parseDataToClass(request.getData().toString(), GameCreateData.class);
+        GameInfo info = data.getQuestions() == null
+                ? Main.gameManager.createGame(session, data.getMaxUserSize(), data.isPrivateGame(), data.isAutoStart())
+                : Main.gameManager.createGame(session, data.getMaxUserSize(), data.isPrivateGame(), data.isAutoStart(), data.getQuestions());
+        Main.gameManager.addUserToGame(info.getGameID(), session);
+        sendResponse(new Response<>(info, ResponseType.SUCCESS), session);
     }
 
-    private <T> T parseDataToClass(String data, Class<T> type)
-    {
-        return new Gson().fromJson(data, type);
+    private void handleGameLeave(Request<?> request, WebSocketSession session) {
+        Long gameID = parseDataToClass(request.getData().toString(), Long.class);
+        if (gameID != null && Main.gameManager.isUserInGame(gameID, session)) {
+            Main.gameManager.removeUser(gameID, session);
+        } else {
+            Main.gameManager.removeUser(session);
+        }
+    }
+
+    private void handleAnswer(Request<?> request, WebSocketSession session) {
+        String answer = parseDataToClass(request.getData().toString(), String.class);
+        Game game = Main.gameManager.getUserGame(session);
+        game.storeAnswer(session, answer);
+        sendResponse(new Response<>("Answer received!", ResponseType.SUCCESS), session);
+    }
+
+    private void handleGetGameInfo(Request<?> request, WebSocketSession session) {
+        Long gameID = parseDataToClass(request.getData().toString(), Long.class);
+        if (!Main.gameManager.isUserInGame(gameID, session)) {
+            sendResponse(new Response<>("Not in game", ResponseType.ERROR), session);
+            return;
+        }
+        GameInfo info = Main.gameManager.getGameInfo(gameID);
+        sendResponse(new Response<>(info, ResponseType.GAME_INFO), session);
+    }
+
+    private void handleScoreInfo(WebSocketSession session) {
+        if (!Main.gameManager.isUserInGame(session)) {
+            sendResponse(new Response<>("Not in game", ResponseType.ERROR), session);
+            return;
+        }
+        ScoreData data = Main.gameManager.getScoreData(session,
+                Main.gameManager.getUserGame(session).getGameID());
+        sendResponse(new Response<>(data, ResponseType.SCORE_INFO), session);
+    }
+
+    private void handleQuestionInfo(WebSocketSession session) {
+        if (!Main.gameManager.isUserInGame(session)) {
+            sendResponse(new Response<>("Not in game", ResponseType.ERROR), session);
+            return;
+        }
+        QuestionInfo info = Main.gameManager.getQuestionInfo(
+                Main.gameManager.getUserGame(session).getGameID());
+        sendResponse(new Response<>(info, ResponseType.QUESTION_INFO), session);
+    }
+ */
+    private <T> void sendResponse(Response<T> response, WebSocketSession session) {
+        this.sendPackage(new Package<>(response, PackageCategory.RESPONSE), session);
+    }
+
+    private <T> void sendPackage(Package<T> pkg, WebSocketSession session) {
+        try {
+            String json = gson.toJson(pkg);
+            session.sendMessage(new TextMessage(json));
+        } catch (Exception e) {
+            logger.error("Failed to send package to session {}: {}",
+                    session.getId(), e.getMessage());
+        }
+    }
+
+    private <T> T parseDataToClass(JsonElement data, Class<T> type) {
+        return gson.fromJson(data, type);
+    }
+
+    private <T> T parseDataToClass(String data, Class<T> type) {
+        return gson.fromJson(data, type);
     }
 }
