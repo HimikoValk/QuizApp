@@ -85,12 +85,13 @@ public class PackageHandler {
         SessionManager.addSession(session, userData);
         this.sendResponse(new Response<>(true, ResponseType.SUCCESS), session);
     }
-/*
+
     private void handleLogout(WebSocketSession session) {
         logger.debug("Received Logout for session {}", session.getId());
-      //  SessionManager.removeSession(session);
-        Main.gameManager.removeUser(session);
+        SessionManager.removeSession(session);
     }
+
+/*
 
     private void handleGameStart(Request<?> request, WebSocketSession session) {
         Long gameID = parseDataToClass(request.getData().toString(), Long.class);

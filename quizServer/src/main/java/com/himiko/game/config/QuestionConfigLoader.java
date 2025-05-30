@@ -17,11 +17,12 @@ import java.util.List;
  * @project quizServer
  */
 public class QuestionConfigLoader {
+
     public static List<Question> loadQuestionData(String path)
     {
         Gson gson = new Gson();
         try {
-             BufferedReader reader = new BufferedReader(new FileReader(path));
+            BufferedReader reader = new BufferedReader(new FileReader(path));
             Type configType = new TypeToken<QuestionConfig>(){}.getType();
             QuestionConfig config = gson.fromJson(reader, configType);
 
